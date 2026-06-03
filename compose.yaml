@@ -1,25 +1,55 @@
-
 services:
-###> doctrine/doctrine-bundle ###
+
+  ###> doctrine/doctrine-bundle ###
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
+    container_name: nutripetit-postgres
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
+      POSTGRES_DB: ${POSTGRES_DB:-nutripetit}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nutripetit}
+      POSTGRES_USER: ${POSTGRES_USER:-nutripetit}
+    ports:
+      - "5433:5432"
     healthcheck:
-      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
+      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-nutripetit}", "-U", "${POSTGRES_USER:-nutripetit}"]
       timeout: 5s
       retries: 5
       start_period: 60s
     volumes:
       - database_data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+  ###< doctrine/doctrine-bundle ###
+
+  ###> redis ###
+  redis:
+    image: redis:7-alpine
+    container_name: nutripetit-redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 5s
+      retries: 5
+  ###< redis ###
+
+  ###> symfony/mailer ###
+  mailer:
+    image: axllent/mailpit
+    container_name: nutripetit-mailpit
+    ports:
+      - "1026:1025"
+      - "8026:8025"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+  ###< symfony/mailer ###
 
 volumes:
-###> doctrine/doctrine-bundle ###
+  ###> doctrine/doctrine-bundle ###
   database_data:
-###< doctrine/doctrine-bundle ###
+  ###< doctrine/doctrine-bundle ###
+
+  ###> redis ###
+  redis_data:
+  ###< redis ###
