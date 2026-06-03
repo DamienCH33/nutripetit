@@ -1,0 +1,132 @@
+/* HEADER */
+.np-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    padding: 0 16px;
+    background-color: #fdf7f1;
+}
+
+.np-header__logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.np-header__logo-icon {
+    width: 36px;
+    height: 36px;
+}
+
+.np-header__logo-nutri {
+    color: #2e7d32;
+}
+
+.np-header__logo-petit {
+    color: #ff9f3d;
+}
+
+/* BOTTOM NAVIGATION */
+.np-bottom-nav {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: calc(100% - 32px);
+    max-width: 448px;
+    height: 68px;
+    padding: 0 12px;
+    background-color: #ffffff;
+    border-radius: 24px;
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.08),
+        0 1px 3px rgba(0, 0, 0, 0.04),
+        0 0 0 1px rgba(0, 0, 0, 0.02);
+}
+
+.np-bottom-nav__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 8px;
+    min-width: 48px;
+    color: #a3a3a3;
+    font-size: 10px;
+    font-weight: 500;
+    transition:
+        color 250ms ease-out,
+        transform 200ms ease-out;
+    text-decoration: none;
+    border-radius: 12px;
+}
+
+.np-bottom-nav__item:hover {
+    color: #525252;
+}
+
+.np-bottom-nav__item--active {
+    color: #ff9f3d;
+}
+
+.np-bottom-nav__item:active {
+    transform: scale(0.92);
+}
+
+.np-bottom-nav__icon {
+    width: 22px;
+    height: 22px;
+}
+
+/* BOUTON SCAN CENTRAL ORANGE */
+.np-bottom-nav__scan {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff9f3d 0%, #ffb86b 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+        0 6px 16px rgba(255, 159, 61, 0.45),
+        0 2px 4px rgba(255, 159, 61, 0.25),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+    margin-top: -28px;
+    transition:
+        transform 200ms ease-out,
+        box-shadow 200ms ease-out;
+    text-decoration: none;
+    border: 4px solid #ffffff;
+}
+
+.np-bottom-nav__scan:hover {
+    transform: scale(1.05);
+}
+
+.np-bottom-nav__scan:active {
+    transform: scale(0.95);
+}
+
+.np-bottom-nav__scan-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* SAFE AREA iOS */
+@supports (padding: max(0px)) {
+    .np-bottom-nav {
+        bottom: max(16px, env(safe-area-inset-bottom));
+    }
+}

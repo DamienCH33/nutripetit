@@ -1,3 +1,25 @@
-body {
-    background-color: skyblue;
-}
+/**
+ * NutriPetit - Feuille de styles principale
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* === BASE === */
+@import './base/_variables.css';
+@import './base/_reset.css';
+@import './base/_typography.css';
+@import './base/_utilities.css';
+
+/* === COMPONENTS === */
+@import './components/_buttons.css';
+@import './components/_cards.css';
+@import './components/_score.css';
+@import './components/_navigation.css';
+@import './components/_forms.css';
+@import './components/_disclaimer.css';
+
+/* === PAGES === */
+@import './pages/_home.css';
+@import './pages/_landing.css';
+@import './pages/_info.css';
+@import './pages/_baby_profile.css';

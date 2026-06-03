@@ -1,0 +1,314 @@
+/**
+ * NutriPetit - Page Infos (Comprendre le score)
+ */
+
+/* ============================================
+ * HERO
+ * ============================================ */
+.np-info-hero {
+  padding: var(--np-spacing-6) 0 var(--np-spacing-4);
+  text-align: center;
+}
+
+.np-info-hero__title {
+  font-size: var(--np-font-size-2xl);
+  font-weight: var(--np-font-weight-bold);
+  color: var(--np-gray-900);
+  margin-bottom: var(--np-spacing-2);
+  line-height: 1.2;
+}
+
+.np-info-hero__subtitle {
+  font-size: var(--np-font-size-base);
+  color: var(--np-gray-600);
+  line-height: 1.5;
+  max-width: 380px;
+  margin: 0 auto var(--np-spacing-3);
+}
+
+.np-info-hero__version {
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: var(--np-cream);
+  color: var(--np-orange-dark);
+  border-radius: var(--np-radius-pill);
+  font-size: var(--np-font-size-xs);
+  font-weight: var(--np-font-weight-semibold);
+}
+
+/* ============================================
+ * SECTIONS
+ * ============================================ */
+.np-info-section {
+  margin-top: var(--np-spacing-6);
+}
+
+.np-info-section--highlight {
+  background-color: var(--np-cream);
+  margin: var(--np-spacing-6) calc(var(--np-spacing-4) * -1) 0;
+  padding: var(--np-spacing-6) var(--np-spacing-4);
+  border-radius: var(--np-radius-lg);
+}
+
+.np-info-section__title {
+  font-size: var(--np-font-size-lg);
+  font-weight: var(--np-font-weight-bold);
+  color: var(--np-gray-900);
+  margin-bottom: var(--np-spacing-2);
+}
+
+.np-info-section__lead {
+  font-size: var(--np-font-size-sm);
+  color: var(--np-gray-600);
+  line-height: 1.5;
+  margin-bottom: var(--np-spacing-4);
+}
+
+/* ============================================
+ * ÉCHELLE DE SCORE
+ * ============================================ */
+.np-info-scale {
+  display: flex;
+  flex-direction: column;
+  gap: var(--np-spacing-3);
+}
+
+.np-info-scale-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--np-spacing-3);
+  padding: var(--np-spacing-3) var(--np-spacing-4);
+  background-color: var(--np-white);
+  border-radius: var(--np-radius-md);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.np-info-scale-item__dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.np-info-scale-item__dot--excellent { background-color: var(--np-score-excellent); }
+.np-info-scale-item__dot--good { background-color: var(--np-score-good); }
+.np-info-scale-item__dot--medium { background-color: var(--np-score-medium); }
+.np-info-scale-item__dot--bad { background-color: var(--np-score-bad); }
+
+.np-info-scale-item__content {
+  flex: 1;
+}
+
+.np-info-scale-item__range {
+  font-size: var(--np-font-size-xs);
+  color: var(--np-gray-500);
+  font-weight: var(--np-font-weight-semibold);
+  margin-bottom: 2px;
+}
+
+.np-info-scale-item__label {
+  font-size: var(--np-font-size-base);
+  font-weight: var(--np-font-weight-bold);
+  color: var(--np-gray-900);
+  margin-bottom: 2px;
+}
+
+.np-info-scale-item__desc {
+  font-size: var(--np-font-size-sm);
+  color: var(--np-gray-600);
+}
+
+/* ============================================
+ * RÈGLES DE SCORING
+ * ============================================ */
+.np-info-rules {
+  display: flex;
+  flex-direction: column;
+  gap: var(--np-spacing-3);
+}
+
+.np-info-rule {
+  padding: var(--np-spacing-4);
+  background-color: var(--np-white);
+  border-radius: var(--np-radius-md);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.np-info-rule__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--np-spacing-2);
+  margin-bottom: var(--np-spacing-2);
+}
+
+.np-info-rule__label {
+  font-size: var(--np-font-size-base);
+  font-weight: var(--np-font-weight-bold);
+  color: var(--np-gray-900);
+  flex: 1;
+}
+
+.np-info-rule__impact {
+  font-size: var(--np-font-size-sm);
+  font-weight: var(--np-font-weight-bold);
+  padding: 4px 10px;
+  border-radius: var(--np-radius-pill);
+  white-space: nowrap;
+}
+
+.np-info-rule__impact--negative {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: var(--np-score-bad);
+}
+
+.np-info-rule__impact--positive {
+  background-color: rgba(139, 195, 74, 0.15);
+  color: var(--np-green-dark);
+}
+
+.np-info-rule__impact--neutral {
+  background-color: var(--np-gray-100);
+  color: var(--np-gray-600);
+}
+
+.np-info-rule__description {
+  font-size: var(--np-font-size-sm);
+  color: var(--np-gray-700);
+  line-height: 1.5;
+  margin-bottom: var(--np-spacing-3);
+}
+
+.np-info-rule__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--np-spacing-3);
+  align-items: center;
+  padding-top: var(--np-spacing-2);
+  border-top: 1px solid var(--np-gray-100);
+}
+
+.np-info-rule__age,
+.np-info-rule__source {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--np-font-size-xs);
+  color: var(--np-gray-500);
+}
+
+.np-info-rule__source {
+  color: var(--np-orange-primary);
+  font-weight: var(--np-font-weight-medium);
+  text-decoration: none;
+}
+
+.np-info-rule__source:hover {
+  text-decoration: underline;
+}
+
+.np-info-rule__icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* ============================================
+ * COMPARAISON NUTRI-SCORE vs NUTRIPETIT
+ * ============================================ */
+.np-info-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--np-spacing-3);
+}
+
+.np-info-comparison__col {
+  background-color: var(--np-white);
+  border-radius: var(--np-radius-md);
+  padding: var(--np-spacing-4);
+  text-align: center;
+}
+
+.np-info-comparison__icon-wrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--np-spacing-2);
+}
+
+.np-info-comparison__icon-wrapper--bad {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: var(--np-score-bad);
+}
+
+.np-info-comparison__icon-wrapper--good {
+  background-color: rgba(139, 195, 74, 0.15);
+  color: var(--np-green-dark);
+}
+
+.np-info-comparison__icon {
+  width: 22px;
+  height: 22px;
+}
+
+.np-info-comparison__title {
+  font-size: var(--np-font-size-sm);
+  font-weight: var(--np-font-weight-bold);
+  color: var(--np-gray-900);
+  margin-bottom: var(--np-spacing-1);
+}
+
+.np-info-comparison__text {
+  font-size: var(--np-font-size-xs);
+  color: var(--np-gray-600);
+  line-height: 1.5;
+}
+
+/* ============================================
+ * SOURCES OFFICIELLES
+ * ============================================ */
+.np-info-sources {
+  display: flex;
+  flex-direction: column;
+  gap: var(--np-spacing-2);
+}
+
+.np-info-source {
+  display: flex;
+  align-items: center;
+  gap: var(--np-spacing-3);
+  padding: var(--np-spacing-3) var(--np-spacing-4);
+  background-color: var(--np-white);
+  border-radius: var(--np-radius-md);
+  border: 1px solid rgba(0,0,0,0.04);
+  text-decoration: none;
+  transition: all 200ms ease-out;
+}
+
+.np-info-source:hover {
+  border-color: var(--np-orange-primary);
+  transform: translateY(-1px);
+}
+
+.np-info-source__name {
+  font-size: var(--np-font-size-base);
+  font-weight: var(--np-font-weight-bold);
+  color: var(--np-gray-900);
+  min-width: 70px;
+}
+
+.np-info-source__desc {
+  font-size: var(--np-font-size-sm);
+  color: var(--np-gray-600);
+  flex: 1;
+}
+
+.np-info-source__arrow {
+  width: 18px;
+  height: 18px;
+  color: var(--np-gray-400);
+  flex-shrink: 0;
+}

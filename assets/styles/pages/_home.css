@@ -1,0 +1,266 @@
+/**
+ * NutriPetit - Page Accueil PWA
+ */
+
+/* BODY PWA*/
+.np-body--pwa {
+    background-color: var(--np-cream-light);
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+/* SHELL PWA */
+.np-pwa-shell {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background-color: var(--np-cream-light);
+    padding-bottom: 100px;
+}
+
+.np-pwa-main {
+    padding: 0 var(--np-spacing-4);
+}
+
+/* HEADER PWA */
+.np-pwa-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--np-cream-light);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    padding: var(--np-spacing-4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.np-pwa-header__logo {
+    display: flex;
+    align-items: center;
+    gap: var(--np-spacing-2);
+    font-size: var(--np-font-size-xl);
+    font-weight: var(--np-font-weight-bold);
+}
+
+.np-pwa-header__logo-icon {
+    width: 36px;
+    height: 36px;
+}
+
+/* HERO - Greeting */
+.np-app-hero {
+    padding: var(--np-spacing-5) 0 var(--np-spacing-3);
+}
+
+.np-app-hero__greeting {
+    font-size: var(--np-font-size-2xl);
+    font-weight: var(--np-font-weight-bold);
+    color: var(--np-gray-900);
+    margin-bottom: var(--np-spacing-1);
+    line-height: 1.2;
+}
+
+.np-app-hero__subtitle {
+    font-size: var(--np-font-size-base);
+    color: var(--np-gray-600);
+    line-height: 1.5;
+}
+
+/* CARD SCAN - Version compacte */
+.np-app-scan-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--np-spacing-5) var(--np-spacing-4);
+    margin-top: var(--np-spacing-2);
+    background: linear-gradient(
+        135deg,
+        var(--np-orange-primary) 0%,
+        var(--np-orange-light) 100%
+    );
+    border-radius: var(--np-radius-lg);
+    color: var(--np-white);
+    box-shadow: var(--np-shadow-orange);
+    transition: transform 200ms ease-out;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.np-app-scan-card::before {
+    content: "";
+    position: absolute;
+    top: -40%;
+    right: -15%;
+    width: 160px;
+    height: 160px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.np-app-scan-card:active {
+    transform: scale(0.98);
+}
+
+.np-app-scan-card__title {
+    font-size: var(--np-font-size-lg);
+    font-weight: var(--np-font-weight-bold);
+    margin-bottom: var(--np-spacing-3);
+    position: relative;
+    z-index: 1;
+}
+
+.np-app-scan-card__icon-wrapper {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--np-spacing-3);
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1;
+}
+
+.np-app-scan-card__icon {
+    width: 28px;
+    height: 28px;
+    color: var(--np-white);
+}
+
+.np-app-scan-card__description {
+    font-size: var(--np-font-size-sm);
+    opacity: 0.95;
+    line-height: 1.5;
+    max-width: 280px;
+    position: relative;
+    z-index: 1;
+}
+
+/* SÉPARATEUR */
+.np-app-separator {
+    display: flex;
+    align-items: center;
+    gap: var(--np-spacing-3);
+    margin: var(--np-spacing-4) 0;
+    color: var(--np-gray-400);
+    font-size: var(--np-font-size-sm);
+    font-weight: var(--np-font-weight-medium);
+}
+
+.np-app-separator::before,
+.np-app-separator::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: var(--np-gray-200);
+}
+
+/* SAISIE MANUELLE */
+.np-app-manual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--np-spacing-2);
+    padding: var(--np-spacing-4);
+    background-color: var(--np-white);
+    border: 1.5px solid var(--np-gray-200);
+    border-radius: var(--np-radius-md);
+    color: var(--np-gray-700);
+    font-size: var(--np-font-size-base);
+    font-weight: var(--np-font-weight-medium);
+    transition: all 200ms ease-out;
+    text-decoration: none;
+}
+
+.np-app-manual:hover {
+    border-color: var(--np-orange-primary);
+    color: var(--np-orange-primary);
+    background-color: var(--np-cream-light);
+}
+
+.np-app-manual__icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* SECTION HISTORIQUE */
+.np-app-section {
+    margin-top: var(--np-spacing-6);
+}
+
+.np-app-section__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--np-spacing-3);
+}
+
+.np-app-section__title {
+    font-size: var(--np-font-size-lg);
+    font-weight: var(--np-font-weight-bold);
+    color: var(--np-gray-900);
+}
+
+.np-app-section__link {
+    font-size: var(--np-font-size-sm);
+    color: var(--np-orange-primary);
+    font-weight: var(--np-font-weight-semibold);
+}
+
+.np-app-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--np-spacing-2);
+}
+
+/* EMPTY STATE */
+.np-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--np-spacing-8) var(--np-spacing-4);
+    background-color: var(--np-white);
+    border: 1.5px dashed var(--np-gray-200);
+    border-radius: var(--np-radius-lg);
+}
+
+.np-empty-state__icon-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: var(--np-cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--np-spacing-3);
+}
+
+.np-empty-state__icon {
+    width: 32px;
+    height: 32px;
+    color: var(--np-orange-primary);
+}
+
+.np-empty-state__title {
+    font-size: var(--np-font-size-base);
+    font-weight: var(--np-font-weight-semibold);
+    color: var(--np-gray-900);
+    margin-bottom: var(--np-spacing-1);
+}
+
+.np-empty-state__text {
+    font-size: var(--np-font-size-sm);
+    color: var(--np-gray-500);
+    line-height: 1.5;
+    max-width: 260px;
+}

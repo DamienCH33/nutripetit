@@ -1,0 +1,110 @@
+/**
+ * NutriPetit - Variables du Design System
+ */
+
+:root {
+    /* COULEURS PRIMAIRES */
+    --np-orange-primary: #ff9f3d;
+    --np-orange-light: #ffb86b;
+    --np-orange-dark: #e8861f;
+
+    --np-green-primary: #8bc34a;
+    --np-green-light: #b5d86f;
+    --np-green-dark: #2e7d32;
+
+    /* COULEURS NEUTRES */
+    --np-cream: #f6ead7;
+    --np-cream-light: #fdf7f1;
+    --np-white: #ffffff;
+
+    --np-gray-50: #fafafa;
+    --np-gray-100: #f5f5f5;
+    --np-gray-200: #e5e5e5;
+    --np-gray-300: #d4d4d4;
+    --np-gray-400: #a3a3a3;
+    --np-gray-500: #737373;
+    --np-gray-600: #525252;
+    --np-gray-700: #404040;
+    --np-gray-800: #262626;
+    --np-gray-900: #1f1f1f;
+
+    /* SCORES */
+    --np-score-excellent: #2e7d32;
+    --np-score-good: #8bc34a;
+    --np-score-medium: #ffb86b;
+    --np-score-bad: #e74c3c;
+
+    /* SÉMANTIQUE */
+    --np-success: var(--np-green-primary);
+    --np-warning: var(--np-orange-light);
+    --np-danger: #e74c3c;
+    --np-info: #5dade2;
+
+    /* TYPOGRAPHIE */
+    --np-font-family:
+        "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --np-font-weight-regular: 400;
+    --np-font-weight-medium: 500;
+    --np-font-weight-semibold: 600;
+    --np-font-weight-bold: 700;
+
+    --np-font-size-xs: 0.75rem;
+    --np-font-size-sm: 0.875rem;
+    --np-font-size-base: 1rem;
+    --np-font-size-lg: 1.125rem;
+    --np-font-size-xl: 1.25rem;
+    --np-font-size-2xl: 1.5rem;
+    --np-font-size-3xl: 1.875rem;
+    --np-font-size-4xl: 2.25rem;
+    --np-font-size-score: 3.5rem;
+
+    --np-line-height-tight: 1.25;
+    --np-line-height-normal: 1.5;
+    --np-line-height-relaxed: 1.75;
+
+    /* ESPACEMENTS */
+    --np-spacing-0: 0;
+    --np-spacing-1: 0.25rem;
+    --np-spacing-2: 0.5rem;
+    --np-spacing-3: 0.75rem;
+    --np-spacing-4: 1rem;
+    --np-spacing-5: 1.25rem;
+    --np-spacing-6: 1.5rem;
+    --np-spacing-8: 2rem;
+    --np-spacing-10: 2.5rem;
+    --np-spacing-12: 3rem;
+    --np-spacing-16: 4rem;
+
+    /* BORDURES */
+    --np-radius-sm: 0.5rem;
+    --np-radius-md: 1rem;
+    --np-radius-lg: 1.5rem;
+    --np-radius-xl: 2rem;
+    --np-radius-pill: 999px;
+    --np-radius-circle: 50%;
+
+    /* OMBRES */
+    --np-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --np-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --np-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+    --np-shadow-orange: 0 4px 12px rgba(255, 159, 61, 0.3);
+    --np-shadow-green: 0 4px 12px rgba(139, 195, 74, 0.3);
+
+    /* ANIMATIONS */
+    --np-transition-fast: 150ms ease-out;
+    --np-transition-base: 250ms ease-out;
+    --np-transition-slow: 400ms ease-out;
+
+    /* LAYOUT */
+    --np-container-max-width: 480px;
+    --np-container-padding: var(--np-spacing-4);
+    --np-bottom-nav-height: 72px;
+    --np-header-height: 60px;
+
+    /* Z-INDEX */
+    --np-z-base: 1;
+    --np-z-sticky: 100;
+    --np-z-bottom-nav: 500;
+    --np-z-modal: 1000;
+    --np-z-toast: 2000;
+}

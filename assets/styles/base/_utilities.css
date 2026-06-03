@@ -1,0 +1,40 @@
+/**
+ * NutriPetit - Utilitaires
+ */
+
+.np-container {
+  width: 100%;
+  max-width: var(--np-container-max-width);
+  margin: 0 auto;
+  padding-left: var(--np-container-padding);
+  padding-right: var(--np-container-padding);
+}
+
+.np-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: 80px;
+  background-color: var(--np-cream-light);
+}
+
+.np-page-content {
+  padding-top: var(--np-spacing-4);
+  padding-bottom: var(--np-spacing-4);
+}
+
+.np-flex { display: flex; }
+.np-flex-col { display: flex; flex-direction: column; }
+.np-flex-center { display: flex; align-items: center; justify-content: center; }
+.np-flex-between { display: flex; align-items: center; justify-content: space-between; }
+
+.np-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

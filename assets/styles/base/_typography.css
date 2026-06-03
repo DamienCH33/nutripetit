@@ -1,0 +1,49 @@
+/**
+ * NutriPetit - Typographie
+ */
+
+.np-title-xl {
+    font-size: var(--np-font-size-3xl);
+    font-weight: var(--np-font-weight-bold);
+    line-height: var(--np-line-height-tight);
+    color: var(--np-gray-900);
+}
+
+.np-title-lg {
+    font-size: var(--np-font-size-2xl);
+    font-weight: var(--np-font-weight-semibold);
+    line-height: var(--np-line-height-tight);
+    color: var(--np-gray-900);
+}
+
+.np-title-md {
+    font-size: var(--np-font-size-xl);
+    font-weight: var(--np-font-weight-semibold);
+    line-height: var(--np-line-height-tight);
+    color: var(--np-gray-900);
+}
+
+.np-text-body {
+    font-size: var(--np-font-size-base);
+    font-weight: var(--np-font-weight-regular);
+    line-height: var(--np-line-height-normal);
+    color: var(--np-gray-700);
+}
+
+.np-text-small {
+    font-size: var(--np-font-size-sm);
+    color: var(--np-gray-600);
+}
+
+.np-text-primary {
+    color: var(--np-orange-primary);
+}
+.np-text-success {
+    color: var(--np-green-dark);
+}
+.np-text-muted {
+    color: var(--np-gray-500);
+}
+.np-text-center {
+    text-align: center;
+}
