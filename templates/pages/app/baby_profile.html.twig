@@ -1,0 +1,130 @@
+{% extends 'base/pwa.html.twig' %}
+
+{% block title %}Mon enfant - NutriPetit{% endblock %}
+
+{% block body %}
+<div {{ stimulus_controller('baby-profile', {
+    ageRanges: ageRanges
+}) }}>
+
+    {# Hero #}
+    <section class="np-baby-hero">
+        <div class="np-baby-hero__avatar">
+            {{ ux_icon('lucide:baby', {class: 'np-baby-hero__avatar-icon'}) }}
+        </div>
+        <h1 class="np-baby-hero__title" {{ stimulus_target('baby-profile', 'titleDisplay') }}>
+            Mon enfant
+        </h1>
+        <p class="np-baby-hero__subtitle">
+            Configurez le profil de votre enfant pour adapter le scoring nutritionnel.
+        </p>
+    </section>
+
+    {# Card profil actuel (visible uniquement si configuré) #}
+    <div class="np-baby-current" {{ stimulus_target('baby-profile', 'currentProfile') }} hidden>
+        <div class="np-baby-current__header">
+            {{ ux_icon('lucide:check-circle-2', {class: 'np-baby-current__icon'}) }}
+            <span>Profil enregistré</span>
+        </div>
+        <p class="np-baby-current__age" {{ stimulus_target('baby-profile', 'currentAgeText') }}>
+            {# Rempli dynamiquement #}
+        </p>
+        <p class="np-baby-current__range" {{ stimulus_target('baby-profile', 'currentRangeText') }}>
+            {# Rempli dynamiquement #}
+        </p>
+    </div>
+
+    {# Formulaire #}
+    <section class="np-baby-form">
+
+        {# Prénom (optionnel) #}
+        <div class="np-baby-field">
+            <label for="baby-name" class="np-baby-field__label">
+                Prénom <span class="np-baby-field__optional">(optionnel)</span>
+            </label>
+            <input
+                type="text"
+                id="baby-name"
+                class="np-baby-field__input"
+                placeholder="Ex. Léa, Tom..."
+                maxlength="30"
+                {{ stimulus_target('baby-profile', 'nameInput') }}
+                {{ stimulus_action('baby-profile', 'updateName', 'input') }}
+            >
+        </div>
+
+        {# Âge en mois (slider) #}
+        <div class="np-baby-field">
+            <label for="baby-age" class="np-baby-field__label">
+                Âge de votre enfant
+            </label>
+            <div class="np-baby-age-display" {{ stimulus_target('baby-profile', 'ageDisplay') }}>
+                <span class="np-baby-age-display__value">12</span>
+                <span class="np-baby-age-display__unit">mois</span>
+            </div>
+            <input
+                type="range"
+                id="baby-age"
+                class="np-baby-field__slider"
+                min="0"
+                max="36"
+                value="12"
+                step="1"
+                {{ stimulus_target('baby-profile', 'ageSlider') }}
+                {{ stimulus_action('baby-profile', 'updateAge', 'input') }}
+            >
+            <div class="np-baby-slider-marks">
+                <span>0</span>
+                <span>12</span>
+                <span>24</span>
+                <span>36</span>
+            </div>
+        </div>
+
+        {# Tranche d'âge calculée auto #}
+        <div class="np-baby-range-card" {{ stimulus_target('baby-profile', 'rangeCard') }}>
+            <div class="np-baby-range-card__icon-wrapper">
+                {{ ux_icon('lucide:calendar', {class: 'np-baby-range-card__icon'}) }}
+            </div>
+            <div class="np-baby-range-card__content">
+                <p class="np-baby-range-card__label" {{ stimulus_target('baby-profile', 'rangeLabel') }}>
+                    {# Rempli dynamiquement #}
+                </p>
+                <p class="np-baby-range-card__desc" {{ stimulus_target('baby-profile', 'rangeDesc') }}>
+                    {# Rempli dynamiquement #}
+                </p>
+            </div>
+        </div>
+
+        {# Toast de confirmation #}
+        <div class="np-baby-toast" {{ stimulus_target('baby-profile', 'toast') }} hidden>
+            {{ ux_icon('lucide:check', {class: 'np-baby-toast__icon'}) }}
+            <span>Profil enregistré</span>
+        </div>
+
+        {# Bouton supprimer #}
+        <button
+            type="button"
+            class="np-baby-reset"
+            {{ stimulus_target('baby-profile', 'resetButton') }}
+            {{ stimulus_action('baby-profile', 'reset') }}
+            hidden
+        >
+            {{ ux_icon('lucide:trash-2', {class: 'np-baby-reset__icon'}) }}
+            Effacer le profil
+        </button>
+    </section>
+
+    {# Explication pourquoi l'âge est important #}
+    <section class="np-baby-info">
+        <div class="np-baby-info__icon-wrapper">
+            {{ ux_icon('lucide:info', {class: 'np-baby-info__icon'}) }}
+        </div>
+        <h3 class="np-baby-info__title">Pourquoi l'âge est important ?</h3>
+        <p class="np-baby-info__text">
+            Les besoins nutritionnels évoluent fortement entre 0 et 3 ans. NutriPetit adapte ses barèmes de scoring en fonction de la tranche d'âge de votre enfant pour vous donner des recommandations pertinentes.
+        </p>
+    </section>
+
+</div>
+{% endblock %}
