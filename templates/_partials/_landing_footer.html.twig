@@ -1,0 +1,53 @@
+<footer class="np-landing-footer">
+    <div class="np-landing-footer__inner">
+        <div class="np-landing-footer__grid">
+            {# Colonne 1 : Marque #}
+            <div>
+                <div class="np-landing-footer__brand-logo">
+                    <img src="{{ asset('images/logo/nutripetit.svg') }}" alt="" width="32" height="32">
+                    <span>NutriPetit</span>
+                </div>
+                <p class="np-landing-footer__brand-text">
+                    L'application qui aide les parents à faire les bons choix nutritionnels pour leurs petits, basée sur les recommandations officielles.
+                </p>
+            </div>
+
+            {# Colonne 2 : Produit #}
+            <div>
+                <h3 class="np-landing-footer__col-title">Produit</h3>
+                <div class="np-landing-footer__links">
+                    <a href="{{ path('app_pwa_home') }}" class="np-landing-footer__link">Accéder à l'app</a>
+                    <a href="#comment-ca-marche" class="np-landing-footer__link">Comment ça marche</a>
+                    <a href="#sources" class="np-landing-footer__link">Nos sources</a>
+                </div>
+            </div>
+
+            {# Colonne 3 : À propos #}
+            <div>
+                <h3 class="np-landing-footer__col-title">À propos</h3>
+                <div class="np-landing-footer__links">
+                    <a href="{{ path('app_landing_about') }}" class="np-landing-footer__link">À propos du projet</a>
+                    <a href="https://github.com/DamienCH33/nutripetit" class="np-landing-footer__link" target="_blank" rel="noopener noreferrer">GitHub</a>
+                </div>
+            </div>
+
+            {# Colonne 4 : Légal #}
+            <div>
+                <h3 class="np-landing-footer__col-title">Légal</h3>
+                <div class="np-landing-footer__links">
+                    <a href="{{ path('app_landing_privacy') }}" class="np-landing-footer__link">Confidentialité</a>
+                    <a href="{{ path('app_landing_legal') }}" class="np-landing-footer__link">Mentions légales</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="np-landing-footer__bottom">
+            <p>© {{ "now"|date("Y") }} NutriPetit. Tous droits réservés.</p>
+            <p>Conçu avec ❤️ pour les parents</p>
+        </div>
+
+        <div class="np-landing-footer__disclaimer">
+            <strong>Avertissement santé :</strong> NutriPetit fournit une analyse nutritionnelle informative basée sur des recommandations officielles. Ce score ne remplace pas l'avis d'un professionnel de santé. Consultez votre pédiatre pour toute question concernant l'alimentation de votre enfant.
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,46 @@
+{# Layout Landing - Site vitrine public #}
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>
+			{% block title %}NutriPetit - Le bon choix nutritionnel pour vos petits
+			{% endblock %}
+		</title>
+		<meta
+		name="description" content="{% block description %}NutriPetit analyse les produits alimentaires bébé avec un scoring nutritionnel adapté aux nourrissons, basé sur les recommandations officielles ANSES, OMS et EFSA.{% endblock %}">
+
+		{# Open Graph / Social sharing #}
+		<meta property="og:title" content="{% block og_title %}NutriPetit - Le bon choix nutritionnel pour vos petits{% endblock %}">
+		<meta property="og:description" content="{% block og_description %}L'app qui analyse les produits alimentaires bébé selon les recommandations officielles.{% endblock %}">
+		<meta property="og:type" content="website">
+		<meta property="og:image" content="{{ absolute_url(asset('images/logo/nutripetit.svg')) }}">
+
+		<meta name="theme-color" content="#FDF7F1">
+
+		<link rel="icon" type="image/svg+xml" href="{{ asset('images/logo/nutripetit.svg') }}">
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+		{% block stylesheets %}
+			{{ importmap('app') }}
+		{% endblock %}
+	</head>
+	<body class="np-body--landing">
+		{% block header %}
+			{% include '_partials/_landing_header.html.twig' %}
+		{% endblock %}
+
+		<main>
+			{% block body %}{% endblock %}
+		</main>
+
+		{% block footer %}
+			{% include '_partials/_landing_footer.html.twig' %}
+		{% endblock %}
+
+		{% block javascripts %}{% endblock %}
+	</body>
+</html>

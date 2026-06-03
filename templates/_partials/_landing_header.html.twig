@@ -1,0 +1,19 @@
+<header class="np-landing-header">
+    <div class="np-landing-header__inner">
+        <a href="{{ path('app_landing') }}" class="np-landing-header__logo" aria-label="NutriPetit - Accueil">
+            <img src="{{ asset('images/logo/nutripetit.svg') }}" alt="" class="np-landing-header__logo-icon" width="40" height="40">
+            <span>
+                <span class="np-header__logo-nutri">Nutri</span><span class="np-header__logo-petit">Petit</span>
+            </span>
+        </a>
+
+        <nav class="np-landing-header__nav" aria-label="Navigation principale">
+            <a href="#comment-ca-marche" class="np-landing-header__link">Comment ça marche</a>
+            <a href="#sources" class="np-landing-header__link">Nos sources</a>
+            <a href="{{ path('app_landing_about') }}" class="np-landing-header__link">À propos</a>
+            <a href="{{ path('app_pwa_home') }}" class="np-landing-header__cta">
+                Lancer l'app
+            </a>
+        </nav>
+    </div>
+</header>

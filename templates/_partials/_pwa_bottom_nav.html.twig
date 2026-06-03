@@ -1,0 +1,31 @@
+<nav
+	class="np-bottom-nav" aria-label="Navigation principale">
+	{# Accueil #}
+	<a href="{{ path('app_pwa_home') }}" class="np-bottom-nav__item {{ app.request.attributes.get('_route') == 'app_pwa_home' ? 'np-bottom-nav__item--active' : '' }}">
+		{{ ux_icon('lucide:house', {class: 'np-bottom-nav__icon'}) }}
+		<span>Accueil</span>
+	</a>
+
+	{# Historique #}
+	<a href="{{ path('app_pwa_history') }}" class="np-bottom-nav__item {{ app.request.attributes.get('_route') == 'app_pwa_history' ? 'np-bottom-nav__item--active' : '' }}">
+		{{ ux_icon('lucide:clock', {class: 'np-bottom-nav__icon'}) }}
+		<span>Historique</span>
+	</a>
+
+	{# Scan central ORANGE #}
+	<a href="{{ path('app_pwa_scanner') }}" class="np-bottom-nav__scan" aria-label="Scanner un produit">
+		{{ ux_icon('lucide:scan-barcode', {class: 'np-bottom-nav__scan-icon'}) }}
+	</a>
+
+	{# Infos #}
+	<a href="{{ path('app_pwa_info') }}" class="np-bottom-nav__item {{ app.request.attributes.get('_route') == 'app_pwa_info' ? 'np-bottom-nav__item--active' : '' }}">
+		{{ ux_icon('lucide:info', {class: 'np-bottom-nav__icon'}) }}
+		<span>Infos</span>
+	</a>
+
+	{# Profil bébé #}
+	<a href="{{ path('app_pwa_baby_profile') }}" class="np-bottom-nav__item {{ app.request.attributes.get('_route') == 'app_pwa_baby_profile' ? 'np-bottom-nav__item--active' : '' }}">
+		{{ ux_icon('lucide:baby', {class: 'np-bottom-nav__icon'}) }}
+		<span>Bébé</span>
+	</a>
+</nav>
