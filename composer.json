@@ -94,6 +94,15 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "cs:check": "php-cs-fixer fix --dry-run --diff",
+        "cs:fix": "php-cs-fixer fix",
+        "stan": "phpstan analyse --memory-limit=1G",
+        "test": "phpunit",
+        "qa": [
+            "@cs:check",
+            "@stan",
+            "@test"
         ]
     },
     "conflict": {
