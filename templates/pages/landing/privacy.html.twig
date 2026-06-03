@@ -1,0 +1,37 @@
+{% extends 'base/landing.html.twig' %}
+
+{% block title %}Politique de confidentialité - NutriPetit{% endblock %}
+
+{% block body %}
+<section class="np-landing-section">
+    <div class="np-landing-section__inner" style="max-width: 800px;">
+        <h1 class="np-landing-section__title">Politique de confidentialité</h1>
+
+        <div style="margin-top: 48px; font-size: 1rem; line-height: 1.7; color: var(--np-gray-700);">
+            <p style="margin-bottom: 24px;">
+                <strong>NutriPetit respecte votre vie privée.</strong> Aucune donnée personnelle n'est collectée sans votre accord.
+            </p>
+
+            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Données stockées localement</h2>
+            <p style="margin-bottom: 24px;">
+                Votre historique de scans est stocké uniquement sur votre appareil (localStorage). Il n'est jamais envoyé à nos serveurs.
+            </p>
+
+            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Données envoyées à des tiers</h2>
+            <p style="margin-bottom: 24px;">
+                Lors d'un scan, le code-barres est envoyé à l'API publique d'Open Food Facts pour récupérer les informations du produit. Aucune donnée personnelle ne transite.
+            </p>
+
+            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Cookies</h2>
+            <p style="margin-bottom: 24px;">
+                NutriPetit n'utilise aucun cookie de tracking. Seuls les cookies techniques nécessaires au fonctionnement de la session peuvent être utilisés.
+            </p>
+
+            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Contact</h2>
+            <p>
+                Pour toute question relative à vos données, contactez-nous via le repo GitHub du projet.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

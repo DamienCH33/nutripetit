@@ -1,0 +1,261 @@
+{% extends 'base/landing.html.twig' %}
+
+{% block title %}NutriPetit - L'analyse nutritionnelle adaptée aux bébés
+{% endblock %}
+
+{% block body %}
+
+	{# HERO #}
+	<section class="np-landing-hero">
+		<div class="np-landing-hero__inner">
+			<div class="np-landing-hero__content">
+				<span class="np-landing-hero__eyebrow">
+					🍃 Spécialement pensé pour les nourrissons
+				</span>
+
+				<h1 class="np-landing-hero__title">
+					Le bon choix nutritionnel pour
+					<span>vos petits</span>
+				</h1>
+
+				<p class="np-landing-hero__subtitle">
+					Scannez les produits alimentaires de votre bébé et obtenez une analyse nutritionnelle adaptée aux 0-3 ans, basée sur les recommandations officielles ANSES, OMS et EFSA.
+				</p>
+
+				<div class="np-landing-hero__actions">
+					<a href="{{ path('app_pwa_home') }}" class="np-landing-hero__cta-primary">
+						<svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+							<path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+							<path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+							<path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+							<line x1="7" y1="12" x2="17" y2="12"/>
+						</svg>
+						Commencer à scanner
+					</a>
+					<a href="#comment-ca-marche" class="np-landing-hero__cta-secondary">
+						Comment ça marche
+					</a>
+				</div>
+			</div>
+
+			<div class="np-landing-hero__visual">
+				<div class="np-landing-mockup" aria-hidden="true">
+					<div class="np-landing-mockup__product">
+						<p class="np-landing-mockup__product-brand">Blédina</p>
+						<p class="np-landing-mockup__product-name">Petits Pots Carottes</p>
+						<div class="np-landing-mockup__score-circle">
+							<span class="np-landing-mockup__score-value">82</span>
+							<span class="np-landing-mockup__score-label">/ 100</span>
+						</div>
+						<span class="np-landing-mockup__badge">Excellent</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{# CONCEPT #}
+	<section class="np-landing-section np-landing-section--alt">
+		<div class="np-landing-section__inner">
+			<span class="np-landing-section__eyebrow">Notre approche</span>
+			<h2 class="np-landing-section__title">Une app pensée pour les parents</h2>
+			<p class="np-landing-section__subtitle">
+				Quatre valeurs guident chaque ligne de NutriPetit pour vous accompagner sereinement dans le choix de l'alimentation de votre enfant.
+			</p>
+
+			<div class="np-landing-pillars">
+				<div class="np-landing-pillar">
+					<div class="np-landing-pillar__icon">
+						<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+							<path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+						</svg>
+					</div>
+					<h3 class="np-landing-pillar__title">Bienveillance</h3>
+					<p class="np-landing-pillar__text">Un ton rassurant, jamais culpabilisant. Nous informons sans alarmer.</p>
+				</div>
+
+				<div class="np-landing-pillar">
+					<div class="np-landing-pillar__icon">
+						<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<circle cx="12" cy="12" r="10"/>
+							<path d="M16 8l-8 8M8 8l8 8"/>
+						</svg>
+					</div>
+					<h3 class="np-landing-pillar__title">Nutrition</h3>
+					<p class="np-landing-pillar__text">Un scoring spécifique nourrisson, pas un Nutri-Score adulte mal adapté.</p>
+				</div>
+
+				<div class="np-landing-pillar">
+					<div class="np-landing-pillar__icon">
+						<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+						</svg>
+					</div>
+					<h3 class="np-landing-pillar__title">Confiance</h3>
+					<p class="np-landing-pillar__text">Chaque règle de scoring est sourcée et accessible. Aucune boîte noire.</p>
+				</div>
+
+				<div class="np-landing-pillar">
+					<div class="np-landing-pillar__icon">
+						<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M12 2L2 7l10 5 10-5-10-5z"/>
+							<path d="M2 17l10 5 10-5"/>
+							<path d="M2 12l10 5 10-5"/>
+						</svg>
+					</div>
+					<h3 class="np-landing-pillar__title">Simplicité</h3>
+					<p class="np-landing-pillar__text">Un scan, un score, une recommandation. En moins de 3 secondes.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{# COMMENT ÇA MARCHE #}
+	<section id="comment-ca-marche" class="np-landing-section">
+		<div class="np-landing-section__inner">
+			<span class="np-landing-section__eyebrow">En 3 étapes</span>
+			<h2 class="np-landing-section__title">Comment ça marche</h2>
+			<p class="np-landing-section__subtitle">
+				Faire les bons choix n'a jamais été aussi simple. Une app conçue pour être utilisée d'une main, en magasin.
+			</p>
+
+			<div class="np-landing-steps">
+				<div class="np-landing-step">
+					<div class="np-landing-step__number">1</div>
+					<h3 class="np-landing-step__title">Scannez</h3>
+					<p class="np-landing-step__text">
+						Pointez votre caméra vers le code-barres du produit. La détection est instantanée, même en faible luminosité.
+					</p>
+				</div>
+
+				<div class="np-landing-step">
+					<div class="np-landing-step__number">2</div>
+					<h3 class="np-landing-step__title">Analysez</h3>
+					<p class="np-landing-step__text">
+						NutriPetit analyse les ingrédients, additifs et valeurs nutritionnelles avec nos règles spécifiques 0-3 ans.
+					</p>
+				</div>
+
+				<div class="np-landing-step">
+					<div class="np-landing-step__number">3</div>
+					<h3 class="np-landing-step__title">Décidez</h3>
+					<p class="np-landing-step__text">
+						Score sur 100, points positifs, points d'attention et sources. Toutes les infos pour décider en confiance.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{# POURQUOI NUTRIPETIT #}
+	<section class="np-landing-section np-landing-section--soft">
+		<div class="np-landing-section__inner">
+			<span class="np-landing-section__eyebrow">Notre différence</span>
+			<h2 class="np-landing-section__title">Pourquoi pas juste Yuka ?</h2>
+			<p class="np-landing-section__subtitle">
+				Le scoring nutritionnel généraliste n'est pas adapté aux nourrissons. Les besoins d'un bébé de 6 mois ne sont pas ceux d'un adulte. NutriPetit corrige cette limite.
+			</p>
+
+			<div class="np-landing-pillars">
+				<div class="np-landing-pillar">
+					<div class="np-landing-pillar__icon">
+						<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<circle cx="12" cy="12" r="10"/>
+							<path d="M12 6v6l4 2"/>
+						</svg>
+					</div>
+					<h3 class="np-landing-pillar__title">Adapté à l'âge</h3>
+					<p class="np-landing-pillar__text">Des règles différentes selon que votre enfant a 6 mois, 12 mois ou 3 ans.</p>
+				</div>
+
+				<div class="np-landing-pillar">
+					<div class="np-landing-pillar__icon">
+						<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+							<polyline points="14 2 14 8 20 8"/>
+							<line x1="9" y1="15" x2="15" y2="15"/>
+						</svg>
+					</div>
+					<h3 class="np-landing-pillar__title">100% transparent</h3>
+					<p class="np-landing-pillar__text">Chaque malus ou bonus est justifié, avec sa source officielle accessible.</p>
+				</div>
+
+				<div class="np-landing-pillar">
+					<div class="np-landing-pillar__icon">
+						<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+							<path d="M21 3v5h-5"/>
+						</svg>
+					</div>
+					<h3 class="np-landing-pillar__title">Toujours à jour</h3>
+					<p class="np-landing-pillar__text">Les règles évoluent avec les recommandations officielles. Versionnées et tracées.</p>
+				</div>
+
+				<div class="np-landing-pillar">
+					<div class="np-landing-pillar__icon">
+						<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+							<line x1="8" y1="21" x2="16" y2="21"/>
+							<line x1="12" y1="17" x2="12" y2="21"/>
+						</svg>
+					</div>
+					<h3 class="np-landing-pillar__title">PWA installable</h3>
+					<p class="np-landing-pillar__text">Ajoutez NutriPetit à votre écran d'accueil. Aucun store, aucun compte.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{# SOURCES OFFICIELLES #}
+	<section id="sources" class="np-landing-section">
+		<div class="np-landing-section__inner">
+			<span class="np-landing-section__eyebrow">Références officielles</span>
+			<h2 class="np-landing-section__title">Basé sur des sources reconnues</h2>
+			<p class="np-landing-section__subtitle">
+				Chacune de nos règles de scoring s'appuie sur des recommandations officielles d'organismes de référence en nutrition et santé.
+			</p>
+
+			<div class="np-landing-sources">
+				<div class="np-landing-source">
+					<div class="np-landing-source__name">ANSES</div>
+					<div class="np-landing-source__desc">Agence française de sécurité sanitaire</div>
+				</div>
+				<div class="np-landing-source">
+					<div class="np-landing-source__name">OMS</div>
+					<div class="np-landing-source__desc">Organisation Mondiale de la Santé</div>
+				</div>
+				<div class="np-landing-source">
+					<div class="np-landing-source__name">EFSA</div>
+					<div class="np-landing-source__desc">Autorité européenne de sécurité des aliments</div>
+				</div>
+				<div class="np-landing-source">
+					<div class="np-landing-source__name">PNNS</div>
+					<div class="np-landing-source__desc">Programme national nutrition santé</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{# CTA FINAL #}
+	<section>
+		<div class="np-landing-cta">
+			<h2 class="np-landing-cta__title">Prêt à faire les bons choix ?</h2>
+			<p class="np-landing-cta__text">
+				Rejoignez les parents qui choisissent en confiance ce qu'ils donnent à leurs petits. C'est gratuit, sans compte, et accessible immédiatement.
+			</p>
+			<a href="{{ path('app_pwa_home') }}" class="np-landing-cta__button">
+				<svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+					<path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+					<path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+					<path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+					<line x1="7" y1="12" x2="17" y2="12"/>
+				</svg>
+				Lancer NutriPetit
+			</a>
+		</div>
+	</section>
+
+{% endblock %}

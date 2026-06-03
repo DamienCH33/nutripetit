@@ -1,0 +1,27 @@
+{% extends 'base/landing.html.twig' %}
+
+{% block title %}À propos - NutriPetit{% endblock %}
+
+{% block body %}
+<section class="np-landing-section">
+    <div class="np-landing-section__inner" style="max-width: 800px;">
+        <span class="np-landing-section__eyebrow">Notre histoire</span>
+        <h1 class="np-landing-section__title">À propos de NutriPetit</h1>
+
+        <div style="margin-top: 48px; font-size: 1.125rem; line-height: 1.7; color: var(--np-gray-700);">
+            <p style="margin-bottom: 24px;">
+                NutriPetit est un projet open-source qui vise à aider les parents à mieux choisir les produits alimentaires pour leurs jeunes enfants (0-3 ans).
+            </p>
+            <p style="margin-bottom: 24px;">
+                Né du constat que les apps de scan généralistes (Yuka, Open Food Facts) appliquent les mêmes règles nutritionnelles aux adultes et aux nourrissons, NutriPetit propose une approche spécifique aux besoins des bébés.
+            </p>
+            <p style="margin-bottom: 24px;">
+                Notre algorithme s'appuie sur les recommandations officielles de l'ANSES, de l'OMS, de l'EFSA et du PNNS. Chaque règle de scoring est documentée, sourcée et versionnée.
+            </p>
+            <p>
+                NutriPetit est développé par <a href="https://github.com/DamienCH33" style="color: var(--np-orange-primary);" target="_blank" rel="noopener noreferrer">Damien Chauveau</a>, développeur PHP/Symfony basé à Bordeaux.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

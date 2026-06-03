@@ -1,0 +1,33 @@
+{% extends 'base/landing.html.twig' %}
+
+{% block title %}Mentions légales - NutriPetit{% endblock %}
+
+{% block body %}
+<section class="np-landing-section">
+    <div class="np-landing-section__inner" style="max-width: 800px;">
+        <h1 class="np-landing-section__title">Mentions légales</h1>
+
+        <div style="margin-top: 48px; font-size: 1rem; line-height: 1.7; color: var(--np-gray-700);">
+            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Éditeur</h2>
+            <p style="margin-bottom: 24px;">
+                NutriPetit est un projet open-source édité par Damien Chauveau, développeur web indépendant basé à Villenave-d'Ornon (Gironde, France).
+            </p>
+
+            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Hébergement</h2>
+            <p style="margin-bottom: 24px;">
+                NutriPetit est hébergé par Railway Corporation, 2261 Market Street #4894, San Francisco, CA 94114, USA.
+            </p>
+
+            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Propriété intellectuelle</h2>
+            <p style="margin-bottom: 24px;">
+                Le code source de NutriPetit est disponible sous licence open-source sur GitHub. Les données produits proviennent d'Open Food Facts, sous licence ODbL.
+            </p>
+
+            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Avertissement santé</h2>
+            <p style="margin-bottom: 24px;">
+                NutriPetit fournit une analyse nutritionnelle informative basée sur des recommandations officielles. Ce score ne remplace pas l'avis d'un professionnel de santé. Consultez votre pédiatre pour toute question concernant l'alimentation de votre enfant.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}
