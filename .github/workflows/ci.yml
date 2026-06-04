@@ -40,6 +40,9 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
+      - name: Security audit (CVE check)
+        run: composer audit
+
       - name: PHP CS Fixer (style)
         run: composer cs:check
 
