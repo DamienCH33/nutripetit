@@ -7,18 +7,18 @@
     <section class="np-info-hero">
         <h1 class="np-info-hero__title">Comprendre le score</h1>
         <p class="np-info-hero__subtitle">
-            Découvrez comment NutriPetit calcule un score nutritionnel adapté à votre bébé, basé sur les recommandations officielles.
+            NutriPetit calcule un score nutritionnel adapté à votre bébé en s'appuyant sur les recommandations officielles ANSES, PNNS 4, OMS et EFSA.
         </p>
         <div class="np-info-hero__version">
-            <span>Algorithme v{{ algoVersion }}</span>
+            <span>Algorithme v{{ algoVersion }} — {{ rules|length }} règles actives</span>
         </div>
     </section>
 
-    {# Échelle de score #}
+    {# Échelle 5 niveaux #}
     <section class="np-info-section">
         <h2 class="np-info-section__title">L'échelle de score</h2>
         <p class="np-info-section__lead">
-            Chaque produit reçoit une note sur 100, déterminée par l'application de nos règles nutritionnelles.
+            Chaque produit reçoit une note de 0 à 100, calculée à partir d'une base de 100 points modulée par l'application des règles.
         </p>
 
         <div class="np-info-scale">
@@ -35,11 +35,11 @@
         </div>
     </section>
 
-    {# Les 8 règles #}
+    {# Les règles depuis la DB #}
     <section class="np-info-section">
         <h2 class="np-info-section__title">Nos règles de scoring</h2>
         <p class="np-info-section__lead">
-            Toutes nos règles sont transparentes et sourcées. Chacune impacte le score final selon des seuils officiels.
+            Toutes nos règles sont versionnées et sourcées. Chaque règle pointe vers sa référence officielle vérifiable.
         </p>
 
         <div class="np-info-rules">
@@ -47,8 +47,8 @@
                 <article class="np-info-rule">
                     <div class="np-info-rule__header">
                         <h3 class="np-info-rule__label">{{ rule.label }}</h3>
-                        <span class="np-info-rule__impact np-info-rule__impact--{{ rule.impact < 0 ? 'negative' : (rule.impact > 0 ? 'positive' : 'neutral') }}">
-                            {% if rule.impact > 0 %}+{% endif %}{{ rule.impact }} pts
+                        <span class="np-info-rule__impact np-info-rule__impact--{{ rule.pointsImpact < 0 ? 'negative' : (rule.pointsImpact > 0 ? 'positive' : 'neutral') }}">
+                            {% if rule.pointsImpact > 0 %}+{% endif %}{{ rule.pointsImpact }} pts
                         </span>
                     </div>
 
@@ -57,7 +57,11 @@
                     <div class="np-info-rule__meta">
                         <span class="np-info-rule__age">
                             {{ ux_icon('lucide:calendar', {class: 'np-info-rule__icon'}) }}
-                            {{ rule.ageRange }}
+                            {% if rule.ageMinMonths is null and rule.ageMaxMonths is null %}
+                                Tous âges
+                            {% else %}
+                                {{ rule.ageMinMonths ?? 0 }}-{{ rule.ageMaxMonths ?? 36 }} mois
+                            {% endif %}
                         </span>
                         <a href="{{ rule.sourceUrl }}" target="_blank" rel="noopener noreferrer" class="np-info-rule__source">
                             {{ ux_icon('lucide:external-link', {class: 'np-info-rule__icon'}) }}
@@ -73,7 +77,7 @@
     <section class="np-info-section np-info-section--highlight">
         <h2 class="np-info-section__title">Pourquoi pas le Nutri-Score adulte ?</h2>
         <p class="np-info-section__lead">
-            Les besoins nutritionnels d'un bébé sont fondamentalement différents de ceux d'un adulte.
+            Les besoins nutritionnels d'un bébé sont fondamentalement différents de ceux d'un adulte. Santé publique France elle-même reconnaît que le Nutri-Score classique n'est pas adapté à l'alimentation infantile.
         </p>
 
         <div class="np-info-comparison">
@@ -82,7 +86,7 @@
                     {{ ux_icon('lucide:x', {class: 'np-info-comparison__icon'}) }}
                 </div>
                 <h3 class="np-info-comparison__title">Nutri-Score classique</h3>
-                <p class="np-info-comparison__text">Conçu pour les adultes. Tolère des seuils de sel, sucre et protéines inadaptés aux nourrissons.</p>
+                <p class="np-info-comparison__text">Conçu pour les adultes. Tolère des seuils de sel et sucre inadaptés aux nourrissons. Pénalise les bonnes matières grasses pourtant essentielles au développement du bébé.</p>
             </div>
 
             <div class="np-info-comparison__col">
@@ -90,7 +94,7 @@
                     {{ ux_icon('lucide:check', {class: 'np-info-comparison__icon'}) }}
                 </div>
                 <h3 class="np-info-comparison__title">NutriPetit</h3>
-                <p class="np-info-comparison__text">Spécialement calibré pour les 0-3 ans, avec des règles qui s'adaptent à l'âge de votre enfant.</p>
+                <p class="np-info-comparison__text">Spécialement calibré pour les 0-3 ans, avec des règles qui s'adaptent à l'âge de votre enfant et qui s'appuient sur les avis ANSES 2019 et PNNS 4.</p>
             </div>
         </div>
     </section>
@@ -113,7 +117,7 @@
         </div>
     </section>
 
-    {# Disclaimer #}
+    {# Disclaimer complet en bas (en plus du compact automatique) #}
     <section class="np-info-section">
         {% include '_partials/_disclaimer.html.twig' %}
     </section>

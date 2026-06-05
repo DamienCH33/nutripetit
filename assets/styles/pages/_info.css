@@ -1,10 +1,9 @@
 /**
  * NutriPetit - Page Infos (Comprendre le score)
+ * Échelle 5 niveaux
  */
 
-/* ============================================
- * HERO
- * ============================================ */
+/* HERO */
 .np-info-hero {
   padding: var(--np-spacing-6) 0 var(--np-spacing-4);
   text-align: center;
@@ -36,9 +35,7 @@
   font-weight: var(--np-font-weight-semibold);
 }
 
-/* ============================================
- * SECTIONS
- * ============================================ */
+/* SECTIONS */
 .np-info-section {
   margin-top: var(--np-spacing-6);
 }
@@ -64,9 +61,7 @@
   margin-bottom: var(--np-spacing-4);
 }
 
-/* ============================================
- * ÉCHELLE DE SCORE
- * ============================================ */
+/* ÉCHELLE 5 NIVEAUX */
 .np-info-scale {
   display: flex;
   flex-direction: column;
@@ -91,10 +86,12 @@
   margin-top: 4px;
 }
 
-.np-info-scale-item__dot--excellent { background-color: var(--np-score-excellent); }
+/* 5 NIVEAUX */
+.np-info-scale-item__dot--ideal { background-color: var(--np-score-ideal); }
 .np-info-scale-item__dot--good { background-color: var(--np-score-good); }
-.np-info-scale-item__dot--medium { background-color: var(--np-score-medium); }
-.np-info-scale-item__dot--bad { background-color: var(--np-score-bad); }
+.np-info-scale-item__dot--occasional { background-color: var(--np-score-occasional); }
+.np-info-scale-item__dot--limit { background-color: var(--np-score-limit); }
+.np-info-scale-item__dot--discouraged { background-color: var(--np-score-discouraged); }
 
 .np-info-scale-item__content {
   flex: 1;
@@ -119,9 +116,7 @@
   color: var(--np-gray-600);
 }
 
-/* ============================================
- * RÈGLES DE SCORING
- * ============================================ */
+/* RÈGLES */
 .np-info-rules {
   display: flex;
   flex-direction: column;
@@ -159,13 +154,13 @@
 }
 
 .np-info-rule__impact--negative {
-  background-color: rgba(231, 76, 60, 0.1);
-  color: var(--np-score-bad);
+  background-color: var(--np-score-discouraged-bg);
+  color: var(--np-score-discouraged);
 }
 
 .np-info-rule__impact--positive {
-  background-color: rgba(139, 195, 74, 0.15);
-  color: var(--np-green-dark);
+  background-color: var(--np-score-good-bg);
+  color: var(--np-score-ideal);
 }
 
 .np-info-rule__impact--neutral {
@@ -213,9 +208,7 @@
   height: 14px;
 }
 
-/* ============================================
- * COMPARAISON NUTRI-SCORE vs NUTRIPETIT
- * ============================================ */
+/* COMPARAISON */
 .np-info-comparison {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -240,13 +233,13 @@
 }
 
 .np-info-comparison__icon-wrapper--bad {
-  background-color: rgba(231, 76, 60, 0.1);
-  color: var(--np-score-bad);
+  background-color: var(--np-score-discouraged-bg);
+  color: var(--np-score-discouraged);
 }
 
 .np-info-comparison__icon-wrapper--good {
-  background-color: rgba(139, 195, 74, 0.15);
-  color: var(--np-green-dark);
+  background-color: var(--np-score-good-bg);
+  color: var(--np-score-ideal);
 }
 
 .np-info-comparison__icon {
@@ -267,9 +260,7 @@
   line-height: 1.5;
 }
 
-/* ============================================
- * SOURCES OFFICIELLES
- * ============================================ */
+/* SOURCES */
 .np-info-sources {
   display: flex;
   flex-direction: column;

@@ -1,54 +1,54 @@
-.np-score-circle {
-    width: 180px;
-    height: 180px;
-    border-radius: var(--np-radius-circle);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-    background-color: var(--np-white);
-    border: 8px solid var(--np-green-primary);
-}
+/**
+ * NutriPetit - Composants de score
+ * Échelle 5 niveaux (Idéal / Bon / Occasionnel / À limiter / Déconseillé)
+ */
 
-.np-score-circle--excellent {
-    border-color: var(--np-score-excellent);
-}
-.np-score-circle--good {
-    border-color: var(--np-score-good);
-}
-.np-score-circle--medium {
-    border-color: var(--np-score-medium);
-}
-.np-score-circle--bad {
-    border-color: var(--np-score-bad);
-}
+/* ============================================
+ * COULEURS DE TEXTE PAR NIVEAU
+ * ============================================ */
+.np-text-ideal { color: var(--np-score-ideal); }
+.np-text-good { color: var(--np-score-good); }
+.np-text-occasional { color: var(--np-score-occasional); }
+.np-text-limit { color: var(--np-score-limit); }
+.np-text-discouraged { color: var(--np-score-discouraged); }
 
-.np-score-circle__value {
-    font-size: 3.5rem;
-    font-weight: var(--np-font-weight-bold);
-    line-height: 1;
-}
+/* Aliases de compatibilité */
+.np-text-success { color: var(--np-score-ideal); }
+.np-text-warning { color: var(--np-score-limit); }
+.np-text-danger { color: var(--np-score-discouraged); }
 
+/* ============================================
+ * BADGES DE NIVEAU
+ * ============================================ */
 .np-score-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: var(--np-spacing-1) var(--np-spacing-3);
-    border-radius: var(--np-radius-pill);
-    font-size: var(--np-font-size-sm);
-    font-weight: var(--np-font-weight-semibold);
-    color: var(--np-white);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--np-spacing-1);
+  padding: 4px 12px;
+  border-radius: var(--np-radius-pill);
+  font-size: var(--np-font-size-xs);
+  font-weight: var(--np-font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.np-score-badge--excellent {
-    background-color: var(--np-score-excellent);
+.np-score-badge--ideal {
+  background-color: var(--np-score-ideal-bg);
+  color: var(--np-score-ideal);
 }
 .np-score-badge--good {
-    background-color: var(--np-score-good);
+  background-color: var(--np-score-good-bg);
+  color: var(--np-score-good);
 }
-.np-score-badge--medium {
-    background-color: var(--np-score-medium);
+.np-score-badge--occasional {
+  background-color: var(--np-score-occasional-bg);
+  color: var(--np-score-occasional);
 }
-.np-score-badge--bad {
-    background-color: var(--np-score-bad);
+.np-score-badge--limit {
+  background-color: var(--np-score-limit-bg);
+  color: var(--np-score-limit);
+}
+.np-score-badge--discouraged {
+  background-color: var(--np-score-discouraged-bg);
+  color: var(--np-score-discouraged);
 }
