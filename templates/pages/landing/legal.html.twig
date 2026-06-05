@@ -1,33 +1,166 @@
 {% extends 'base/landing.html.twig' %}
 
-{% block title %}Mentions légales - NutriPetit{% endblock %}
+{% block title %}Mentions légales - NutriPetit
+{% endblock %}
+
+{% block description %}Mentions légales de NutriPetit. Projet open source à but non commercial, développé en France.
+{% endblock %}
 
 {% block body %}
-<section class="np-landing-section">
-    <div class="np-landing-section__inner" style="max-width: 800px;">
-        <h1 class="np-landing-section__title">Mentions légales</h1>
+	<div class="np-legal">
+		<div class="np-legal__container">
 
-        <div style="margin-top: 48px; font-size: 1rem; line-height: 1.7; color: var(--np-gray-700);">
-            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Éditeur</h2>
-            <p style="margin-bottom: 24px;">
-                NutriPetit est un projet open-source édité par Damien Chauveau, développeur web indépendant basé à Villenave-d'Ornon (Gironde, France).
-            </p>
+			<header class="np-legal__header">
+				<h1 class="np-legal__title">Mentions légales</h1>
+				<p class="np-legal__meta">Dernière mise à jour :
+					{{ "now"|date("d F Y") }}</p>
+			</header>
 
-            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Hébergement</h2>
-            <p style="margin-bottom: 24px;">
-                NutriPetit est hébergé par Railway Corporation, 2261 Market Street #4894, San Francisco, CA 94114, USA.
-            </p>
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">1. Éditeur du site</h2>
+				<p>
+					<strong>NutriPetit</strong>
+					est édité à titre individuel et bénévole par :
+				</p>
+				<p>
+					<strong>Damien Chauveau</strong><br>
+					Développeur PHP/Symfony<br>
+					Villenave d'Ornon, France<br>
+					Contact :
+					<a href="mailto:contact@monavispro.fr">contact@monavispro.fr</a><br>
+					Portfolio :
+					<a href="https://damienchauveau-dev.fr" target="_blank" rel="noopener noreferrer">damienchauveau-dev.fr</a><br>
+					GitHub :
+					<a href="https://github.com/DamienCH33/nutripetit" target="_blank" rel="noopener noreferrer">github.com/DamienCH33/nutripetit</a>
+				</p>
+				<p>
+					NutriPetit est un projet
+					<strong>open source à but non lucratif</strong>
+					développé dans le cadre d'un portfolio professionnel. Aucune monétisation, publicité ou revente de données n'est associée à ce site.
+				</p>
+			</section>
 
-            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Propriété intellectuelle</h2>
-            <p style="margin-bottom: 24px;">
-                Le code source de NutriPetit est disponible sous licence open-source sur GitHub. Les données produits proviennent d'Open Food Facts, sous licence ODbL.
-            </p>
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">2. Hébergement</h2>
+				<p>
+					Ce site est hébergé par :
+				</p>
+				<p>
+					<strong>Railway Corp.</strong><br>
+					548 Market St #99879<br>
+					San Francisco, CA 94104<br>
+					États-Unis<br>
+					<a href="https://railway.app" target="_blank" rel="noopener noreferrer">railway.app</a>
+				</p>
+				<p>
+					Les infrastructures Railway utilisées pour ce projet sont localisées en
+					<strong>Union européenne</strong>
+					(région Frankfurt). Aucune donnée utilisateur n'est transférée hors UE.
+				</p>
+			</section>
 
-            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Avertissement santé</h2>
-            <p style="margin-bottom: 24px;">
-                NutriPetit fournit une analyse nutritionnelle informative basée sur des recommandations officielles. Ce score ne remplace pas l'avis d'un professionnel de santé. Consultez votre pédiatre pour toute question concernant l'alimentation de votre enfant.
-            </p>
-        </div>
-    </div>
-</section>
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">3. Propriété intellectuelle</h2>
+				<p>
+					Le code source de NutriPetit est publié sous
+					<strong>licence MIT</strong>
+					et disponible sur GitHub. La marque, le logo et le design graphique restent la propriété de Damien Chauveau.
+				</p>
+				<p>
+					Les données produits sont issues d'<strong>Open Food Facts</strong>, projet collaboratif sous licence Open Database License (ODbL).
+				</p>
+				<p>
+					Les recommandations nutritionnelles citées (ANSES, OMS, PNNS, EFSA) restent la propriété de leurs auteurs respectifs. NutriPetit les cite à titre informatif avec leurs sources publiques officielles.
+				</p>
+			</section>
+
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">4. Sources de données</h2>
+				<ul>
+					<li>
+						<strong>Open Food Facts</strong>
+						— Association française à but non lucratif.
+						<a href="https://world.openfoodfacts.org" target="_blank" rel="noopener noreferrer">openfoodfacts.org</a>
+					</li>
+					<li>
+						<strong>ANSES</strong>
+						— Agence nationale de sécurité sanitaire de l'alimentation, de l'environnement et du travail.
+						<a href="https://www.anses.fr" target="_blank" rel="noopener noreferrer">anses.fr</a>
+					</li>
+					<li>
+						<strong>OMS</strong>
+						— Organisation Mondiale de la Santé.
+						<a href="https://www.who.int" target="_blank" rel="noopener noreferrer">who.int</a>
+					</li>
+					<li>
+						<strong>PNNS 4</strong>
+						— Programme National Nutrition Santé / Santé publique France.
+						<a href="https://www.mangerbouger.fr" target="_blank" rel="noopener noreferrer">mangerbouger.fr</a>
+					</li>
+					<li>
+						<strong>EFSA</strong>
+						— Autorité européenne de sécurité des aliments.
+						<a href="https://www.efsa.europa.eu" target="_blank" rel="noopener noreferrer">efsa.europa.eu</a>
+					</li>
+				</ul>
+			</section>
+
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">5. Avertissement santé</h2>
+				<div class="np-legal__warning">
+					<p>
+						<strong>NutriPetit fournit une analyse nutritionnelle informative basée sur les recommandations officielles. Ce score ne constitue pas un avis médical et ne remplace pas l'avis d'un professionnel de santé.</strong>
+					</p>
+					<p>
+						Consultez toujours votre
+						<strong>pédiatre</strong>
+						pour toute question concernant l'alimentation de votre enfant, en particulier en cas d'allergie, intolérance ou condition médicale particulière. NutriPetit décline toute responsabilité quant aux décisions alimentaires prises sur la base des informations fournies.
+					</p>
+				</div>
+			</section>
+
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">6. Limites de l'application</h2>
+				<p>
+					NutriPetit s'efforce de fournir des données aussi fiables que possible mais ne peut garantir leur fiabilité absolue :
+				</p>
+				<ul>
+					<li>Les données produits dépendent d'Open Food Facts et peuvent contenir des erreurs ou être incomplètes.</li>
+					<li>NutriPetit émet des analyses informatives et ne se prévaut pas d'être une autorité de santé publique.</li>
+					<li>NutriPetit ne fournit pas de recommandation médicale et ne remplace en aucun cas les conseils d'un professionnel.</li>
+					<li>NutriPetit n'évalue pas l'efficacité des produits mais fournit une première analyse de leur composition.</li>
+					<li>L'utilisateur doit toujours se référer aux informations présentes sur l'emballage du produit.</li>
+				</ul>
+			</section>
+
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">7. Signalement d'une erreur</h2>
+				<p>
+					Si vous constatez une information erronée sur un produit, vous pouvez :
+				</p>
+				<ul>
+					<li>La signaler directement sur Open Food Facts (source primaire des données).</li>
+					<li>Nous écrire à
+						<a href="mailto:contact@monavispro.fr">contact@monavispro.fr</a>.</li>
+					<li>Ouvrir une issue sur le repository GitHub du projet.</li>
+				</ul>
+			</section>
+
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">8. Droit applicable</h2>
+				<p>
+					Le présent site est soumis au
+					<strong>droit français</strong>. Tout litige sera porté devant les juridictions françaises compétentes.
+				</p>
+			</section>
+
+			<footer class="np-legal__footer">
+				<p>
+					Pour toute question relative à ces mentions légales, contactez-nous à
+					<a href="mailto:contact@monavispro.fr">contact@monavispro.fr</a>.
+				</p>
+			</footer>
+
+		</div>
+	</div>
 {% endblock %}

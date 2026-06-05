@@ -1,37 +1,266 @@
 {% extends 'base/landing.html.twig' %}
 
-{% block title %}Politique de confidentialité - NutriPetit{% endblock %}
+{% block title %}Politique de confidentialité - NutriPetit
+{% endblock %}
+
+{% block description %}Politique de confidentialité de NutriPetit. Aucune donnée nominative collectée, pseudonymisation par session anonyme, conformité RGPD maximale.
+{% endblock %}
 
 {% block body %}
-<section class="np-landing-section">
-    <div class="np-landing-section__inner" style="max-width: 800px;">
-        <h1 class="np-landing-section__title">Politique de confidentialité</h1>
+	<div class="np-legal">
+		<div class="np-legal__container">
 
-        <div style="margin-top: 48px; font-size: 1rem; line-height: 1.7; color: var(--np-gray-700);">
-            <p style="margin-bottom: 24px;">
-                <strong>NutriPetit respecte votre vie privée.</strong> Aucune donnée personnelle n'est collectée sans votre accord.
-            </p>
+			<header class="np-legal__header">
+				<h1 class="np-legal__title">Politique de confidentialité</h1>
+				<p class="np-legal__meta">Dernière mise à jour :
+					{{ "now"|date("d F Y") }}</p>
+			</header>
 
-            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Données stockées localement</h2>
-            <p style="margin-bottom: 24px;">
-                Votre historique de scans est stocké uniquement sur votre appareil (localStorage). Il n'est jamais envoyé à nos serveurs.
-            </p>
+			<section class="np-legal__intro">
+				<p>
+					NutriPetit est conçu selon le principe de
+					<strong>privacy by design</strong>
+					(Article 25 RGPD).
+										                Cette politique décrit de manière transparente quelles données nous collectons et pourquoi.
+				</p>
 
-            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Données envoyées à des tiers</h2>
-            <p style="margin-bottom: 24px;">
-                Lors d'un scan, le code-barres est envoyé à l'API publique d'Open Food Facts pour récupérer les informations du produit. Aucune donnée personnelle ne transite.
-            </p>
+				<div class="np-legal__highlight">
+					<p class="np-legal__highlight-title">En résumé</p>
+					<ul class="np-legal__highlight-list">
+						<li>Aucune donnée nominative (pas de nom, pas d'email, pas d'adresse IP stockée)</li>
+						<li>Aucun compte utilisateur requis pour utiliser l'application</li>
+						<li>Aucune donnée vendue, partagée ou exploitée commercialement</li>
+						<li>Aucun cookie de tracking publicitaire</li>
+						<li>Aucun transfert hors Union européenne</li>
+					</ul>
+				</div>
+			</section>
 
-            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Cookies</h2>
-            <p style="margin-bottom: 24px;">
-                NutriPetit n'utilise aucun cookie de tracking. Seuls les cookies techniques nécessaires au fonctionnement de la session peuvent être utilisés.
-            </p>
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">1. Responsable du traitement</h2>
+				<p>
+					Le responsable du traitement des données collectées via NutriPetit est :
+				</p>
+				<p>
+					<strong>Damien Chauveau</strong><br>
+					Villenave d'Ornon, France<br>
+					Contact :
+					<a href="mailto:contact@monavispro.fr">contact@monavispro.fr</a>
+				</p>
+				<p>
+					NutriPetit est un projet open source développé dans le cadre d'un portfolio professionnel.
+				</p>
+			</section>
 
-            <h2 style="font-size: 1.5rem; margin-top: 32px; margin-bottom: 16px; color: var(--np-gray-900);">Contact</h2>
-            <p>
-                Pour toute question relative à vos données, contactez-nous via le repo GitHub du projet.
-            </p>
-        </div>
-    </div>
-</section>
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">2. Données collectées</h2>
+
+				<h3 class="np-legal__subtitle">2.1. Données stockées sur votre appareil (localStorage)</h3>
+				<p>
+					Les informations suivantes sont stockées
+					<strong>uniquement sur votre appareil</strong>, dans le localStorage de votre navigateur. Elles ne sont jamais transmises à nos serveurs :
+				</p>
+				<ul>
+					<li>
+						<strong>Âge de votre enfant en mois</strong>
+						: utilisé pour adapter le score nutritionnel à la tranche d'âge.</li>
+					<li>
+						<strong>Identifiant de session anonyme (ULID)</strong>
+						: un identifiant aléatoire généré localement pour vous reconnaître entre vos visites.</li>
+				</ul>
+
+				<h3 class="np-legal__subtitle">2.2. Données enregistrées sur nos serveurs</h3>
+				<p>
+					Lorsque vous scannez un produit, les données suivantes sont conservées dans notre base de données :
+				</p>
+				<ul>
+					<li>
+						<strong>Identifiant de session anonyme (ULID)</strong>
+						: transmis depuis votre appareil, sans aucun lien avec votre identité.</li>
+					<li>
+						<strong>Âge en mois associé au scan</strong>
+						: nécessaire à la traçabilité juridique du score affiché.</li>
+					<li>
+						<strong>Code-barres (EAN) scanné</strong>
+						: identifiant universel du produit.</li>
+					<li>
+						<strong>Score calculé et règles appliquées</strong>
+						: pour pouvoir prouver, en cas de litige, quel score a été affiché à quel moment.</li>
+					<li>
+						<strong>User-Agent du navigateur</strong>
+						: information technique (type de navigateur), pas nominative.</li>
+					<li>
+						<strong>Date de scan et de dernière activité</strong>
+						: pour appliquer la durée de conservation.</li>
+				</ul>
+
+				<h3 class="np-legal__subtitle">2.3. Ce que nous ne collectons jamais</h3>
+				<ul>
+					<li>Nom, prénom, date de naissance, sexe</li>
+					<li>Adresse email, numéro de téléphone, adresse postale</li>
+					<li>Adresse IP (anonymisée dans les logs serveur)</li>
+					<li>Géolocalisation</li>
+					<li>Identifiants publicitaires</li>
+					<li>Historique de navigation</li>
+					<li>Données biométriques</li>
+				</ul>
+			</section>
+
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">3. Finalités du traitement</h2>
+				<p>Les données collectées sont utilisées exclusivement pour :</p>
+				<ul>
+					<li>
+						<strong>Calculer un score nutritionnel adapté</strong>
+						à la tranche d'âge de votre enfant.</li>
+					<li>
+						<strong>Conserver une trace technique</strong>
+						du score affiché, pour vous permettre de retrouver votre historique et pour la traçabilité juridique de l'application.</li>
+					<li>
+						<strong>Améliorer l'application</strong>
+						grâce à des statistiques anonymes d'utilisation (User-Agent agrégé).</li>
+				</ul>
+				<p>
+					Aucune donnée n'est utilisée à des fins de profilage publicitaire, de revente, ou de partage avec des tiers commerciaux.
+				</p>
+			</section>
+
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">4. Base légale</h2>
+				<p>
+					Le traitement repose sur
+					<strong>l'intérêt légitime</strong>
+					(Article 6.1.f du RGPD) : fournir un service d'information nutritionnelle adapté aux nourrissons, dans l'intérêt de l'enfant.
+				</p>
+				<p>
+					Conformément à
+					<strong>l'Article 8 du RGPD</strong>
+					(protection des données des enfants), NutriPetit est destiné aux parents et aux personnes en charge de jeunes enfants. Les données concernant l'enfant (âge uniquement) sont saisies par l'adulte responsable, dans l'intérêt légitime parental.
+				</p>
+			</section>
+
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">5. Durée de conservation</h2>
+				<table class="np-legal__table">
+					<thead>
+						<tr>
+							<th>Type de donnée</th>
+							<th>Durée de conservation</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Profil bébé (localStorage)</td>
+							<td>Jusqu'à effacement par l'utilisateur</td>
+						</tr>
+						<tr>
+							<td>Session anonyme (ULID)</td>
+							<td>3 ans d'inactivité maximum, puis suppression automatique</td>
+						</tr>
+						<tr>
+							<td>Scores calculés (ScoreResult)</td>
+							<td>Lié à la session, supprimés en même temps</td>
+						</tr>
+						<tr>
+							<td>Cache produit OpenFoodFacts</td>
+							<td>7 jours (renouvellement automatique)</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">6. Cookies et technologies similaires</h2>
+				<p>
+					NutriPetit
+					<strong>n'utilise aucun cookie de tracking publicitaire</strong>. Aucun outil d'analyse tiers (Google Analytics, Meta Pixel, etc.) n'est intégré à l'application.
+				</p>
+				<p>
+					Seul un
+					<strong>identifiant de session anonyme (ULID)</strong>
+					est stocké dans le localStorage de votre navigateur, exclusivement pour le fonctionnement technique de l'application.
+				</p>
+			</section>
+
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">7. Vos droits</h2>
+				<p>Conformément au RGPD, vous disposez des droits suivants :</p>
+				<ul>
+					<li>
+						<strong>Droit d'accès</strong>
+						(Article 15) : connaître les données vous concernant.</li>
+					<li>
+						<strong>Droit de rectification</strong>
+						(Article 16) : corriger une donnée inexacte.</li>
+					<li>
+						<strong>Droit à l'effacement</strong>
+						(Article 17) : supprimer vos données.</li>
+					<li>
+						<strong>Droit à la limitation</strong>
+						(Article 18) : restreindre un traitement.</li>
+					<li>
+						<strong>Droit à la portabilité</strong>
+						(Article 20) : récupérer vos données dans un format structuré.</li>
+					<li>
+						<strong>Droit d'opposition</strong>
+						(Article 21) : refuser un traitement.</li>
+				</ul>
+				<p>
+					Pour exercer ces droits, vous pouvez :
+				</p>
+				<ul>
+					<li>
+						<strong>Effacer directement votre profil</strong>
+						depuis la page « Mon enfant » de l'application.</li>
+					<li>
+						<strong>Effacer votre historique</strong>
+						depuis la page « Historique ».</li>
+					<li>
+						<strong>Nous contacter</strong>
+						à
+						<a href="mailto:contact@monavispro.fr">contact@monavispro.fr</a>
+						en mentionnant votre identifiant de session anonyme (visible dans les paramètres de l'application).</li>
+				</ul>
+				<p>
+					Vous pouvez également introduire une réclamation auprès de la
+					<strong>CNIL</strong>
+					(<a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">www.cnil.fr</a>).
+				</p>
+			</section>
+
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">8. Sécurité des données</h2>
+				<ul>
+					<li>Connexions HTTPS chiffrées (TLS 1.3) sur l'ensemble de l'application.</li>
+					<li>Base de données hébergée en Union européenne (Railway, infrastructure dans l'UE).</li>
+					<li>Sauvegardes chiffrées automatiques.</li>
+					<li>Aucun accès humain aux données autre que le responsable du traitement.</li>
+					<li>Logs serveur anonymisés (IP non stockées en clair).</li>
+				</ul>
+			</section>
+
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">9. Transferts hors Union européenne</h2>
+				<p>
+					Aucune donnée n'est transférée hors de l'Union européenne. NutriPetit n'utilise pas d'intelligence artificielle américaine, ni d'outils d'analyse étrangers. La seule source externe est
+					<strong>Open Food Facts</strong>, association française à but non lucratif.
+				</p>
+			</section>
+
+			<section class="np-legal__section">
+				<h2 class="np-legal__section-title">10. Modifications de la politique</h2>
+				<p>
+					Toute modification substantielle de cette politique sera affichée en page d'accueil et datée. La date de dernière mise à jour figure en haut de cette page.
+				</p>
+			</section>
+
+			<footer class="np-legal__footer">
+				<p>
+					Document soumis au droit français et au Règlement (UE) 2016/679 (RGPD).
+										                En cas de litige, les juridictions françaises sont compétentes.
+				</p>
+			</footer>
+
+		</div>
+	</div>
 {% endblock %}

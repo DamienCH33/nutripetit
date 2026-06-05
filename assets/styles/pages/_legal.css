@@ -1,0 +1,187 @@
+/**
+ * NutriPetit - Pages légales (privacy, mentions légales)
+ */
+
+.np-legal {
+  background-color: var(--np-white);
+  padding: var(--np-spacing-12) 0;
+  min-height: 100vh;
+}
+
+.np-legal__container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 var(--np-spacing-4);
+}
+
+.np-legal__header {
+  margin-bottom: var(--np-spacing-8);
+  padding-bottom: var(--np-spacing-6);
+  border-bottom: 1px solid var(--np-gray-100);
+}
+
+.np-legal__title {
+  font-size: var(--np-font-size-3xl);
+  font-weight: var(--np-font-weight-bold);
+  color: var(--np-gray-900);
+  margin-bottom: var(--np-spacing-2);
+  line-height: 1.2;
+}
+
+.np-legal__meta {
+  font-size: var(--np-font-size-sm);
+  color: var(--np-gray-500);
+  font-style: italic;
+}
+
+.np-legal__intro {
+  margin-bottom: var(--np-spacing-8);
+  font-size: var(--np-font-size-base);
+  color: var(--np-gray-700);
+  line-height: 1.7;
+}
+
+.np-legal__highlight {
+  margin-top: var(--np-spacing-4);
+  padding: var(--np-spacing-4);
+  background-color: var(--np-cream-light);
+  border-left: 4px solid var(--np-orange-primary);
+  border-radius: var(--np-radius-md);
+}
+
+.np-legal__highlight-title {
+  font-size: var(--np-font-size-sm);
+  font-weight: var(--np-font-weight-bold);
+  color: var(--np-orange-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--np-spacing-2);
+}
+
+.np-legal__highlight-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.np-legal__highlight-list li {
+  position: relative;
+  padding-left: var(--np-spacing-5);
+  margin-bottom: var(--np-spacing-1);
+  font-size: var(--np-font-size-sm);
+  color: var(--np-gray-800);
+}
+
+.np-legal__highlight-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--np-score-ideal);
+  font-weight: var(--np-font-weight-bold);
+}
+
+.np-legal__section {
+  margin-bottom: var(--np-spacing-8);
+}
+
+.np-legal__section-title {
+  font-size: var(--np-font-size-xl);
+  font-weight: var(--np-font-weight-bold);
+  color: var(--np-gray-900);
+  margin-bottom: var(--np-spacing-3);
+  padding-top: var(--np-spacing-4);
+  border-top: 2px solid var(--np-orange-primary);
+  display: inline-block;
+}
+
+.np-legal__subtitle {
+  font-size: var(--np-font-size-lg);
+  font-weight: var(--np-font-weight-semibold);
+  color: var(--np-gray-800);
+  margin-top: var(--np-spacing-4);
+  margin-bottom: var(--np-spacing-2);
+}
+
+.np-legal__section p {
+  font-size: var(--np-font-size-base);
+  color: var(--np-gray-700);
+  line-height: 1.7;
+  margin-bottom: var(--np-spacing-3);
+}
+
+.np-legal__section ul {
+  margin-bottom: var(--np-spacing-3);
+  padding-left: var(--np-spacing-5);
+}
+
+.np-legal__section ul li {
+  font-size: var(--np-font-size-base);
+  color: var(--np-gray-700);
+  line-height: 1.7;
+  margin-bottom: var(--np-spacing-1);
+}
+
+.np-legal__section a {
+  color: var(--np-orange-primary);
+  font-weight: var(--np-font-weight-medium);
+  text-decoration: underline;
+}
+
+.np-legal__section a:hover {
+  color: var(--np-orange-dark);
+}
+
+.np-legal__section strong {
+  color: var(--np-gray-900);
+  font-weight: var(--np-font-weight-semibold);
+}
+
+/* Tableau */
+.np-legal__table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--np-spacing-3) 0;
+  font-size: var(--np-font-size-sm);
+}
+
+.np-legal__table thead th {
+  text-align: left;
+  padding: var(--np-spacing-2) var(--np-spacing-3);
+  background-color: var(--np-cream-light);
+  color: var(--np-gray-900);
+  font-weight: var(--np-font-weight-bold);
+  border-bottom: 2px solid var(--np-orange-primary);
+}
+
+.np-legal__table tbody td {
+  padding: var(--np-spacing-2) var(--np-spacing-3);
+  border-bottom: 1px solid var(--np-gray-100);
+  color: var(--np-gray-700);
+}
+
+/* Encart warning santé */
+.np-legal__warning {
+  padding: var(--np-spacing-4);
+  background-color: var(--np-score-discouraged-bg);
+  border-left: 4px solid var(--np-score-discouraged);
+  border-radius: var(--np-radius-md);
+  margin: var(--np-spacing-3) 0;
+}
+
+.np-legal__warning p {
+  margin-bottom: var(--np-spacing-2);
+}
+
+.np-legal__warning p:last-child {
+  margin-bottom: 0;
+}
+
+.np-legal__footer {
+  margin-top: var(--np-spacing-12);
+  padding-top: var(--np-spacing-4);
+  border-top: 1px solid var(--np-gray-100);
+  font-size: var(--np-font-size-sm);
+  color: var(--np-gray-500);
+  font-style: italic;
+  text-align: center;
+}

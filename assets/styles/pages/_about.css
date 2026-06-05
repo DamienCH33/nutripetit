@@ -1,0 +1,284 @@
+/**
+ * NutriPetit - Page À propos / Indépendance
+ */
+
+.np-about {
+  background-color: var(--np-white);
+  padding: var(--np-spacing-8) 0 var(--np-spacing-12);
+  min-height: 100vh;
+}
+
+.np-about__container {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 var(--np-spacing-4);
+}
+
+/* HERO */
+.np-about__hero {
+  text-align: center;
+  margin-bottom: var(--np-spacing-12);
+  padding: var(--np-spacing-8) var(--np-spacing-4);
+  background: linear-gradient(135deg, var(--np-cream-light) 0%, var(--np-cream) 100%);
+  border-radius: var(--np-radius-lg);
+}
+
+.np-about__badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background-color: var(--np-white);
+  color: var(--np-orange-dark);
+  border-radius: var(--np-radius-pill);
+  font-size: var(--np-font-size-xs);
+  font-weight: var(--np-font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--np-spacing-4);
+}
+
+.np-about__title {
+  font-size: var(--np-font-size-3xl);
+  font-weight: var(--np-font-weight-bold);
+  color: var(--np-gray-900);
+  margin-bottom: var(--np-spacing-3);
+  line-height: 1.2;
+}
+
+.np-about__lead {
+  font-size: var(--np-font-size-lg);
+  color: var(--np-gray-700);
+  line-height: 1.5;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* SECTIONS */
+.np-about__section {
+  margin-bottom: var(--np-spacing-12);
+}
+
+.np-about__section--highlight {
+  padding: var(--np-spacing-8) var(--np-spacing-6);
+  background-color: var(--np-cream-light);
+  border-radius: var(--np-radius-lg);
+}
+
+.np-about__section--author {
+  padding: var(--np-spacing-6);
+  background-color: var(--np-gray-50);
+  border-radius: var(--np-radius-md);
+}
+
+.np-about__section-title {
+  font-size: var(--np-font-size-2xl);
+  font-weight: var(--np-font-weight-bold);
+  color: var(--np-gray-900);
+  margin-bottom: var(--np-spacing-4);
+  line-height: 1.3;
+}
+
+.np-about__section p {
+  font-size: var(--np-font-size-base);
+  color: var(--np-gray-700);
+  line-height: 1.7;
+  margin-bottom: var(--np-spacing-3);
+}
+
+.np-about__section ul {
+  padding-left: var(--np-spacing-5);
+  margin-bottom: var(--np-spacing-3);
+}
+
+.np-about__section ul li {
+  font-size: var(--np-font-size-base);
+  color: var(--np-gray-700);
+  line-height: 1.7;
+  margin-bottom: var(--np-spacing-1);
+}
+
+.np-about__section a {
+  color: var(--np-orange-primary);
+  font-weight: var(--np-font-weight-medium);
+  text-decoration: underline;
+}
+
+.np-about__section strong {
+  color: var(--np-gray-900);
+  font-weight: var(--np-font-weight-semibold);
+}
+
+.np-about__big-text {
+  font-size: var(--np-font-size-lg);
+  color: var(--np-gray-800);
+  line-height: 1.6;
+  margin-bottom: var(--np-spacing-6);
+}
+
+/* PRINCIPES */
+.np-about__principles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--np-spacing-4);
+}
+
+.np-about__principle {
+  padding: var(--np-spacing-5);
+  background-color: var(--np-white);
+  border-radius: var(--np-radius-md);
+  border: 1px solid var(--np-gray-100);
+  transition: all 200ms ease-out;
+}
+
+.np-about__principle:hover {
+  transform: translateY(-2px);
+  border-color: var(--np-orange-primary);
+  box-shadow: var(--np-shadow-orange);
+}
+
+.np-about__principle-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--np-radius-md);
+  background: linear-gradient(135deg, var(--np-orange-primary) 0%, var(--np-orange-light) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--np-spacing-3);
+}
+
+.np-about__icon {
+  width: 24px;
+  height: 24px;
+  color: var(--np-white);
+}
+
+.np-about__principle-title {
+  font-size: var(--np-font-size-base);
+  font-weight: var(--np-font-weight-bold);
+  color: var(--np-gray-900);
+  margin-bottom: var(--np-spacing-2);
+}
+
+.np-about__principle-text {
+  font-size: var(--np-font-size-sm);
+  color: var(--np-gray-600);
+  line-height: 1.5;
+}
+
+/* FINANCING */
+.np-about__financing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--np-spacing-4);
+  margin-top: var(--np-spacing-4);
+}
+
+.np-about__financing-col {
+  padding: var(--np-spacing-5);
+  background-color: var(--np-white);
+  border-radius: var(--np-radius-md);
+}
+
+.np-about__financing-title {
+  display: flex;
+  align-items: center;
+  gap: var(--np-spacing-2);
+  font-size: var(--np-font-size-base);
+  font-weight: var(--np-font-weight-bold);
+  margin-bottom: var(--np-spacing-3);
+}
+
+.np-about__financing-title--no {
+  color: var(--np-score-discouraged);
+}
+
+.np-about__financing-title--yes {
+  color: var(--np-score-ideal);
+}
+
+.np-about__financing-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.np-about__financing-icon--no { color: var(--np-score-discouraged); }
+.np-about__financing-icon--yes { color: var(--np-score-ideal); }
+
+.np-about__financing-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.np-about__financing-list li {
+  position: relative;
+  padding-left: var(--np-spacing-5);
+  margin-bottom: var(--np-spacing-2);
+  font-size: var(--np-font-size-sm);
+  color: var(--np-gray-700);
+  line-height: 1.5;
+}
+
+.np-about__financing-list li::before {
+  content: '•';
+  position: absolute;
+  left: var(--np-spacing-2);
+  color: var(--np-gray-400);
+}
+
+/* CTA */
+.np-about__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--np-spacing-2);
+  padding: var(--np-spacing-3) var(--np-spacing-4);
+  background: linear-gradient(135deg, var(--np-orange-primary) 0%, var(--np-orange-light) 100%);
+  color: var(--np-white) !important;
+  border-radius: var(--np-radius-pill);
+  font-weight: var(--np-font-weight-semibold);
+  text-decoration: none !important;
+  box-shadow: var(--np-shadow-orange);
+  transition: all 200ms ease-out;
+}
+
+.np-about__cta:hover {
+  transform: translateY(-1px);
+}
+
+.np-about__cta-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* AUTEUR */
+.np-about__author-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--np-spacing-2);
+  margin-top: var(--np-spacing-4);
+}
+
+.np-about__author-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--np-spacing-2);
+  padding: var(--np-spacing-2) var(--np-spacing-4);
+  background-color: var(--np-white);
+  border: 1.5px solid var(--np-gray-200);
+  border-radius: var(--np-radius-pill);
+  font-size: var(--np-font-size-sm);
+  font-weight: var(--np-font-weight-medium);
+  color: var(--np-gray-700);
+  text-decoration: none;
+  transition: all 200ms ease-out;
+}
+
+.np-about__author-link:hover {
+  border-color: var(--np-orange-primary);
+  color: var(--np-orange-primary);
+}
+
+.np-about__author-link-icon {
+  width: 16px;
+  height: 16px;
+}

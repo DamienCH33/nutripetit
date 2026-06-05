@@ -1,27 +1,232 @@
 {% extends 'base/landing.html.twig' %}
 
-{% block title %}À propos - NutriPetit{% endblock %}
+{% block title %}À propos & Indépendance - NutriPetit
+{% endblock %}
+
+{% block description %}NutriPetit est un projet open source 100% gratuit, sans publicité, sans collecte de données nominatives, dédié à l'alimentation des 0-3 ans.
+{% endblock %}
 
 {% block body %}
-<section class="np-landing-section">
-    <div class="np-landing-section__inner" style="max-width: 800px;">
-        <span class="np-landing-section__eyebrow">Notre histoire</span>
-        <h1 class="np-landing-section__title">À propos de NutriPetit</h1>
+	<div class="np-about">
+		<div
+			class="np-about__container">
 
-        <div style="margin-top: 48px; font-size: 1.125rem; line-height: 1.7; color: var(--np-gray-700);">
-            <p style="margin-bottom: 24px;">
-                NutriPetit est un projet open-source qui vise à aider les parents à mieux choisir les produits alimentaires pour leurs jeunes enfants (0-3 ans).
-            </p>
-            <p style="margin-bottom: 24px;">
-                Né du constat que les apps de scan généralistes (Yuka, Open Food Facts) appliquent les mêmes règles nutritionnelles aux adultes et aux nourrissons, NutriPetit propose une approche spécifique aux besoins des bébés.
-            </p>
-            <p style="margin-bottom: 24px;">
-                Notre algorithme s'appuie sur les recommandations officielles de l'ANSES, de l'OMS, de l'EFSA et du PNNS. Chaque règle de scoring est documentée, sourcée et versionnée.
-            </p>
-            <p>
-                NutriPetit est développé par <a href="https://github.com/DamienCH33" style="color: var(--np-orange-primary);" target="_blank" rel="noopener noreferrer">Damien Chauveau</a>, développeur PHP/Symfony basé à Bordeaux.
-            </p>
-        </div>
-    </div>
-</section>
+			{# Hero #}
+			<header class="np-about__hero">
+				<div class="np-about__badge">À propos & Indépendance</div>
+				<h1 class="np-about__title">Un projet libre, transparent, sans conflit d'intérêts</h1>
+				<p class="np-about__lead">
+					NutriPetit est né d'une conviction : les besoins nutritionnels des bébés méritent une application dédiée, scientifiquement rigoureuse, et totalement indépendante.
+				</p>
+			</header>
+
+			{# Principes fondateurs #}
+			<section class="np-about__section">
+				<h2 class="np-about__section-title">Nos engagements</h2>
+				<div class="np-about__principles">
+
+					<article class="np-about__principle">
+						<div class="np-about__principle-icon">
+							{{ ux_icon('lucide:heart-handshake', {class: 'np-about__icon'}) }}
+						</div>
+						<h3 class="np-about__principle-title">100% gratuit</h3>
+						<p class="np-about__principle-text">
+							Aucun abonnement, aucune fonctionnalité premium cachée. L'intégralité de l'application est accessible librement, sans restriction.
+						</p>
+					</article>
+
+					<article class="np-about__principle">
+						<div class="np-about__principle-icon">
+							{{ ux_icon('lucide:github', {class: 'np-about__icon'}) }}
+						</div>
+						<h3 class="np-about__principle-title">Open source</h3>
+						<p class="np-about__principle-text">
+							Le code source complet est public sur GitHub sous licence MIT. Tout le monde peut l'auditer, le forker, ou contribuer.
+						</p>
+					</article>
+
+					<article class="np-about__principle">
+						<div class="np-about__principle-icon">
+							{{ ux_icon('lucide:eye-off', {class: 'np-about__icon'}) }}
+						</div>
+						<h3 class="np-about__principle-title">Aucune publicité</h3>
+						<p class="np-about__principle-text">
+							Aucune marque ne peut rémunérer NutriPetit pour mettre en avant ses produits. Aucune bannière, aucun message sponsorisé.
+						</p>
+					</article>
+
+					<article class="np-about__principle">
+						<div class="np-about__principle-icon">
+							{{ ux_icon('lucide:shield-check', {class: 'np-about__icon'}) }}
+						</div>
+						<h3 class="np-about__principle-title">Vos données restent vos données</h3>
+						<p class="np-about__principle-text">
+							Aucune donnée nominative collectée. Aucun nom, aucun email, aucune adresse IP stockée. Pseudonymisation totale par session anonyme.
+						</p>
+					</article>
+
+					<article class="np-about__principle">
+						<div class="np-about__principle-icon">
+							{{ ux_icon('lucide:file-text', {class: 'np-about__icon'}) }}
+						</div>
+						<h3 class="np-about__principle-title">Sources officielles</h3>
+						<p class="np-about__principle-text">
+							Chaque règle de scoring est sourcée et vérifiable (ANSES, OMS, PNNS 4, EFSA). Aucune opinion personnelle, aucune intelligence artificielle.
+						</p>
+					</article>
+
+					<article class="np-about__principle">
+						<div class="np-about__principle-icon">
+							{{ ux_icon('lucide:baby', {class: 'np-about__icon'}) }}
+						</div>
+						<h3 class="np-about__principle-title">Spécialisé 0-3 ans</h3>
+						<p class="np-about__principle-text">
+							Les applications généralistes reconnaissent elles-mêmes ne pas être adaptées aux nourrissons. NutriPetit occupe cette niche.
+						</p>
+					</article>
+
+				</div>
+			</section>
+
+			{# Financement #}
+			<section class="np-about__section np-about__section--highlight">
+				<h2 class="np-about__section-title">Comment NutriPetit est financé ?</h2>
+				<p class="np-about__big-text">
+					NutriPetit n'est
+					<strong>pas financé</strong>. C'est un projet personnel développé bénévolement par un développeur indépendant, sans budget, sans investisseurs, sans partenariats commerciaux.
+				</p>
+				<div class="np-about__financing-grid">
+					<div class="np-about__financing-col">
+						<h3 class="np-about__financing-title np-about__financing-title--no">
+							{{ ux_icon('lucide:x-circle', {class: 'np-about__financing-icon np-about__financing-icon--no'}) }}
+							Ce que nous refusons
+						</h3>
+						<ul class="np-about__financing-list">
+							<li>La publicité dans l'application</li>
+							<li>La revente de données utilisateurs</li>
+							<li>Les partenariats marques de produits bébé</li>
+						</ul>
+					</div>
+					<div class="np-about__financing-col">
+						<h3 class="np-about__financing-title np-about__financing-title--yes">
+							{{ ux_icon('lucide:check-circle', {class: 'np-about__financing-icon np-about__financing-icon--yes'}) }}
+							Ce que nous acceptons
+						</h3>
+						<ul class="np-about__financing-list">
+							<li>Les contributions bénévoles au code (GitHub)</li>
+							<li>Le signalement d'erreurs ou de produits manquants</li>
+							<li>Les retours utilisateurs et suggestions</li>
+							<li>Les dons libres si le projet venait à se développer</li>
+						</ul>
+					</div>
+				</div>
+			</section>
+
+			{# Méthodologie #}
+			<section class="np-about__section">
+				<h2 class="np-about__section-title">Comment notre score est-il calculé ?</h2>
+				<p>
+					Le score NutriPetit est
+					<strong>100% déterministe</strong>
+					: aucune intelligence artificielle, aucune boîte noire. L'algorithme part d'une base de 100 points, à laquelle on ajoute ou retire des points selon des règles précises et versionnées.
+				</p>
+				<p>
+					Chaque règle correspond à une recommandation officielle d'une autorité de santé reconnue, avec sa source publique :
+				</p>
+				<ul>
+					<li>
+						<strong>ANSES</strong>
+						— Avis 0-3 ans (2019), Référentiels nutritionnels nourrissons</li>
+					<li>
+						<strong>HCSP</strong>
+						— Avis sur les recommandations alimentaires (2020)</li>
+					<li>
+						<strong>PNNS 4</strong>
+						— Recommandations Santé publique France (2021)</li>
+					<li>
+						<strong>OMS</strong>
+						— Guideline Sugars intake for children (2015)</li>
+					<li>
+						<strong>EFSA</strong>
+						— Évaluations des additifs alimentaires</li>
+					<li>
+						<strong>Règlements EU</strong>
+						— INCO 1169/2011, Bio 2018/848, Aliments bébé 2006/125/CE</li>
+				</ul>
+				<p>
+					<a href="{{ path('app_pwa_info') }}" class="np-about__cta">
+						Voir le détail des 15 règles de scoring
+						{{ ux_icon('lucide:arrow-right', {class: 'np-about__cta-icon'}) }}
+					</a>
+				</p>
+			</section>
+
+			{# Vs Yuka #}
+			<section class="np-about__section">
+				<h2 class="np-about__section-title">Pourquoi pas Yuka ?</h2>
+				<p>
+					Yuka est une excellente application
+					<strong>pour les adultes</strong>. Sur sa page d'aide officielle, Yuka reconnaît que
+					<em>« la notation ne s'applique pas strictement aux produits pour enfants »</em>
+					et que
+					<em>« les besoins nutritionnels des enfants entre 0 et 2 ans sont assez différents de ceux des adultes »</em>.
+				</p>
+				<p>
+					NutriPetit complète cet écosystème en proposant une analyse spécifiquement calibrée pour la tranche d'âge 0-3 ans, avec des seuils ANSES, une adaptation à l'âge en mois, et une transparence totale sur la méthodologie.
+				</p>
+			</section>
+
+			{# Limites #}
+			<section class="np-about__section">
+				<h2 class="np-about__section-title">Les limites que nous assumons</h2>
+				<p>
+					Aucun outil n'est parfait. NutriPetit assume publiquement ses limites :
+				</p>
+				<ul>
+					<li>
+						<strong>Fiabilité des données produits</strong>
+						— Les informations dépendent d'Open Food Facts, base collaborative qui peut contenir des erreurs ou être incomplète.</li>
+					<li>
+						<strong>Pas d'autorité de santé publique</strong>
+						— Nous ne sommes ni l'ANSES, ni l'OMS. Nous relayons leurs recommandations.</li>
+					<li>
+						<strong>Pas de recommandation médicale</strong>
+						— Le score ne remplace en aucun cas l'avis d'un pédiatre, particulièrement en cas d'allergie, d'intolérance ou de condition médicale particulière.</li>
+					<li>
+						<strong>Pas d'évaluation environnementale</strong>
+						— Nous affichons les informations brutes d'Open Food Facts (origine, emballage, bio) sans calculer de score environnemental, par souci de rigueur scientifique.</li>
+					<li>
+						<strong>Périmètre limité aux 0-3 ans</strong>
+						— Au-delà, les recommandations diffèrent et nous redirigeons vers les applications généralistes.</li>
+				</ul>
+			</section>
+
+			{# Auteur #}
+			<section class="np-about__section np-about__section--author">
+				<h2 class="np-about__section-title">Qui suis-je ?</h2>
+				<p>
+					Je suis
+					<strong>Damien Chauveau</strong>, développeur PHP/Symfony basé à Villenave d'Ornon, en région bordelaise. NutriPetit est un projet personnel développé dans le cadre de mon portfolio professionnel.
+				</p>
+				<p>
+					Je ne suis ni médecin, ni nutritionniste, ni toxicologue. Je m'appuie exclusivement sur les recommandations publiques des autorités scientifiques reconnues (ANSES, OMS, PNNS, EFSA). Mon rôle est d'agréger ces recommandations dans un outil pratique et transparent.
+				</p>
+				<div class="np-about__author-links">
+					<a href="https://damienchauveau-dev.fr" target="_blank" rel="noopener noreferrer" class="np-about__author-link">
+						{{ ux_icon('lucide:globe', {class: 'np-about__author-link-icon'}) }}
+						Portfolio
+					</a>
+					<a href="https://github.com/DamienCH33/nutripetit" target="_blank" rel="noopener noreferrer" class="np-about__author-link">
+						{{ ux_icon('lucide:github', {class: 'np-about__author-link-icon'}) }}
+						GitHub
+					</a>
+					<a href="https://www.linkedin.com/in/damien-chauveau-747892100/" target="_blank" rel="noopener noreferrer" class="np-about__author-link">
+						{{ ux_icon('lucide:linkedin', {class: 'np-about__author-link-icon'}) }}
+						LinkedIn
+					</a>
+				</div>
+			</section>
+
+		</div>
+	</div>
 {% endblock %}
