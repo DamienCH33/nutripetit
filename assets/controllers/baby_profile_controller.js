@@ -1,29 +1,23 @@
-import { Controller } from '@hotwired/stimulus';
+import { Controller } from "@hotwired/stimulus";
 
 /**
  * Baby Profile Controller
  *
- * Gère la configuration du profil bébé en V1 :
- * - Lecture/écriture localStorage (clés "babyName" et "babyAgeMonths")
- * - Mise à jour réactive de l'affichage (âge, tranche, prénom)
- * - Toast de confirmation à chaque sauvegarde
- *
- * En V2, sera remplacé par un Live Component connecté à une entité Doctrine.
+ * Stockage localStorage uniquement : âge en mois.
+ * Aucune donnée nominative (prénom supprimé pour conformité RGPD renforcée).
  */
 export default class extends Controller {
     static targets = [
-        'nameInput',
-        'ageSlider',
-        'ageDisplay',
-        'rangeCard',
-        'rangeLabel',
-        'rangeDesc',
-        'currentProfile',
-        'currentAgeText',
-        'currentRangeText',
-        'titleDisplay',
-        'toast',
-        'resetButton',
+        "ageSlider",
+        "ageDisplay",
+        "rangeCard",
+        "rangeLabel",
+        "rangeDesc",
+        "currentProfile",
+        "currentAgeText",
+        "currentRangeText",
+        "toast",
+        "resetButton",
     ];
 
     static values = {
@@ -36,119 +30,67 @@ export default class extends Controller {
         this.updateRangeDisplay();
     }
 
-    /**
-     * Charge le profil depuis localStorage et hydrate l'UI
-     */
     loadProfile() {
-        const savedName = localStorage.getItem('babyName') || '';
-        const savedAge = parseInt(localStorage.getItem('babyAgeMonths') || '12', 10);
+        const savedAge = parseInt(
+            localStorage.getItem("babyAgeMonths") || "12",
+            10,
+        );
 
-        if (this.hasNameInputTarget) {
-            this.nameInputTarget.value = savedName;
-        }
         if (this.hasAgeSliderTarget) {
             this.ageSliderTarget.value = savedAge;
         }
 
         this.updateAgeDisplay(savedAge);
-        this.updateTitle(savedName);
-        this.updateCurrentProfile(savedName, savedAge);
+        this.updateCurrentProfile(savedAge);
     }
 
-    /**
-     * Action : prénom modifié
-     */
-    updateName(event) {
-        const name = event.target.value.trim();
-
-        if (name) {
-            localStorage.setItem('babyName', name);
-        } else {
-            localStorage.removeItem('babyName');
-        }
-
-        this.updateTitle(name);
-        this.updateCurrentProfile(name, this.getCurrentAge());
-        this.showToast();
-    }
-
-    /**
-     * Action : âge modifié (slider)
-     */
     updateAge(event) {
         const age = parseInt(event.target.value, 10);
 
-        localStorage.setItem('babyAgeMonths', age.toString());
+        localStorage.setItem("babyAgeMonths", age.toString());
 
         this.updateAgeDisplay(age);
         this.updateRangeDisplay();
-        this.updateCurrentProfile(this.getCurrentName(), age);
+        this.updateCurrentProfile(age);
         this.showToast();
     }
 
-    /**
-     * Action : réinitialiser le profil
-     */
     reset() {
-        if (!confirm('Effacer le profil de votre enfant ?')) {
+        if (!confirm("Effacer le profil de votre enfant ?")) {
             return;
         }
 
-        localStorage.removeItem('babyName');
-        localStorage.removeItem('babyAgeMonths');
+        localStorage.removeItem("babyAgeMonths");
+        localStorage.removeItem("babyName"); // Au cas où une ancienne version aurait stocké
 
-        if (this.hasNameInputTarget) {
-            this.nameInputTarget.value = '';
-        }
         if (this.hasAgeSliderTarget) {
             this.ageSliderTarget.value = 12;
         }
 
         this.updateAgeDisplay(12);
-        this.updateTitle('');
         this.updateRangeDisplay();
-        this.updateCurrentProfile('', null);
+        this.updateCurrentProfile(null);
     }
 
-    /**
-     * Met à jour le display de l'âge (gestion singulier/pluriel + mois/an)
-     */
     updateAgeDisplay(months) {
         if (!this.hasAgeDisplayTarget) return;
 
-        const valueEl = this.ageDisplayTarget.querySelector('.np-baby-age-display__value');
-        const unitEl = this.ageDisplayTarget.querySelector('.np-baby-age-display__unit');
+        const valueEl = this.ageDisplayTarget.querySelector(
+            ".np-baby-age-display__value",
+        );
+        const unitEl = this.ageDisplayTarget.querySelector(
+            ".np-baby-age-display__unit",
+        );
 
         if (months === 0) {
-            valueEl.textContent = '0';
-            unitEl.textContent = 'mois (à la naissance)';
-        } else if (months < 12) {
-            valueEl.textContent = months;
-            unitEl.textContent = months > 1 ? 'mois' : 'mois';
+            valueEl.textContent = "0";
+            unitEl.textContent = "mois (à la naissance)";
         } else {
-            const years = Math.floor(months / 12);
-            const remainingMonths = months % 12;
-            if (remainingMonths === 0) {
-                valueEl.textContent = years;
-                unitEl.textContent = years > 1 ? 'ans' : 'an';
-            } else {
-                valueEl.textContent = `${years}a ${remainingMonths}m`;
-                unitEl.textContent = '';
-            }
+            valueEl.textContent = months;
+            unitEl.textContent = months > 1 ? "mois" : "mois";
         }
     }
 
-    /**
-     * Met à jour le titre de la page avec le prénom si présent
-     */
-    updateTitle(name) {
-        if (!this.hasTitleDisplayTarget) return;
-        this.titleDisplayTarget.textContent = name ? name : 'Mon enfant';
-    }
-
-    /**
-     * Met à jour la carte tranche d'âge en fonction du slider
-     */
     updateRangeDisplay() {
         const age = this.getCurrentAge();
         const range = this.findAgeRange(age);
@@ -163,13 +105,11 @@ export default class extends Controller {
         }
     }
 
-    /**
-     * Met à jour la carte "Profil enregistré" visible quand le profil existe
-     */
-    updateCurrentProfile(name, age) {
+    updateCurrentProfile(age) {
         if (!this.hasCurrentProfileTarget) return;
 
-        const hasProfile = name || (age !== null && localStorage.getItem('babyAgeMonths'));
+        const hasProfile =
+            age !== null && localStorage.getItem("babyAgeMonths");
 
         if (hasProfile) {
             this.currentProfileTarget.hidden = false;
@@ -178,12 +118,13 @@ export default class extends Controller {
             }
 
             if (this.hasCurrentAgeTextTarget) {
-                const displayName = name || 'Votre enfant';
-                this.currentAgeTextTarget.textContent = `${displayName} — ${age} mois`;
+                this.currentAgeTextTarget.textContent = `${age} mois`;
             }
             if (this.hasCurrentRangeTextTarget) {
                 const range = this.findAgeRange(age);
-                this.currentRangeTextTarget.textContent = range ? range.label : '';
+                this.currentRangeTextTarget.textContent = range
+                    ? range.label
+                    : "";
             }
         } else {
             this.currentProfileTarget.hidden = true;
@@ -193,38 +134,30 @@ export default class extends Controller {
         }
     }
 
-    /**
-     * Affiche le toast de confirmation (auto-hide 2s)
-     */
     showToast() {
         if (!this.hasToastTarget) return;
 
         clearTimeout(this.toastTimeout);
         this.toastTarget.hidden = false;
-        this.toastTarget.classList.add('np-baby-toast--visible');
+        this.toastTarget.classList.add("np-baby-toast--visible");
 
         this.toastTimeout = setTimeout(() => {
-            this.toastTarget.classList.remove('np-baby-toast--visible');
+            this.toastTarget.classList.remove("np-baby-toast--visible");
             setTimeout(() => {
                 this.toastTarget.hidden = true;
             }, 300);
         }, 2000);
     }
 
-    /**
-     * Utilitaires
-     */
     getCurrentAge() {
-        return this.hasAgeSliderTarget ? parseInt(this.ageSliderTarget.value, 10) : 12;
-    }
-
-    getCurrentName() {
-        return this.hasNameInputTarget ? this.nameInputTarget.value.trim() : '';
+        return this.hasAgeSliderTarget
+            ? parseInt(this.ageSliderTarget.value, 10)
+            : 12;
     }
 
     findAgeRange(months) {
         return this.ageRangesValue.find(
-            r => months >= r.minMonths && months <= r.maxMonths
+            (r) => months >= r.minMonths && months <= r.maxMonths,
         );
     }
 }

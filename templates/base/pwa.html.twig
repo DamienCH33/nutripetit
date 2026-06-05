@@ -1,43 +1,38 @@
-{# Layout PWA - Interface application installable #}
 <!DOCTYPE html>
 <html lang="fr">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-		<title>
-			{% block title %}NutriPetit
-			{% endblock %}
-		</title>
-		<meta name="description" content="{% block description %}Analyse nutritionnelle adaptée aux bébés et jeunes enfants.{% endblock %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>{% block title %}NutriPetit{% endblock %}</title>
+    <meta name="description" content="{% block description %}Analyse nutritionnelle adaptée aux bébés et jeunes enfants.{% endblock %}">
 
-		<meta name="theme-color" content="#FDF7F1">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="default">
-		<meta name="apple-mobile-web-app-title" content="NutriPetit">
+    <meta name="theme-color" content="#FDF7F1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="NutriPetit">
 
-		<link rel="icon" type="image/svg+xml" href="{{ asset('images/logo/nutripetit.svg') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo/nutripetit.svg') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    {% block stylesheets %}{{ importmap('app') }}{% endblock %}
+</head>
+<body class="np-body--pwa">
+    <div class="np-pwa-shell">
+        {% block header %}{% include '_partials/_pwa_header.html.twig' %}{% endblock %}
 
-		{% block stylesheets %}
-			{{ importmap('app') }}
-		{% endblock %}
-	</head>
-	<body class="np-body--pwa">
-		<div class="np-pwa-shell">
-			{% block header %}
-				{% include '_partials/_pwa_header.html.twig' %}
-			{% endblock %}
+        <main class="np-pwa-main">
+            {% block body %}{% endblock %}
 
-			<main class="np-pwa-main"> {% block body %}{% endblock %}
-				</main>
-			</div>
+            {# Disclaimer compact OBLIGATOIRE en bas de chaque page PWA #}
+            {% block pwa_disclaimer %}
+                {% include '_partials/_disclaimer_compact.html.twig' %}
+            {% endblock %}
+        </main>
+    </div>
 
-			{% block bottom_nav %}
-				{% include '_partials/_pwa_bottom_nav.html.twig' %}
-			{% endblock %}
+    {% block bottom_nav %}{% include '_partials/_pwa_bottom_nav.html.twig' %}{% endblock %}
 
-			{% block javascripts %}{% endblock %}
-		</body>
-	</html>
+    {% block javascripts %}{% endblock %}
+</body>
+</html>

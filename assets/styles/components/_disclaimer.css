@@ -1,29 +1,85 @@
+/* ============================================
+ * DISCLAIMER COMPLET (Info page, fin de fiches produit)
+ * ============================================ */
 .np-disclaimer {
   display: flex;
-  align-items: flex-start;
   gap: var(--np-spacing-3);
   padding: var(--np-spacing-4);
-  background-color: var(--np-cream);
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.05) 0%, rgba(255, 159, 61, 0.05) 100%);
+  border: 1.5px solid rgba(231, 76, 60, 0.25);
   border-radius: var(--np-radius-md);
-  border-left: 4px solid var(--np-orange-primary);
-  margin: var(--np-spacing-4) 0;
+}
+
+.np-disclaimer__icon-wrapper {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background-color: var(--np-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .np-disclaimer__icon {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  color: var(--np-orange-dark);
-  margin-top: 2px;
+  width: 22px;
+  height: 22px;
+  color: var(--np-score-bad);
+}
+
+.np-disclaimer__content {
+  flex: 1;
+}
+
+.np-disclaimer__title {
+  font-size: var(--np-font-size-sm);
+  font-weight: var(--np-font-weight-bold);
+  color: var(--np-gray-900);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--np-spacing-1);
 }
 
 .np-disclaimer__text {
   font-size: var(--np-font-size-sm);
-  line-height: 1.5;
   color: var(--np-gray-700);
+  line-height: 1.6;
 }
 
 .np-disclaimer__text strong {
-  font-weight: var(--np-font-weight-semibold);
   color: var(--np-gray-900);
+}
+
+/* ============================================
+ * DISCLAIMER COMPACT (bas de page produit, scan)
+ * ============================================ */
+.np-disclaimer-compact {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--np-spacing-2);
+  padding: var(--np-spacing-3);
+  background-color: var(--np-cream-light);
+  border-left: 3px solid var(--np-orange-primary);
+  border-radius: var(--np-radius-sm);
+  font-size: var(--np-font-size-xs);
+  color: var(--np-gray-700);
+  line-height: 1.5;
+  margin: var(--np-spacing-4) 0;
+}
+
+.np-disclaimer-compact__icon {
+  width: 16px;
+  height: 16px;
+  color: var(--np-orange-primary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.np-disclaimer-compact a {
+  color: var(--np-orange-primary);
+  font-weight: var(--np-font-weight-semibold);
+}
+
+.np-disclaimer-compact a:hover {
+  text-decoration: underline;
 }

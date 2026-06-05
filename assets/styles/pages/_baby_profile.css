@@ -2,9 +2,7 @@
  * NutriPetit - Page Profil bébé
  */
 
-/* ============================================
- * HERO
- * ============================================ */
+/* HERO */
 .np-baby-hero {
   padding: var(--np-spacing-6) 0 var(--np-spacing-4);
   text-align: center;
@@ -43,9 +41,7 @@
   margin: 0 auto;
 }
 
-/* ============================================
- * CARD PROFIL ACTUEL
- * ============================================ */
+/* CARD PROFIL ACTUEL */
 .np-baby-current {
   padding: var(--np-spacing-4);
   background: linear-gradient(135deg, rgba(139, 195, 74, 0.08) 0%, rgba(46, 125, 50, 0.05) 100%);
@@ -83,9 +79,7 @@
   color: var(--np-gray-600);
 }
 
-/* ============================================
- * FORMULAIRE
- * ============================================ */
+/* FORMULAIRE */
 .np-baby-form {
   display: flex;
   flex-direction: column;
@@ -104,32 +98,7 @@
   margin-bottom: var(--np-spacing-2);
 }
 
-.np-baby-field__optional {
-  font-weight: var(--np-font-weight-regular);
-  color: var(--np-gray-500);
-}
-
-.np-baby-field__input {
-  width: 100%;
-  padding: var(--np-spacing-3) var(--np-spacing-4);
-  background-color: var(--np-white);
-  border: 1.5px solid var(--np-gray-200);
-  border-radius: var(--np-radius-md);
-  font-size: var(--np-font-size-base);
-  font-family: var(--np-font-family);
-  color: var(--np-gray-900);
-  transition: border-color 200ms ease-out;
-}
-
-.np-baby-field__input:focus {
-  outline: none;
-  border-color: var(--np-orange-primary);
-  box-shadow: 0 0 0 3px rgba(255, 159, 61, 0.1);
-}
-
-/* ============================================
- * AFFICHAGE ÂGE GROS
- * ============================================ */
+/* AFFICHAGE ÂGE */
 .np-baby-age-display {
   display: flex;
   align-items: baseline;
@@ -154,9 +123,7 @@
   font-weight: var(--np-font-weight-medium);
 }
 
-/* ============================================
- * SLIDER
- * ============================================ */
+/* SLIDER */
 .np-baby-field__slider {
   -webkit-appearance: none;
   appearance: none;
@@ -205,9 +172,7 @@
   margin-top: 4px;
 }
 
-/* ============================================
- * CARD TRANCHE D'ÂGE
- * ============================================ */
+/* CARD TRANCHE D'ÂGE */
 .np-baby-range-card {
   display: flex;
   align-items: center;
@@ -252,9 +217,7 @@
   line-height: 1.4;
 }
 
-/* ============================================
- * TOAST DE CONFIRMATION
- * ============================================ */
+/* TOAST */
 .np-baby-toast {
   position: fixed;
   bottom: 96px;
@@ -286,9 +249,7 @@
   color: var(--np-green-primary);
 }
 
-/* ============================================
- * BOUTON RESET
- * ============================================ */
+/* BOUTON RESET */
 .np-baby-reset {
   display: flex;
   align-items: center;
@@ -306,8 +267,8 @@
 }
 
 .np-baby-reset:hover {
-  border-color: var(--np-score-bad);
-  color: var(--np-score-bad);
+  border-color: var(--np-score-discouraged);
+  color: var(--np-score-discouraged);
 }
 
 .np-baby-reset__icon {
@@ -315,43 +276,89 @@
   height: 16px;
 }
 
-/* ============================================
- * INFO - Pourquoi l'âge est important
- * ============================================ */
+/* SECTION RGPD - REDUITE (avant trop imposante) */
+.np-baby-rgpd {
+  display: flex;
+  align-items: center;
+  gap: var(--np-spacing-3);
+  margin-top: var(--np-spacing-4);
+  padding: var(--np-spacing-3) var(--np-spacing-4);
+  background-color: rgba(46, 125, 50, 0.05);
+  border-radius: var(--np-radius-md);
+  border-left: 3px solid var(--np-green-dark);
+}
+
+.np-baby-rgpd__icon-wrapper {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background-color: var(--np-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.np-baby-rgpd__icon {
+  width: 16px;
+  height: 16px;
+  color: var(--np-green-dark);
+}
+
+.np-baby-rgpd__title {
+  font-size: var(--np-font-size-xs);
+  font-weight: var(--np-font-weight-semibold);
+  color: var(--np-green-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.np-baby-rgpd__text {
+  font-size: var(--np-font-size-xs);
+  color: var(--np-gray-700);
+  line-height: 1.4;
+}
+
+.np-baby-rgpd__title,
+.np-baby-rgpd__text {
+  display: block;
+}
+
+/* SECTION INFO */
 .np-baby-info {
-  margin-top: var(--np-spacing-6);
-  padding: var(--np-spacing-5);
+  margin-top: var(--np-spacing-4);
+  padding: var(--np-spacing-4);
   background-color: var(--np-cream-light);
-  border-radius: var(--np-radius-lg);
-  border: 1px solid var(--np-cream);
+  border-radius: var(--np-radius-md);
 }
 
 .np-baby-info__icon-wrapper {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background-color: var(--np-white);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--np-spacing-3);
+  margin-bottom: var(--np-spacing-2);
 }
 
 .np-baby-info__icon {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   color: var(--np-orange-primary);
 }
 
 .np-baby-info__title {
-  font-size: var(--np-font-size-base);
+  font-size: var(--np-font-size-sm);
   font-weight: var(--np-font-weight-bold);
   color: var(--np-gray-900);
-  margin-bottom: var(--np-spacing-2);
+  margin-bottom: var(--np-spacing-1);
 }
 
 .np-baby-info__text {
-  font-size: var(--np-font-size-sm);
+  font-size: var(--np-font-size-xs);
   color: var(--np-gray-700);
-  line-height: 1.6;
+  line-height: 1.5;
 }

@@ -1,11 +1,11 @@
-<aside class="np-disclaimer" role="note">
-	<svg class="np-disclaimer__icon" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-		<circle cx="12" cy="12" r="10"/>
-		<line x1="12" y1="8" x2="12" y2="12"/>
-		<line x1="12" y1="16" x2="12.01" y2="16"/>
-	</svg>
-	<p class="np-disclaimer__text">
-		<strong>Information :</strong>
-		NutriPetit fournit une analyse nutritionnelle informative basée sur des recommandations officielles. Ce score ne remplace pas l'avis d'un professionnel de santé. Consultez votre pédiatre pour toute question concernant l'alimentation de votre enfant.
-	</p>
+<aside class="np-disclaimer" role="note" aria-label="Avertissement santé">
+    <div class="np-disclaimer__icon-wrapper">
+        {{ ux_icon('lucide:shield-alert', {class: 'np-disclaimer__icon'}) }}
+    </div>
+    <div class="np-disclaimer__content">
+        <p class="np-disclaimer__title">Avertissement santé</p>
+        <p class="np-disclaimer__text">
+            NutriPetit fournit une <strong>analyse informative</strong> basée sur les recommandations officielles ANSES, OMS, EFSA et PNNS. Ce score <strong>ne constitue pas un avis médical</strong> et ne remplace en aucun cas l'avis d'un professionnel de santé. <strong>Consultez votre pédiatre</strong> pour toute question concernant l'alimentation de votre enfant, en particulier en cas d'allergie, intolérance ou condition médicale particulière.
+        </p>
+    </div>
 </aside>
