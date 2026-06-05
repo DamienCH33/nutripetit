@@ -1,0 +1,34 @@
+{# Position du curseur sur la jauge en % #}
+{% set position = (nutrient.value / nutrient.max_scale * 100)|round(1) %}
+{% if position > 100 %}{% set position = 100 %}{% endif %}
+
+{# Position du seuil bébé en % #}
+{% set thresholdPosition = (nutrient.threshold_baby / nutrient.max_scale * 100)|round(1) %}
+
+<article class="np-nutrient">
+    <div class="np-nutrient__header">
+        <span class="np-nutrient__name">{{ nutrient.name }}</span>
+        <span class="np-nutrient__value np-nutrient__value--{{ nutrient.level }}">
+            {{ nutrient.value }}{{ nutrient.unit }}
+        </span>
+    </div>
+
+    <div class="np-nutrient__gauge">
+        <div class="np-nutrient__bar"></div>
+        <div class="np-nutrient__threshold" style="left: {{ thresholdPosition }}%;" title="Seuil bébé"></div>
+        <div class="np-nutrient__cursor np-nutrient__cursor--{{ nutrient.level }}"
+             style="left: {{ position }}%;"></div>
+    </div>
+
+    <div class="np-nutrient__scale">
+        <span>0{{ nutrient.unit }}</span>
+        <span class="np-nutrient__scale-threshold">{{ nutrient.threshold_baby }}{{ nutrient.unit }} max</span>
+        <span>{{ nutrient.max_scale }}{{ nutrient.unit }}</span>
+    </div>
+
+    <p class="np-nutrient__message np-nutrient__message--{{ nutrient.level }}">
+        {{ nutrient.message }}
+    </p>
+
+    <p class="np-nutrient__reference">{{ nutrient.reference }}</p>
+</article>

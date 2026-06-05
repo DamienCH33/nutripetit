@@ -1,0 +1,15 @@
+<aside class="np-critical-alert" role="alert">
+    <div class="np-critical-alert__icon-wrapper">
+        {{ ux_icon('lucide:alert-triangle', {class: 'np-critical-alert__icon'}) }}
+    </div>
+    <div class="np-critical-alert__content">
+        <p class="np-critical-alert__title">{{ alert.title }}</p>
+        <p class="np-critical-alert__message">{{ alert.message }}</p>
+        {% if alert.source_url is defined %}
+            <a href="{{ alert.source_url }}" target="_blank" rel="noopener noreferrer" class="np-critical-alert__source">
+                Source : {{ alert.source_name }}
+                {{ ux_icon('lucide:external-link', {class: 'np-critical-alert__source-icon'}) }}
+            </a>
+        {% endif %}
+    </div>
+</aside>

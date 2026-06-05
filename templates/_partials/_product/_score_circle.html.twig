@@ -1,0 +1,30 @@
+{# Score circulaire #}
+{% set levelLabels = {
+    'ideal': 'Idéal pour bébé',
+    'good': 'Bon choix',
+    'occasional': 'Occasionnel',
+    'limit': 'À limiter',
+    'discouraged': 'Déconseillé'
+} %}
+
+<div class="np-score-circle">
+	<div class="np-score-circle__visual">
+		<svg viewbox="0 0 120 120" class="np-score-circle__svg">
+			<circle cx="60" cy="60" r="52" class="np-score-circle__bg"/>
+			<circle cx="60" cy="60" r="52" class="np-score-circle__progress np-score-circle__progress--{{ level }}" style="stroke-dasharray: {{ (score / 100 * 326.7)|round(1) }} 326.7"/>
+		</svg>
+		<div class="np-score-circle__value">
+			<span class="np-score-circle__number">{{ score }}</span>
+			<span class="np-score-circle__total">/100</span>
+		</div>
+	</div>
+	<div class="np-score-circle__info">
+		<span class="np-score-circle__dot np-score-circle__dot--{{ level }}"></span>
+		<p class="np-score-circle__label">{{ levelLabels[level] }}</p>
+		{% if babyAgeMonths is defined %}
+			<p class="np-score-circle__context">Pour bébé de
+				{{ babyAgeMonths }}
+				mois</p>
+		{% endif %}
+	</div>
+</div>

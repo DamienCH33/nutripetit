@@ -1,0 +1,22 @@
+<article class="np-rule-card np-rule-card--{{ rule.category }}">
+    <div class="np-rule-card__header">
+        <div class="np-rule-card__icon-wrapper np-rule-card__icon-wrapper--{{ rule.category }}">
+            {{ ux_icon(rule.icon|default('lucide:circle'), {class: 'np-rule-card__icon'}) }}
+        </div>
+        <div class="np-rule-card__main">
+            <h4 class="np-rule-card__label">{{ rule.rule_label }}</h4>
+            <p class="np-rule-card__reason">{{ rule.reason }}</p>
+        </div>
+        <div class="np-rule-card__impact np-rule-card__impact--{{ rule.category }}">
+            {% if rule.points > 0 %}+{% endif %}{{ rule.points }}
+            <span class="np-rule-card__impact-unit">pts</span>
+        </div>
+    </div>
+    <a href="{{ rule.source_url }}"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="np-rule-card__source">
+        {{ ux_icon('lucide:external-link', {class: 'np-rule-card__source-icon'}) }}
+        <span>Source : {{ rule.source_name }}</span>
+    </a>
+</article>

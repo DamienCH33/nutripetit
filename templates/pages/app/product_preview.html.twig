@@ -1,0 +1,250 @@
+{% extends 'base/pwa.html.twig' %}
+
+{% block title %}
+	{{ product.name }}
+	- NutriPetit
+{% endblock %}
+
+{% block body %}
+	<div
+		class="np-product" {{ stimulus_controller('product-tabs') }}>
+
+		{# Bandeau alerte critique #}
+		{% if criticalAlert %}
+			{% include '_partials/_product/_critical_alert.html.twig' with { alert: criticalAlert } %}
+		{% endif %}
+
+		{# HEADER produit #}
+		<section class="np-product__header">
+			<div class="np-product__header-row">
+				<div class="np-product__image">
+					{% if product.image_url %}
+						<img src="{{ product.image_url }}" alt="{{ product.name }}">
+					{% else %}
+						{{ ux_icon('lucide:image', {class: 'np-product__image-placeholder'}) }}
+					{% endif %}
+				</div>
+				<div class="np-product__identity">
+					<h1 class="np-product__name">{{ product.name }}</h1>
+					<p class="np-product__brand">{{ product.brand }}</p>
+					<p class="np-product__ean">EAN :
+						{{ product.ean }}</p>
+				</div>
+			</div>
+
+			{% include '_partials/_product/_score_circle.html.twig' with {
+            score: finalScore,
+            level: level,
+            babyAgeMonths: babyAgeMonths
+        } %}
+		</section>
+
+		{# Onglets #}
+		<div class="np-tabs np-tabs--scrollable" role="tablist">
+			<button type="button" class="np-tabs__tab np-tabs__tab--active" data-tab="rules" {{ stimulus_action('product-tabs', 'switch') }} data-product-tabs-target="tab">
+				{{ ux_icon('lucide:list-checks', {class: 'np-tabs__icon'}) }}
+				<span>Détails</span>
+			</button>
+			<button type="button" class="np-tabs__tab" data-tab="nutrients" {{ stimulus_action('product-tabs', 'switch') }} data-product-tabs-target="tab">
+				{{ ux_icon('lucide:bar-chart-3', {class: 'np-tabs__icon'}) }}
+				<span>Nutriments</span>
+			</button>
+			<button type="button" class="np-tabs__tab" data-tab="age" {{ stimulus_action('product-tabs', 'switch') }} data-product-tabs-target="tab">
+				{{ ux_icon('lucide:trending-up', {class: 'np-tabs__icon'}) }}
+				<span>Évolution âge</span>
+			</button>
+			<button type="button" class="np-tabs__tab" data-tab="environment" {{ stimulus_action('product-tabs', 'switch') }} data-product-tabs-target="tab">
+				{{ ux_icon('lucide:leaf', {class: 'np-tabs__icon'}) }}
+				<span>Environnement</span>
+			</button>
+			<button type="button" class="np-tabs__tab" data-tab="sources" {{ stimulus_action('product-tabs', 'switch') }} data-product-tabs-target="tab">
+				{{ ux_icon('lucide:book-open', {class: 'np-tabs__icon'}) }}
+				<span>Sources</span>
+			</button>
+		</div>
+
+		{# Onglet 1 : Détails (Bonus / Malus) #}
+		<section class="np-tabs__panel np-tabs__panel--active" data-tab="rules" data-product-tabs-target="panel">
+
+			{% set bonusRules = appliedRules|filter(r => r.category == 'bonus') %}
+			{% if bonusRules|length > 0 %}
+				<div class="np-rules-section">
+					<h3 class="np-rules-section__title np-rules-section__title--bonus">
+						{{ ux_icon('lucide:plus-circle', {class: 'np-rules-section__icon'}) }}
+						Points positifs
+					</h3>
+					{% for rule in bonusRules %}
+						{% include '_partials/_product/_rule_card.html.twig' with { rule: rule } %}
+					{% endfor %}
+				</div>
+			{% endif %}
+
+			{% set malusRules = appliedRules|filter(r => r.category == 'malus') %}
+			{% if malusRules|length > 0 %}
+				<div class="np-rules-section">
+					<h3 class="np-rules-section__title np-rules-section__title--malus">
+						{{ ux_icon('lucide:minus-circle', {class: 'np-rules-section__icon'}) }}
+						Points à surveiller
+					</h3>
+					{% for rule in malusRules %}
+						{% include '_partials/_product/_rule_card.html.twig' with { rule: rule } %}
+					{% endfor %}
+				</div>
+			{% endif %}
+		</section>
+
+		{# Onglet 2 : Nutriments #}
+		<section class="np-tabs__panel" data-tab="nutrients" data-product-tabs-target="panel" hidden>
+			<div class="np-nutrients-info">
+				<p class="np-nutrients-info__text">
+					{{ ux_icon('lucide:info', {class: 'np-nutrients-info__icon'}) }}
+					Les seuils affichés sont adaptés aux nourrissons selon les recommandations ANSES.
+				</p>
+			</div>
+			{% for nutrient in nutrients %}
+				{% include '_partials/_product/_nutrient_gauge.html.twig' with { nutrient: nutrient } %}
+			{% endfor %}
+		</section>
+
+		{# Onglet 3 : Évolution selon l'âge #}
+		<section class="np-tabs__panel" data-tab="age" data-product-tabs-target="panel" hidden>
+			<div class="np-age-info">
+				<p class="np-age-info__text">
+					{{ ux_icon('lucide:info', {class: 'np-age-info__icon'}) }}
+					Le score s'adapte aux besoins nutritionnels par tranche d'âge selon l'ANSES et le PNNS 4.
+				</p>
+			</div>
+
+			<div class="np-age-evolution">
+				{% for entry in scoresByAge %}
+					<div class="np-age-evolution__row {{ entry.months == babyAgeMonths ? 'np-age-evolution__row--active' : '' }}">
+						<div class="np-age-evolution__age">{{ entry.months }}
+							mois</div>
+						<div class="np-age-evolution__bar">
+							<div class="np-age-evolution__fill np-age-evolution__fill--{{ entry.level }}" style="width: {{ entry.score }}%"></div>
+						</div>
+						<div class="np-age-evolution__score">
+							<span class="np-age-evolution__value">{{ entry.score }}</span>
+							<span class="np-age-evolution__label">{{ entry.label }}</span>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</section>
+
+		{# Onglet 4 : Environnement #}
+		<section class="np-tabs__panel" data-tab="environment" data-product-tabs-target="panel" hidden>
+			<div class="np-env-info">
+				<p class="np-env-info__text">
+					{{ ux_icon('lucide:info', {class: 'np-env-info__icon'}) }}
+					Informations issues d'Open Food Facts. NutriPetit ne calcule pas de score environnemental.
+				</p>
+			</div>
+
+			{# Origine #}
+			{% if environment.origin is not null %}
+				<article class="np-env-card">
+					<div class="np-env-card__icon-wrapper">
+						{{ ux_icon('lucide:map-pin', {class: 'np-env-card__icon'}) }}
+					</div>
+					<div class="np-env-card__main">
+						<p class="np-env-card__label">Origine</p>
+						<p class="np-env-card__value">{{ environment.origin.flag }}
+							{{ environment.origin.country }}</p>
+					</div>
+				</article>
+			{% endif %}
+
+			{# Bio #}
+			<article class="np-env-card">
+				<div class="np-env-card__icon-wrapper np-env-card__icon-wrapper--{{ environment.bio_certified ? 'good' : 'neutral' }}">
+					{{ ux_icon('lucide:leaf', {class: 'np-env-card__icon'}) }}
+				</div>
+				<div class="np-env-card__main">
+					<p class="np-env-card__label">Certification Bio AB</p>
+					<p class="np-env-card__value">
+						{% if environment.bio_certified %}
+							<span class="np-env-card__check">✓ Certifié</span>
+						{% else %}
+							<span class="np-env-card__cross">Non certifié</span>
+						{% endif %}
+					</p>
+				</div>
+			</article>
+
+			{# Huile de palme #}
+			<article class="np-env-card">
+				<div class="np-env-card__icon-wrapper np-env-card__icon-wrapper--{{ environment.palm_oil_free ? 'good' : 'limit' }}">
+					{{ ux_icon('lucide:trees', {class: 'np-env-card__icon'}) }}
+				</div>
+				<div class="np-env-card__main">
+					<p class="np-env-card__label">Huile de palme</p>
+					<p class="np-env-card__value">
+						{% if environment.palm_oil_free %}
+							<span class="np-env-card__check">✓ Sans huile de palme</span>
+						{% else %}
+							<span class="np-env-card__cross">Contient de l'huile de palme</span>
+						{% endif %}
+					</p>
+				</div>
+			</article>
+
+			{# Emballage #}
+			{% if environment.packaging is not null %}
+				<article class="np-env-card np-env-card--expandable">
+					<div class="np-env-card__header">
+						<div class="np-env-card__icon-wrapper np-env-card__icon-wrapper--{{ environment.packaging.level }}">
+							{{ ux_icon('lucide:recycle', {class: 'np-env-card__icon'}) }}
+						</div>
+						<div class="np-env-card__main">
+							<p class="np-env-card__label">Emballage</p>
+							<p class="np-env-card__value">{{ environment.packaging.label }}</p>
+						</div>
+					</div>
+					{% if environment.packaging.details is defined %}
+						<div class="np-env-card__details">
+							{% for item in environment.packaging.details %}
+								<div class="np-env-card__detail-row">
+									<span class="np-env-card__detail-name">{{ item.name }}</span>
+									<span class="np-env-card__detail-status">
+										{% if item.recyclable %}
+											<span class="np-env-card__check">✓ Recyclable</span>
+										{% else %}
+											<span class="np-env-card__cross">✗ Non recyclable</span>
+										{% endif %}
+									</span>
+								</div>
+							{% endfor %}
+						</div>
+					{% endif %}
+				</article>
+			{% endif %}
+		</section>
+
+		{# Onglet 5 : Sources #}
+		<section class="np-tabs__panel" data-tab="sources" data-product-tabs-target="panel" hidden>
+			<div class="np-sources-intro">
+				<div class="np-sources-intro__badge">Algorithme v{{ algoVersion }}</div>
+				<p class="np-sources-intro__text">
+					Cette analyse s'appuie sur les recommandations officielles suivantes. Chaque source est vérifiable publiquement.
+				</p>
+			</div>
+
+			{% for source in uniqueSources %}
+				<a href="{{ source.url }}" target="_blank" rel="noopener noreferrer" class="np-source-card">
+					<div class="np-source-card__icon-wrapper">
+						{{ ux_icon('lucide:file-text', {class: 'np-source-card__icon'}) }}
+					</div>
+					<div class="np-source-card__content">
+						<p class="np-source-card__name">{{ source.name }}</p>
+						<p class="np-source-card__rules">
+							{{ source.rules|join(' · ') }}
+						</p>
+					</div>
+					{{ ux_icon('lucide:external-link', {class: 'np-source-card__arrow'}) }}
+				</a>
+			{% endfor %}
+		</section>
+
+	</div>
+{% endblock %}
