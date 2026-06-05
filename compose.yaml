@@ -4,6 +4,7 @@ services:
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
     container_name: nutripetit-postgres
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-nutripetit}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nutripetit}
@@ -23,6 +24,7 @@ services:
   redis:
     image: redis:7-alpine
     container_name: nutripetit-redis
+    restart: unless-stopped
     ports:
       - "6380:6379"
     volumes:
@@ -37,6 +39,7 @@ services:
   mailer:
     image: axllent/mailpit
     container_name: nutripetit-mailpit
+    restart: unless-stopped
     ports:
       - "1026:1025"
       - "8026:8025"
