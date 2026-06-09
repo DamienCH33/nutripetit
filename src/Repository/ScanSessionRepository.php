@@ -8,7 +8,7 @@ use App\Entity\ScanSession;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<ScanSession>
@@ -20,7 +20,7 @@ class ScanSessionRepository extends ServiceEntityRepository
         parent::__construct($registry, ScanSession::class);
     }
 
-    public function findById(Ulid $id): ?ScanSession
+    public function findById(Uuid $id): ?ScanSession
     {
         return $this->find($id);
     }

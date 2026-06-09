@@ -8,8 +8,8 @@ use App\Repository\ScoreResultRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Types\UlidType;
-use Symfony\Component\Uid\Ulid;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ScoreResultRepository::class)]
 #[ORM\Table(name: 'score_results')]
@@ -18,8 +18,8 @@ use Symfony\Component\Uid\Ulid;
 class ScoreResult
 {
     #[ORM\Id]
-    #[ORM\Column(type: UlidType::NAME, unique: true)]
-    private Ulid $id;
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    private Uuid $id;
 
     #[ORM\ManyToOne(targetEntity: Product::class)]
     #[ORM\JoinColumn(name: 'product_ean', referencedColumnName: 'ean', nullable: false)]
@@ -58,7 +58,7 @@ class ScoreResult
         ?int $babyAgeMonths = null,
         ?ScanSession $scanSession = null,
     ) {
-        $this->id = new Ulid();
+        $this->id = Uuid::v7();
         $this->product = $product;
         $this->finalScore = max(0, min(100, $finalScore));
         $this->level = $level;
@@ -68,7 +68,7 @@ class ScoreResult
         $this->calculatedAt = new DateTimeImmutable();
     }
 
-    public function getId(): Ulid
+    public function getId(): Uuid
     {
         return $this->id;
     }

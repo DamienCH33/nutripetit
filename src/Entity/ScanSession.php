@@ -7,8 +7,8 @@ namespace App\Entity;
 use App\Repository\ScanSessionRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Types\UlidType;
-use Symfony\Component\Uid\Ulid;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ScanSessionRepository::class)]
 #[ORM\Table(name: 'scan_sessions')]
@@ -16,8 +16,8 @@ use Symfony\Component\Uid\Ulid;
 class ScanSession
 {
     #[ORM\Id]
-    #[ORM\Column(type: UlidType::NAME, unique: true)]
-    private Ulid $id;
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    private Uuid $id;
 
     #[ORM\Column(nullable: true)]
     private ?int $babyAgeMonths = null;
@@ -33,13 +33,13 @@ class ScanSession
 
     public function __construct(?string $userAgent = null)
     {
-        $this->id = new Ulid();
+        $this->id = Uuid::v7();
         $this->userAgent = $userAgent;
         $this->createdAt = new DateTimeImmutable();
         $this->lastActiveAt = new DateTimeImmutable();
     }
 
-    public function getId(): Ulid
+    public function getId(): Uuid
     {
         return $this->id;
     }
