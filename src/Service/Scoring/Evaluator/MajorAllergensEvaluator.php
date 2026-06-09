@@ -25,6 +25,39 @@ final class MajorAllergensEvaluator implements RuleEvaluator
         return 'major_allergens' === $rule->getCode();
     }
 
+    private const ALLERGEN_FR = [
+        'gluten' => 'Gluten',
+        'crustaceans' => 'Crustacés',
+        'eggs' => 'Œufs',
+        'fish' => 'Poisson',
+        'peanuts' => 'Arachides',
+        'soybeans' => 'Soja',
+        'milk' => 'Lait',
+        'nuts' => 'Fruits à coque',
+        'celery' => 'Céleri',
+        'mustard' => 'Moutarde',
+        'sesame-seeds' => 'Graines de sésame',
+        'sulphur-dioxide-and-sulphites' => 'Sulfites',
+        'lupin' => 'Lupin',
+        'molluscs' => 'Mollusques',
+    ];
+
+    /**
+     * @param list<string> $allergens
+     *
+     * @return list<string>
+     */
+    private function translateAllergens(array $allergens): array
+    {
+        $result = [];
+        foreach ($allergens as $tag) {
+            $clean = str_replace(['en:', 'fr:'], '', (string) $tag);
+            $result[] = self::ALLERGEN_FR[$clean] ?? ucfirst($clean);
+        }
+
+        return $result;
+    }
+
     public function evaluate(
         Product $product,
         ScoringRule $rule,
@@ -46,9 +79,10 @@ final class MajorAllergensEvaluator implements RuleEvaluator
             $allergens,
         );
 
+        $translated = $this->translateAllergens($product->getAllergens());
         $reason = \sprintf(
             'Allergène(s) majeur(s) déclaré(s) : %s. Vigilance recommandée selon le règlement INCO.',
-            implode(', ', \array_slice($cleanAllergens, 0, 5)),
+            implode(', ', $translated),
         );
 
         return new AppliedRuleDto(

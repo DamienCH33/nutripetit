@@ -55,18 +55,7 @@ final class ScoringRuleFixtures extends Fixture
     }
 
     /**
-     * @return list<array{
-     *     code: string,
-     *     label: string,
-     *     description: string,
-     *     pointsImpact: int,
-     *     sourceName: string,
-     *     sourceUrl: string,
-     *     thresholdValue?: float,
-     *     thresholdUnit?: string,
-     *     ageMinMonths?: int,
-     *     ageMaxMonths?: int
-     * }>
+     * @return list<array<string, mixed>>
      */
     private function getRules(): array
     {
@@ -187,6 +176,17 @@ final class ScoringRuleFixtures extends Fixture
             // BONUS - Garanties qualité
             //
             [
+                'code' => 'high_fruit_vegetable',
+                'label' => 'Riche en fruits et légumes',
+                'description' => 'Composé d\'au moins 50% de fruits et légumes selon l\'analyse Open Food Facts. Favorise l\'apport en vitamines, minéraux et fibres.',
+                'pointsImpact' => 5,
+                'ageMinMonths' => 6,
+                'ageMaxMonths' => 36,
+                'sourceName' => 'PNNS 4 / ANSES',
+                'sourceUrl' => 'https://www.mangerbouger.fr/',
+            ],
+
+            [
                 'code' => 'baby_food_certified',
                 'label' => 'Adapté aux nourrissons',
                 'description' => 'Produit conforme à la Directive 2006/125/CE sur les aliments pour bébés. Composition réglementée et adaptée aux nourrissons.',
@@ -233,8 +233,10 @@ final class ScoringRuleFixtures extends Fixture
             [
                 'code' => 'major_allergens',
                 'label' => 'Allergènes majeurs',
-                'description' => 'Présence d\'allergènes majeurs (gluten, lait, œuf, arachide, fruits à coque, soja, poisson, crustacés, céleri, moutarde, sésame, sulfites, lupin, mollusques). Mention informative obligatoire selon le règlement INCO.',
+                'description' => 'Présence d\'allergènes majeurs...',
                 'pointsImpact' => 0,
+                'ageMinMonths' => 0,
+                'ageMaxMonths' => 36,
                 'sourceName' => 'Règlement EU 1169/2011 (INCO)',
                 'sourceUrl' => 'https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX%3A32011R1169',
             ],

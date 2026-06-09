@@ -83,10 +83,10 @@ final readonly class ScoreCalculator
     private function determineLevel(int $score): string
     {
         return match (true) {
-            $score >= 85 => 'ideal',
-            $score >= 70 => 'good',
-            $score >= 50 => 'occasional',
-            $score >= 30 => 'limit',
+            $score >= 95 => 'ideal',
+            $score >= 85 => 'good',
+            $score >= 75 => 'occasional',
+            $score >= 70 => 'limit',
             default => 'discouraged',
         };
     }
