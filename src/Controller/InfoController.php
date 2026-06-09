@@ -9,14 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * Contrôleur de la page d'informations sur le scoring.
- * Affiche l'échelle 5 niveaux et les 4 sources officielles.
- */
 final class InfoController extends AbstractController
 {
-    private const ALGO_VERSION = '1.0.0';
-
     public function __construct(
         private readonly ScoringRuleRepository $ruleRepository,
     ) {
@@ -25,31 +19,48 @@ final class InfoController extends AbstractController
     #[Route('/app/infos', name: 'app_pwa_info', methods: ['GET'])]
     public function index(): Response
     {
-        // Échelle 5 niveaux (inspirée du Nutri-Score officiel mais adaptée 0-3 ans)
+        $rules = $this->ruleRepository->findActiveByVersion('1.0.0');
+
         $scoreScale = [
-            ['min' => 85, 'max' => 100, 'level' => 'ideal', 'label' => 'Idéal pour bébé', 'description' => 'Composition optimale, recommandé'],
-            ['min' => 70, 'max' => 84, 'level' => 'good', 'label' => 'Bon choix', 'description' => 'Adapté à votre enfant'],
-            ['min' => 50, 'max' => 69, 'level' => 'occasional', 'label' => 'Occasionnel', 'description' => 'Acceptable de temps en temps'],
-            ['min' => 30, 'max' => 49, 'level' => 'limit', 'label' => 'À limiter', 'description' => 'À consommer rarement'],
-            ['min' => 0, 'max' => 29, 'level' => 'discouraged', 'label' => 'Déconseillé', 'description' => 'Non recommandé pour bébé'],
+            ['level' => 'ideal', 'min' => 85, 'max' => 100, 'label' => 'Idéal pour bébé', 'description' => 'Composition optimale, recommandé'],
+            ['level' => 'good', 'min' => 70, 'max' => 84, 'label' => 'Bon choix', 'description' => 'Adapté à votre enfant'],
+            ['level' => 'occasional', 'min' => 50, 'max' => 69, 'label' => 'Occasionnel', 'description' => 'Acceptable de temps en temps'],
+            ['level' => 'limit', 'min' => 30, 'max' => 49, 'label' => 'À limiter', 'description' => 'À consommer rarement'],
+            ['level' => 'discouraged', 'min' => 0, 'max' => 29, 'label' => 'Déconseillé', 'description' => 'Non recommandé pour bébé'],
         ];
 
-        // Sources officielles (mises à jour 2026 confirmées)
+        $infantFormulaRules = [
+            ['code' => 'formula_dha_present', 'label' => 'DHA (Oméga 3) présent', 'points' => 5, 'reason' => 'Le DHA est obligatoire depuis 2020, essentiel au développement cérébral et visuel.', 'source' => 'Règlement UE 2016/127', 'category' => 'bonus'],
+            ['code' => 'formula_ara_present', 'label' => 'ARA (Oméga 6) présent', 'points' => 5, 'reason' => 'L\'ARA accompagne le DHA.', 'source' => 'European Academy of Paediatrics 2020', 'category' => 'bonus'],
+            ['code' => 'formula_no_palm_oil', 'label' => 'Sans huile de palme', 'points' => 8, 'reason' => 'Évite les contaminants 3-MCPD et glycidol issus du raffinage.', 'source' => 'EFSA Scientific Opinion 2016', 'category' => 'bonus'],
+            ['code' => 'formula_organic', 'label' => 'Certification Bio', 'points' => 6, 'reason' => 'Production biologique réduisant l\'exposition aux pesticides.', 'source' => 'Règlement UE 2018/848', 'category' => 'bonus'],
+            ['code' => 'formula_prebiotics', 'label' => 'Prébiotiques (GOS/FOS)', 'points' => 4, 'reason' => 'Favorisent le microbiote intestinal.', 'source' => 'ANSES / mpedia.fr', 'category' => 'bonus'],
+            ['code' => 'formula_probiotics', 'label' => 'Probiotiques', 'points' => 4, 'reason' => 'Souches Bifidobacterium ou Lactobacillus.', 'source' => 'Études cliniques', 'category' => 'bonus'],
+            ['code' => 'formula_low_protein', 'label' => 'Faible teneur en protéines (≤1,34g/100ml)', 'points' => 4, 'reason' => 'Charge rénale moindre, proche du lait maternel.', 'source' => 'SFP', 'category' => 'bonus'],
+            ['code' => 'formula_low_sodium', 'label' => 'Faible sodium (≤24mg/100ml)', 'points' => 4, 'reason' => 'Optimal pour les nourrissons.', 'source' => 'mpedia.fr', 'category' => 'bonus'],
+            ['code' => 'formula_palm_oil_main', 'label' => 'Huile de palme en premier ingrédient', 'points' => -8, 'reason' => 'Contaminants 3-MCPD et glycidol.', 'source' => 'EFSA / Règlement UE 2018/290', 'category' => 'malus'],
+            ['code' => 'formula_added_sugars', 'label' => 'Sucres ajoutés (autres que lactose)', 'points' => -6, 'reason' => 'Le lactose seul est préférable.', 'source' => 'Société Française de Pédiatrie', 'category' => 'malus'],
+            ['code' => 'formula_soy_protein', 'label' => 'Protéines de soja', 'points' => -4, 'reason' => 'Déconseillé sauf prescription médicale.', 'source' => 'ANSES', 'category' => 'malus'],
+        ];
+
         $sources = [
-            ['name' => 'ANSES', 'description' => 'Agence française - Avis 0-3 ans (2019)', 'url' => 'https://www.anses.fr'],
-            ['name' => 'PNNS 4', 'description' => 'Programme National Nutrition Santé (2021)', 'url' => 'https://www.mangerbouger.fr'],
-            ['name' => 'OMS', 'description' => 'Organisation Mondiale de la Santé', 'url' => 'https://www.who.int'],
-            ['name' => 'EFSA', 'description' => 'Autorité européenne de sécurité des aliments', 'url' => 'https://www.efsa.europa.eu'],
+            ['name' => 'ANSES', 'description' => 'Agence française - Avis 0-3 ans (2019)', 'url' => 'https://www.anses.fr/'],
+            ['name' => 'PNNS 4', 'description' => 'Programme National Nutrition Santé (2021)', 'url' => 'https://www.mangerbouger.fr/'],
+            ['name' => 'OMS', 'description' => 'Organisation Mondiale de la Santé', 'url' => 'https://www.who.int/'],
+            ['name' => 'EFSA', 'description' => 'Autorité européenne de sécurité des aliments', 'url' => 'https://www.efsa.europa.eu/'],
+            ['name' => 'Règlement UE 2016/127', 'description' => 'Préparations pour nourrissons (laits infantiles)', 'url' => 'https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX%3A32016R0127'],
+            ['name' => 'Règlement UE 2018/848', 'description' => 'Production biologique (label AB)', 'url' => 'https://eur-lex.europa.eu/eli/reg/2018/848/oj'],
+            ['name' => 'Règlement UE 1169/2011 (INCO)', 'description' => 'Étiquetage et allergènes', 'url' => 'https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX%3A32011R1169'],
+            ['name' => 'Directive UE 2006/125/CE', 'description' => 'Aliments à base de céréales et aliments pour bébés', 'url' => 'https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX%3A32006L0125'],
         ];
-
-        // Chargement dynamique des règles depuis la DB
-        $rules = $this->ruleRepository->findActiveByVersion(self::ALGO_VERSION);
 
         return $this->render('pages/app/info.html.twig', [
-            'scoreScale' => $scoreScale,
             'rules' => $rules,
+            'algoVersion' => '1.0.0',
+            'scoreScale' => $scoreScale,
+            'infantFormulaRules' => $infantFormulaRules,
+            'infantFormulaAlgoVersion' => 'infant_formula_1.0.0',
             'sources' => $sources,
-            'algoVersion' => self::ALGO_VERSION,
         ]);
     }
 }

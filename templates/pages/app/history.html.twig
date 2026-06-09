@@ -1,8 +1,55 @@
 {% extends 'base/pwa.html.twig' %}
-{% block title %}Historique - NutriPetit{% endblock %}
+
+{% block title %}Historique - NutriPetit
+{% endblock %}
+
 {% block body %}
-<div class="np-container np-page-content">
-    <h1 class="np-title-lg np-text-center">Historique</h1>
-    <p class="np-text-body np-text-center">À développer en J12.</p>
-</div>
+	<div class="np-history">
+		<header class="np-history__header">
+			<h1 class="np-history__title">
+				{{ ux_icon('lucide:history', {class: 'np-history__title-icon'}) }}
+				Mon historique
+			</h1>
+			<p class="np-history__lead">
+				Vos derniers produits scannés. Les données sont conservées 3 ans maximum.
+			</p>
+		</header>
+
+		{% if results|length == 0 %}
+			<div class="np-history__empty">
+				<div class="np-history__empty-icon-wrapper">
+					{{ ux_icon('lucide:scan-line', {class: 'np-history__empty-icon'}) }}
+				</div>
+				<p class="np-history__empty-title">Aucun scan pour le moment</p>
+				<p class="np-history__empty-message">Scannez votre premier produit pour commencer à construire votre historique.</p>
+				<a href="{{ path('app_pwa_scanner') }}" class="np-history__cta">
+					{{ ux_icon('lucide:camera', {class: 'np-history__cta-icon'}) }}
+					Scanner un produit
+				</a>
+			</div>
+		{% else %}
+			<div class="np-history__list">
+				{% for result in results %}
+					<a href="{{ path('app_pwa_scan', {ean: result.product.ean}) }}" class="np-history__item">
+						<div class="np-history__item-image">
+							{% if result.product.imageUrl %}
+								<img src="{{ result.product.imageUrl }}" alt="{{ result.product.name }}">
+							{% else %}
+								{{ ux_icon('lucide:image', {class: 'np-history__item-placeholder'}) }}
+							{% endif %}
+						</div>
+						<div class="np-history__item-main">
+							<p class="np-history__item-name">{{ result.product.name }}</p>
+							<p class="np-history__item-brand">{{ result.product.brand|default('-') }}</p>
+							<p class="np-history__item-date">{{ result.calculatedAt|date('d/m/Y à H:i') }}</p>
+						</div>
+						<div class="np-history__item-score np-history__item-score--{{ result.level }}">
+							<span class="np-history__item-score-value">{{ result.finalScore }}</span>
+							<span class="np-history__item-score-total">/100</span>
+						</div>
+					</a>
+				{% endfor %}
+			</div>
+		{% endif %}
+	</div>
 {% endblock %}

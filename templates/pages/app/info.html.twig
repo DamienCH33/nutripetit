@@ -1,124 +1,149 @@
 {% extends 'base/pwa.html.twig' %}
 
-{% block title %}Comprendre le score - NutriPetit{% endblock %}
+{% block title %}Comprendre le score - NutriPetit
+{% endblock %}
 
 {% block body %}
-    {# Intro #}
-    <section class="np-info-hero">
-        <h1 class="np-info-hero__title">Comprendre le score</h1>
-        <p class="np-info-hero__subtitle">
-            NutriPetit calcule un score nutritionnel adapté à votre bébé en s'appuyant sur les recommandations officielles ANSES, PNNS 4, OMS et EFSA.
-        </p>
-        <div class="np-info-hero__version">
-            <span>Algorithme v{{ algoVersion }} — {{ rules|length }} règles actives</span>
-        </div>
-    </section>
+	{# Intro #}
+	<section class="np-info-hero">
+		<h1 class="np-info-hero__title">Comprendre le score</h1>
+		<p class="np-info-hero__subtitle">
+			NutriPetit calcule un score nutritionnel adapté à votre bébé en s'appuyant sur les recommandations officielles ANSES, PNNS 4, OMS et EFSA.
+		</p>
+		<div class="np-info-hero__version">
+			<span>Algorithme v{{ algoVersion }}
+				—
+				{{ rules|length }}
+				règles actives</span>
+		</div>
+	</section>
 
-    {# Échelle 5 niveaux #}
-    <section class="np-info-section">
-        <h2 class="np-info-section__title">L'échelle de score</h2>
-        <p class="np-info-section__lead">
-            Chaque produit reçoit une note de 0 à 100, calculée à partir d'une base de 100 points modulée par l'application des règles.
-        </p>
+	{# Échelle 5 niveaux #}
+	<section class="np-info-section">
+		<h2 class="np-info-section__title">L'échelle de score</h2>
+		<p class="np-info-section__lead">
+			Chaque produit reçoit une note de 0 à 100, calculée à partir d'une base de 100 points modulée par l'application des règles.
+		</p>
 
-        <div class="np-info-scale">
-            {% for tier in scoreScale %}
-                <div class="np-info-scale-item">
-                    <div class="np-info-scale-item__dot np-info-scale-item__dot--{{ tier.level }}"></div>
-                    <div class="np-info-scale-item__content">
-                        <p class="np-info-scale-item__range">{{ tier.min }}–{{ tier.max }}</p>
-                        <p class="np-info-scale-item__label">{{ tier.label }}</p>
-                        <p class="np-info-scale-item__desc">{{ tier.description }}</p>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </section>
+		<div class="np-info-scale">
+			{% for tier in scoreScale %}
+				<div class="np-info-scale-item">
+					<div class="np-info-scale-item__dot np-info-scale-item__dot--{{ tier.level }}"></div>
+					<div class="np-info-scale-item__content">
+						<p class="np-info-scale-item__range">{{ tier.min }}–{{ tier.max }}</p>
+						<p class="np-info-scale-item__label">{{ tier.label }}</p>
+						<p class="np-info-scale-item__desc">{{ tier.description }}</p>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</section>
 
-    {# Les règles depuis la DB #}
-    <section class="np-info-section">
-        <h2 class="np-info-section__title">Nos règles de scoring</h2>
-        <p class="np-info-section__lead">
-            Toutes nos règles sont versionnées et sourcées. Chaque règle pointe vers sa référence officielle vérifiable.
-        </p>
+	{# Les règles depuis la DB #}
+	<section class="np-info-section">
+		<h2 class="np-info-section__title">Nos règles de scoring</h2>
+		<p class="np-info-section__lead">
+			Toutes nos règles sont versionnées et sourcées. Chaque règle pointe vers sa référence officielle vérifiable.
+		</p>
 
-        <div class="np-info-rules">
-            {% for rule in rules %}
-                <article class="np-info-rule">
-                    <div class="np-info-rule__header">
-                        <h3 class="np-info-rule__label">{{ rule.label }}</h3>
-                        <span class="np-info-rule__impact np-info-rule__impact--{{ rule.pointsImpact < 0 ? 'negative' : (rule.pointsImpact > 0 ? 'positive' : 'neutral') }}">
-                            {% if rule.pointsImpact > 0 %}+{% endif %}{{ rule.pointsImpact }} pts
-                        </span>
-                    </div>
+		<div class="np-info-rules">
+			{% for rule in rules %}
+				<article class="np-info-rule">
+					<div class="np-info-rule__header">
+						<h3 class="np-info-rule__label">{{ rule.label }}</h3>
+						<span class="np-info-rule__impact np-info-rule__impact--{{ rule.pointsImpact < 0 ? 'negative' : (rule.pointsImpact > 0 ? 'positive' : 'neutral') }}">
+							{% if rule.pointsImpact > 0 %}+
+							{% endif %}
+							{{ rule.pointsImpact }}
+							pts
+						</span>
+					</div>
 
-                    <p class="np-info-rule__description">{{ rule.description }}</p>
+					<p class="np-info-rule__description">{{ rule.description }}</p>
 
-                    <div class="np-info-rule__meta">
-                        <span class="np-info-rule__age">
-                            {{ ux_icon('lucide:calendar', {class: 'np-info-rule__icon'}) }}
-                            {% if rule.ageMinMonths is null and rule.ageMaxMonths is null %}
-                                Tous âges
-                            {% else %}
-                                {{ rule.ageMinMonths ?? 0 }}-{{ rule.ageMaxMonths ?? 36 }} mois
-                            {% endif %}
-                        </span>
-                        <a href="{{ rule.sourceUrl }}" target="_blank" rel="noopener noreferrer" class="np-info-rule__source">
-                            {{ ux_icon('lucide:external-link', {class: 'np-info-rule__icon'}) }}
-                            {{ rule.sourceName }}
-                        </a>
-                    </div>
-                </article>
-            {% endfor %}
-        </div>
-    </section>
+					<div class="np-info-rule__meta">
+						<span class="np-info-rule__age">
+							{{ ux_icon('lucide:calendar', {class: 'np-info-rule__icon'}) }}
+							{% if rule.ageMinMonths is null and rule.ageMaxMonths is null %}
+								Tous âges
+							{% else %}
+								{{ rule.ageMinMonths ?? 0 }}-{{ rule.ageMaxMonths ?? 36 }}
+								mois
+							{% endif %}
+						</span>
+						<a href="{{ rule.sourceUrl }}" target="_blank" rel="noopener noreferrer" class="np-info-rule__source">
+							{{ ux_icon('lucide:external-link', {class: 'np-info-rule__icon'}) }}
+							{{ rule.sourceName }}
+						</a>
+					</div>
+				</article>
+			{% endfor %}
+		</div>
+	</section>
+	{# Règles spécifiques laits infantiles #}
+	<div class="np-info-hero__version">
+		<h2>Algorithme spécifique laits infantiles ({{ infantFormulaAlgoVersion }})</h2>
+	</div>
+	<p>Les laits infantiles sont strictement réglementés par le Règlement UE 2016/127. Notre algorithme dédié compare la qualité optionnelle entre produits déjà conformes.</p>
 
-    {# Pourquoi pas Nutri-Score adulte #}
-    <section class="np-info-section np-info-section--highlight">
-        <h2 class="np-info-section__title">Pourquoi pas le Nutri-Score adulte ?</h2>
-        <p class="np-info-section__lead">
-            Les besoins nutritionnels d'un bébé sont fondamentalement différents de ceux d'un adulte. Santé publique France elle-même reconnaît que le Nutri-Score classique n'est pas adapté à l'alimentation infantile.
-        </p>
+	{% for rule in infantFormulaRules %}
+		<article class="np-rule-card np-rule-card--{{ rule.category }}">
+			<h4>{{ rule.label }}
+				<span>{{ rule.points >= 0 ? '+' : '' }}{{ rule.points }}
+					pts</span>
+			</h4>
+			<p>{{ rule.reason }}</p>
+			<p>
+				<strong>Source :</strong>
+				{{ rule.source }}</p>
+		</article>
+	{% endfor %}
+	{# Pourquoi pas Nutri-Score adulte #}
+	<section class="np-info-section np-info-section--highlight">
+		<h2 class="np-info-section__title">Pourquoi pas le Nutri-Score adulte ?</h2>
+		<p class="np-info-section__lead">
+			Les besoins nutritionnels d'un bébé sont fondamentalement différents de ceux d'un adulte. Santé publique France elle-même reconnaît que le Nutri-Score classique n'est pas adapté à l'alimentation infantile.
+		</p>
 
-        <div class="np-info-comparison">
-            <div class="np-info-comparison__col">
-                <div class="np-info-comparison__icon-wrapper np-info-comparison__icon-wrapper--bad">
-                    {{ ux_icon('lucide:x', {class: 'np-info-comparison__icon'}) }}
-                </div>
-                <h3 class="np-info-comparison__title">Nutri-Score classique</h3>
-                <p class="np-info-comparison__text">Conçu pour les adultes. Tolère des seuils de sel et sucre inadaptés aux nourrissons. Pénalise les bonnes matières grasses pourtant essentielles au développement du bébé.</p>
-            </div>
+		<div class="np-info-comparison">
+			<div class="np-info-comparison__col">
+				<div class="np-info-comparison__icon-wrapper np-info-comparison__icon-wrapper--bad">
+					{{ ux_icon('lucide:x', {class: 'np-info-comparison__icon'}) }}
+				</div>
+				<h3 class="np-info-comparison__title">Nutri-Score classique</h3>
+				<p class="np-info-comparison__text">Conçu pour les adultes. Tolère des seuils de sel et sucre inadaptés aux nourrissons. Pénalise les bonnes matières grasses pourtant essentielles au développement du bébé.</p>
+			</div>
 
-            <div class="np-info-comparison__col">
-                <div class="np-info-comparison__icon-wrapper np-info-comparison__icon-wrapper--good">
-                    {{ ux_icon('lucide:check', {class: 'np-info-comparison__icon'}) }}
-                </div>
-                <h3 class="np-info-comparison__title">NutriPetit</h3>
-                <p class="np-info-comparison__text">Spécialement calibré pour les 0-3 ans, avec des règles qui s'adaptent à l'âge de votre enfant et qui s'appuient sur les avis ANSES 2019 et PNNS 4.</p>
-            </div>
-        </div>
-    </section>
+			<div class="np-info-comparison__col">
+				<div class="np-info-comparison__icon-wrapper np-info-comparison__icon-wrapper--good">
+					{{ ux_icon('lucide:check', {class: 'np-info-comparison__icon'}) }}
+				</div>
+				<h3 class="np-info-comparison__title">NutriPetit</h3>
+				<p class="np-info-comparison__text">Spécialement calibré pour les 0-3 ans, avec des règles qui s'adaptent à l'âge de votre enfant et qui s'appuient sur les avis ANSES 2019 et PNNS 4.</p>
+			</div>
+		</div>
+	</section>
 
-    {# Sources officielles #}
-    <section class="np-info-section">
-        <h2 class="np-info-section__title">Nos sources officielles</h2>
-        <p class="np-info-section__lead">
-            Tout notre algorithme s'appuie sur des organismes reconnus en nutrition et santé infantile.
-        </p>
+	{# Sources officielles #}
+	<section class="np-info-section">
+		<h2 class="np-info-section__title">Nos sources officielles</h2>
+		<p class="np-info-section__lead">
+			Tout notre algorithme s'appuie sur des organismes reconnus en nutrition et santé infantile.
+		</p>
 
-        <div class="np-info-sources">
-            {% for source in sources %}
-                <a href="{{ source.url }}" target="_blank" rel="noopener noreferrer" class="np-info-source">
-                    <div class="np-info-source__name">{{ source.name }}</div>
-                    <div class="np-info-source__desc">{{ source.description }}</div>
-                    {{ ux_icon('lucide:arrow-up-right', {class: 'np-info-source__arrow'}) }}
-                </a>
-            {% endfor %}
-        </div>
-    </section>
+		<div class="np-info-sources">
+			{% for source in sources %}
+				<a href="{{ source.url }}" target="_blank" rel="noopener noreferrer" class="np-info-source">
+					<div class="np-info-source__name">{{ source.name }}</div>
+					<div class="np-info-source__desc">{{ source.description }}</div>
+					{{ ux_icon('lucide:arrow-up-right', {class: 'np-info-source__arrow'}) }}
+				</a>
+			{% endfor %}
+		</div>
+	</section>
 
-    {# Disclaimer complet en bas (en plus du compact automatique) #}
-    <section class="np-info-section">
-        {% include '_partials/_disclaimer.html.twig' %}
-    </section>
+	{# Disclaimer complet en bas (en plus du compact automatique) #}
+	<section class="np-info-section">
+		{% include '_partials/_disclaimer.html.twig' %}
+	</section>
 {% endblock %}
