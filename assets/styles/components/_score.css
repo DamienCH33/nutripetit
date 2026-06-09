@@ -6,49 +6,65 @@
 /* ============================================
  * COULEURS DE TEXTE PAR NIVEAU
  * ============================================ */
-.np-text-ideal { color: var(--np-score-ideal); }
-.np-text-good { color: var(--np-score-good); }
-.np-text-occasional { color: var(--np-score-occasional); }
-.np-text-limit { color: var(--np-score-limit); }
-.np-text-discouraged { color: var(--np-score-discouraged); }
+.np-text-ideal {
+    color: var(--np-score-ideal);
+}
+.np-text-good {
+    color: var(--np-score-good);
+}
+.np-text-occasional {
+    color: var(--np-score-occasional);
+}
+.np-text-limit {
+    color: var(--np-score-limit);
+}
+.np-text-discouraged {
+    color: var(--np-score-discouraged);
+}
 
 /* Aliases de compatibilité */
-.np-text-success { color: var(--np-score-ideal); }
-.np-text-warning { color: var(--np-score-limit); }
-.np-text-danger { color: var(--np-score-discouraged); }
+.np-text-success {
+    color: var(--np-score-ideal);
+}
+.np-text-warning {
+    color: var(--np-score-limit);
+}
+.np-text-danger {
+    color: var(--np-score-discouraged);
+}
 
 /* ============================================
  * BADGES DE NIVEAU
  * ============================================ */
 .np-score-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--np-spacing-1);
-  padding: 4px 12px;
-  border-radius: var(--np-radius-pill);
-  font-size: var(--np-font-size-xs);
-  font-weight: var(--np-font-weight-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--np-spacing-1);
+    padding: 4px 12px;
+    border-radius: var(--np-radius-pill);
+    font-size: var(--np-font-size-xs);
+    font-weight: var(--np-font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .np-score-badge--ideal {
-  background-color: var(--np-score-ideal-bg);
-  color: var(--np-score-ideal);
+    background-color: var(--np-score-ideal-bg);
+    color: var(--np-score-ideal);
 }
 .np-score-badge--good {
-  background-color: var(--np-score-good-bg);
-  color: var(--np-score-good);
+    background-color: var(--np-score-good-bg);
+    color: var(--np-score-good);
 }
 .np-score-badge--occasional {
-  background-color: var(--np-score-occasional-bg);
-  color: var(--np-score-occasional);
+    background-color: var(--np-score-occasional-bg);
+    color: var(--np-score-occasional);
 }
 .np-score-badge--limit {
-  background-color: var(--np-score-limit-bg);
-  color: var(--np-score-limit);
+    background-color: var(--np-score-limit-bg);
+    color: var(--np-score-limit);
 }
 .np-score-badge--discouraged {
-  background-color: var(--np-score-discouraged-bg);
-  color: var(--np-score-discouraged);
+    background-color: var(--np-score-discouraged-bg);
+    color: var(--np-score-discouraged);
 }

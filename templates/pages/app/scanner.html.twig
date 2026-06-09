@@ -1,8 +1,52 @@
 {% extends 'base/pwa.html.twig' %}
-{% block title %}Scanner - NutriPetit{% endblock %}
+
+{% block title %}Scanner un produit - NutriPetit
+{% endblock %}
+
 {% block body %}
-<div class="np-container np-page-content">
-    <h1 class="np-title-lg np-text-center">Page Scanner</h1>
-    <p class="np-text-body np-text-center">À développer en J8.</p>
-</div>
+	<div class="np-scanner" {{ stimulus_controller('barcode-scanner') }} data-barcode-scanner-scan-url-pattern-value="/app/scan/__EAN__">
+
+		<header class="np-scanner__header">
+			<h1 class="np-scanner__title">
+				{{ ux_icon('lucide:scan-line', {class: 'np-scanner__title-icon'}) }}
+				Scanner un produit
+			</h1>
+			<p class="np-scanner__lead">
+				Pointez votre caméra vers le code-barres EAN-13 du produit.
+			</p>
+		</header>
+
+		<div class="np-scanner__viewport">
+			<video data-barcode-scanner-target="video" class="np-scanner__video" playsinline></video>
+			<div class="np-scanner__overlay">
+				<div class="np-scanner__frame"></div>
+			</div>
+		</div>
+
+		<p class="np-scanner__status" data-barcode-scanner-target="status">
+			Cliquez sur « Démarrer » pour activer la caméra.
+		</p>
+
+		<p class="np-scanner__error" data-barcode-scanner-target="error" hidden></p>
+
+		<div class="np-scanner__actions">
+			<button type="button" class="np-scanner__btn np-scanner__btn--secondary" data-barcode-scanner-target="stopBtn" {{ stimulus_action('barcode-scanner', 'stop') }} hidden>
+				{{ ux_icon('lucide:square', {class: 'np-scanner__btn-icon'}) }}
+				Arrêter
+			</button>
+			<a href="{{ path('app_pwa_manual_entry') }}" class="np-scanner__btn np-scanner__btn--ghost">
+				{{ ux_icon('lucide:keyboard', {class: 'np-scanner__btn-icon'}) }}
+				Saisie manuelle
+			</a>
+		</div>
+
+		<div class="np-scanner__help">
+			<p>
+				{{ ux_icon('lucide:info', {class: 'np-scanner__help-icon'}) }}
+				<strong>Astuce :</strong>
+				tenez votre téléphone à environ 15-20 cm du code-barres,
+												            avec un bon éclairage. Pour les boîtes courbées, ajustez l'angle pour aplatir le code.
+			</p>
+		</div>
+	</div>
 {% endblock %}

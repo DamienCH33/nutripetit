@@ -13,7 +13,22 @@
 		{% if criticalAlert %}
 			{% include '_partials/_product/_critical_alert.html.twig' with { alert: criticalAlert } %}
 		{% endif %}
-
+		{% if isInfantFormula|default(false) %}
+			<aside class="np-formula-notice" role="note">
+				<div class="np-formula-notice__icon-wrapper">
+					{{ ux_icon('lucide:baby', {class: 'np-formula-notice__icon'}) }}
+				</div>
+				<div class="np-formula-notice__content">
+					<p class="np-formula-notice__title">Lait infantile — Notation spécifique</p>
+					<p class="np-formula-notice__message">
+						Tous les laits infantiles vendus en Europe sont strictement réglementés
+																																																																																																																																																																																																																								                (Règlement UE 2016/127) et garantis sûrs. NutriPetit compare uniquement
+																																																																																																																																																																																																																								                la qualité optionnelle entre produits déjà conformes. Toute substitution
+																																																																																																																																																																																																																								                doit faire l'objet d'un avis pédiatrique.
+					</p>
+				</div>
+			</aside>
+		{% endif %}
 		{# HEADER produit #}
 		<section class="np-product__header">
 			<div class="np-product__header-row">
@@ -91,6 +106,20 @@
 					{% endfor %}
 				</div>
 			{% endif %}
+			{% if additives|length > 0 %}
+				<div class="np-additives-section">
+					<h3 class="np-rules-section__title">
+						{{ ux_icon('lucide:flask-conical', {class: 'np-rules-section__icon'}) }}
+						Additifs présents ({{ additives|length }})
+					</h3>
+					{% for additive in additives %}
+						<article class="np-additive-card">
+							<span class="np-additive-card__code">{{ additive.code }}</span>
+							<span class="np-additive-card__name">{{ additive.name }}</span>
+						</article>
+					{% endfor %}
+				</div>
+			{% endif %}
 		</section>
 
 		{# Onglet 2 : Nutriments #}
@@ -98,38 +127,82 @@
 			<div class="np-nutrients-info">
 				<p class="np-nutrients-info__text">
 					{{ ux_icon('lucide:info', {class: 'np-nutrients-info__icon'}) }}
-					Les seuils affichés sont adaptés aux nourrissons selon les recommandations ANSES.
+					{% if isInfantFormula|default(false) %}
+						Critères encadrés par le Règlement UE 2016/127. Les valeurs « N/D » sont absentes de la fiche Open Food Facts.
+					{% else %}
+						Les seuils affichés sont adaptés aux nourrissons selon les recommandations ANSES.
+					{% endif %}
 				</p>
 			</div>
+
+			{% set grouped = {} %}
 			{% for nutrient in nutrients %}
-				{% include '_partials/_product/_nutrient_gauge.html.twig' with { nutrient: nutrient } %}
+				{% set cat = nutrient.category|default('Nutrition') %}
+				{% set grouped = grouped|merge({(cat): (grouped[cat]|default([]))|merge([nutrient])}) %}
+			{% endfor %}
+
+			{% for category, items in grouped %}
+				<h3 class="np-nutrients-category">{{ category }}</h3>
+				{% for nutrient in items %}
+					{% include '_partials/_product/_nutrient_gauge.html.twig' with { nutrient: nutrient } %}
+				{% endfor %}
 			{% endfor %}
 		</section>
 
 		{# Onglet 3 : Évolution selon l'âge #}
 		<section class="np-tabs__panel" data-tab="age" data-product-tabs-target="panel" hidden>
-			<div class="np-age-info">
-				<p class="np-age-info__text">
-					{{ ux_icon('lucide:info', {class: 'np-age-info__icon'}) }}
-					Le score s'adapte aux besoins nutritionnels par tranche d'âge selon l'ANSES et le PNNS 4.
-				</p>
-			</div>
+			{% if isInfantFormula|default(false) %}
+				<div class="np-age-info">
+					<p class="np-age-info__text">
+						{{ ux_icon('lucide:info', {class: 'np-age-info__icon'}) }}
+						Les laits infantiles sont formulés pour une tranche d'âge précise. Leur qualité ne varie pas selon l'âge du bébé dans cette tranche.
+					</p>
+				</div>
+			{% elseif minAgeMonths is not null and babyAgeMonths is not null and babyAgeMonths < minAgeMonths %}
+				<div class="np-age-info np-age-info--warning">
+					<p class="np-age-info__text">
+						{{ ux_icon('lucide:alert-triangle', {class: 'np-age-info__icon'}) }}
+						<strong>Produit non adapté à votre bébé.</strong>
+						Ce produit est recommandé dès
+						{{ minAgeMonths }}
+						mois selon le fabricant.
+																		                Votre enfant a
+						{{ babyAgeMonths }}
+						mois.
+					</p>
+				</div>
+			{% else %}
+				<div class="np-age-info">
+					<p class="np-age-info__text">
+						{{ ux_icon('lucide:info', {class: 'np-age-info__icon'}) }}
+						{% if minAgeMonths is not null %}
+							Recommandé dès
+							{{ minAgeMonths }}
+							mois par le fabricant. Évolution du score selon l'âge :
+						{% else %}
+							Le score s'adapte aux besoins nutritionnels par tranche d'âge selon l'ANSES et le PNNS 4.
+						{% endif %}
+					</p>
+				</div>
 
-			<div class="np-age-evolution">
-				{% for entry in scoresByAge %}
-					<div class="np-age-evolution__row {{ entry.months == babyAgeMonths ? 'np-age-evolution__row--active' : '' }}">
-						<div class="np-age-evolution__age">{{ entry.months }}
-							mois</div>
-						<div class="np-age-evolution__bar">
-							<div class="np-age-evolution__fill np-age-evolution__fill--{{ entry.level }}" style="width: {{ entry.score }}%"></div>
-						</div>
-						<div class="np-age-evolution__score">
-							<span class="np-age-evolution__value">{{ entry.score }}</span>
-							<span class="np-age-evolution__label">{{ entry.label }}</span>
-						</div>
+				{% if scoresByAge|length > 0 %}
+					<div class="np-age-evolution">
+						{% for entry in scoresByAge %}
+							<div class="np-age-evolution__row {{ entry.months == babyAgeMonths ? 'np-age-evolution__row--active' : '' }}">
+								<div class="np-age-evolution__age">{{ entry.months }}
+									mois</div>
+								<div class="np-age-evolution__bar">
+									<div class="np-age-evolution__fill np-age-evolution__fill--{{ entry.level }}" style="width: {{ entry.score }}%"></div>
+								</div>
+								<div class="np-age-evolution__score">
+									<span class="np-age-evolution__value">{{ entry.score }}</span>
+									<span class="np-age-evolution__label">{{ entry.label }}</span>
+								</div>
+							</div>
+						{% endfor %}
 					</div>
-				{% endfor %}
-			</div>
+				{% endif %}
+			{% endif %}
 		</section>
 
 		{# Onglet 4 : Environnement #}
@@ -217,6 +290,22 @@
 							{% endfor %}
 						</div>
 					{% endif %}
+				</article>
+			{% endif %}
+
+			{% if carbonFootprint is not null %}
+				<article class="np-carbon-card">
+					<p class="np-carbon-card__title">
+						{{ ux_icon('lucide:leaf', {class: 'np-carbon-card__icon'}) }}
+						Empreinte carbone
+					</p>
+					<p class="np-carbon-card__value">{{ carbonFootprint.value }}
+						{{ carbonFootprint.unit }}</p>
+					<p class="np-carbon-card__equivalent">
+						Équivaut à environ
+						{{ carbonFootprint.car_km }}
+						km en voiture essence.
+					</p>
 				</article>
 			{% endif %}
 		</section>

@@ -36,6 +36,8 @@ export default class extends Controller {
             10,
         );
 
+        document.cookie = `np_baby_age=${savedAge}; path=/; max-age=31536000; samesite=lax`;
+
         if (this.hasAgeSliderTarget) {
             this.ageSliderTarget.value = savedAge;
         }
@@ -49,6 +51,8 @@ export default class extends Controller {
 
         localStorage.setItem("babyAgeMonths", age.toString());
 
+        document.cookie = `np_baby_age=${age}; path=/; max-age=31536000; samesite=lax`;
+
         this.updateAgeDisplay(age);
         this.updateRangeDisplay();
         this.updateCurrentProfile(age);
@@ -61,6 +65,8 @@ export default class extends Controller {
         }
 
         localStorage.removeItem("babyAgeMonths");
+        document.cookie =
+            "np_baby_age=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         localStorage.removeItem("babyName"); // Au cas où une ancienne version aurait stocké
 
         if (this.hasAgeSliderTarget) {

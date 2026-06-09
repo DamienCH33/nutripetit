@@ -982,3 +982,443 @@
   font-size: var(--np-font-size-xs);
   font-weight: var(--np-font-weight-semibold);
 }
+
+/* ============================================
+ * SCAN ERROR PAGE
+ * ============================================ */
+.np-scan-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--np-spacing-12) var(--np-spacing-4);
+  min-height: 60vh;
+  justify-content: center;
+}
+
+.np-scan-error__icon-wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--np-score-discouraged-bg) 0%, rgba(245, 124, 0, 0.1) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--np-spacing-4);
+}
+
+.np-scan-error__icon {
+  width: 40px;
+  height: 40px;
+  color: var(--np-score-discouraged);
+}
+
+.np-scan-error__title {
+  font-size: var(--np-font-size-2xl);
+  font-weight: var(--np-font-weight-bold);
+  color: var(--np-gray-900);
+  margin-bottom: var(--np-spacing-2);
+}
+
+.np-scan-error__message {
+  font-size: var(--np-font-size-base);
+  color: var(--np-gray-600);
+  line-height: 1.5;
+  max-width: 400px;
+  margin-bottom: var(--np-spacing-6);
+}
+
+.np-scan-error__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--np-spacing-2);
+  width: 100%;
+  max-width: 320px;
+}
+
+.np-scan-error__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--np-spacing-2);
+  padding: var(--np-spacing-3) var(--np-spacing-4);
+  border-radius: var(--np-radius-md);
+  font-size: var(--np-font-size-base);
+  font-weight: var(--np-font-weight-semibold);
+  text-decoration: none;
+  transition: all 200ms ease-out;
+}
+
+.np-scan-error__btn--primary {
+  background: linear-gradient(135deg, var(--np-orange-primary) 0%, var(--np-orange-light) 100%);
+  color: var(--np-white);
+  box-shadow: var(--np-shadow-orange);
+}
+
+.np-scan-error__btn--primary:hover {
+  transform: translateY(-1px);
+}
+
+.np-scan-error__btn--secondary {
+  background-color: var(--np-white);
+  color: var(--np-gray-800);
+  border: 1.5px solid var(--np-gray-200);
+}
+
+.np-scan-error__btn--secondary:hover {
+  border-color: var(--np-orange-primary);
+  color: var(--np-orange-primary);
+}
+
+.np-scan-error__btn--ghost {
+  background-color: transparent;
+  color: var(--np-gray-500);
+  font-weight: var(--np-font-weight-medium);
+}
+
+.np-scan-error__btn--ghost:hover {
+  color: var(--np-gray-800);
+}
+
+.np-scan-error__btn-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* ============================================
+ * FORMULA NOTICE (laits infantiles)
+ * ============================================ */
+.np-formula-notice {
+  display: flex;
+  gap: var(--np-spacing-3);
+  padding: var(--np-spacing-4);
+  background: linear-gradient(135deg, #E3F2FD 0%, #F3E5F5 100%);
+  border-left: 4px solid #1976D2;
+  border-radius: var(--np-radius-md);
+}
+
+.np-formula-notice__icon-wrapper {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  background-color: var(--np-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.np-formula-notice__icon {
+  width: 22px;
+  height: 22px;
+  color: #1976D2;
+}
+
+.np-formula-notice__title {
+  font-size: var(--np-font-size-base);
+  font-weight: var(--np-font-weight-bold);
+  color: #1565C0;
+  margin-bottom: var(--np-spacing-1);
+}
+
+.np-formula-notice__message {
+  font-size: var(--np-font-size-sm);
+  color: var(--np-gray-800);
+  line-height: 1.5;
+}
+
+.np-nutrient--unavailable {
+  opacity: 0.7;
+  background-color: var(--np-gray-50);
+}
+
+.np-nutrient__value--unknown {
+  color: var(--np-gray-400);
+  font-style: italic;
+}
+
+.np-nutrient__cursor--unknown {
+  background-color: var(--np-gray-300);
+}
+
+.np-nutrient__message--unknown {
+  color: var(--np-gray-500);
+  font-style: italic;
+}
+
+.np-nutrients-category {
+  font-size: var(--np-font-size-base);
+  font-weight: var(--np-font-weight-bold);
+  color: var(--np-orange-dark);
+  margin-top: var(--np-spacing-4);
+  margin-bottom: var(--np-spacing-2);
+  padding-bottom: var(--np-spacing-1);
+  border-bottom: 2px solid var(--np-orange-primary);
+}
+
+/* === RULE CARD POINTS COLORÉS === */
+.np-rule-card__impact {
+    flex-shrink: 0;
+    padding: 4px 12px;
+    border-radius: var(--np-radius-pill);
+    font-size: var(--np-font-size-base);
+    font-weight: var(--np-font-weight-bold);
+}
+
+.np-rule-card__impact--bonus {
+    background-color: var(--np-score-ideal-bg);
+    color: var(--np-score-ideal);
+}
+
+.np-rule-card__impact--malus {
+    background-color: var(--np-score-discouraged-bg);
+    color: var(--np-score-discouraged);
+}
+
+.np-rule-card__impact-unit {
+    font-size: var(--np-font-size-xs);
+    opacity: 0.7;
+    margin-left: 2px;
+}
+
+.np-rule-card__icon-wrapper--bonus {
+    background-color: var(--np-score-ideal-bg);
+}
+
+.np-rule-card__icon-wrapper--malus {
+    background-color: var(--np-score-discouraged-bg);
+}
+
+.np-rule-card__icon-wrapper--bonus .np-rule-card__icon {
+    color: var(--np-score-ideal);
+}
+
+.np-rule-card__icon-wrapper--malus .np-rule-card__icon {
+    color: var(--np-score-discouraged);
+}
+
+/* === BADGE ÂGE RECOMMANDÉ === */
+.np-age-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--np-spacing-2);
+    padding: var(--np-spacing-2) var(--np-spacing-4);
+    background: linear-gradient(135deg, var(--np-cream-light) 0%, var(--np-cream) 100%);
+    border-radius: var(--np-radius-pill);
+    font-size: var(--np-font-size-sm);
+    font-weight: var(--np-font-weight-semibold);
+    color: var(--np-orange-dark);
+    margin: 0 auto;
+    align-self: center;
+}
+
+.np-age-badge__icon {
+    width: 18px;
+    height: 18px;
+    color: var(--np-orange-primary);
+}
+
+/* === ADDITIFS === */
+.np-additives-section {
+    margin-top: var(--np-spacing-4);
+}
+
+.np-additive-card {
+    display: flex;
+    gap: var(--np-spacing-3);
+    padding: var(--np-spacing-3);
+    background-color: var(--np-white);
+    border: 1px solid var(--np-gray-100);
+    border-radius: var(--np-radius-md);
+    margin-bottom: var(--np-spacing-2);
+}
+
+.np-additive-card__code {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    background-color: var(--np-gray-100);
+    border-radius: var(--np-radius-md);
+    font-family: monospace;
+    font-weight: var(--np-font-weight-bold);
+    color: var(--np-gray-800);
+}
+
+.np-additive-card__name {
+    flex: 1;
+    font-size: var(--np-font-size-sm);
+    color: var(--np-gray-800);
+}
+
+/* === EMPREINTE CARBONE === */
+.np-carbon-card {
+    padding: var(--np-spacing-4);
+    background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+    border-left: 4px solid #43A047;
+    border-radius: var(--np-radius-md);
+    margin-top: var(--np-spacing-3);
+}
+
+.np-carbon-card__title {
+    display: flex;
+    align-items: center;
+    gap: var(--np-spacing-2);
+    font-size: var(--np-font-size-base);
+    font-weight: var(--np-font-weight-bold);
+    color: #1B5E20;
+    margin-bottom: var(--np-spacing-2);
+}
+
+.np-carbon-card__icon {
+    width: 22px;
+    height: 22px;
+}
+
+.np-carbon-card__value {
+    font-size: var(--np-font-size-xl);
+    font-weight: var(--np-font-weight-bold);
+    color: #1B5E20;
+}
+
+.np-carbon-card__equivalent {
+    font-size: var(--np-font-size-sm);
+    color: var(--np-gray-700);
+    margin-top: var(--np-spacing-1);
+}
+
+/* === RULE CARD POINTS COLORÉS === */
+.np-rule-card__impact {
+    flex-shrink: 0;
+    padding: 4px 12px;
+    border-radius: var(--np-radius-pill);
+    font-size: var(--np-font-size-base);
+    font-weight: var(--np-font-weight-bold);
+}
+
+.np-rule-card__impact--bonus {
+    background-color: var(--np-score-ideal-bg);
+    color: var(--np-score-ideal);
+}
+
+.np-rule-card__impact--malus {
+    background-color: var(--np-score-discouraged-bg);
+    color: var(--np-score-discouraged);
+}
+
+.np-rule-card__impact-unit {
+    font-size: var(--np-font-size-xs);
+    opacity: 0.7;
+    margin-left: 2px;
+}
+
+.np-rule-card__icon-wrapper--bonus {
+    background-color: var(--np-score-ideal-bg);
+}
+
+.np-rule-card__icon-wrapper--malus {
+    background-color: var(--np-score-discouraged-bg);
+}
+
+.np-rule-card__icon-wrapper--bonus .np-rule-card__icon {
+    color: var(--np-score-ideal);
+}
+
+.np-rule-card__icon-wrapper--malus .np-rule-card__icon {
+    color: var(--np-score-discouraged);
+}
+
+/* === BADGE ÂGE RECOMMANDÉ === */
+.np-age-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--np-spacing-2);
+    padding: var(--np-spacing-2) var(--np-spacing-4);
+    background: linear-gradient(135deg, var(--np-cream-light) 0%, var(--np-cream) 100%);
+    border-radius: var(--np-radius-pill);
+    font-size: var(--np-font-size-sm);
+    font-weight: var(--np-font-weight-semibold);
+    color: var(--np-orange-dark);
+    margin: 0 auto;
+    align-self: center;
+}
+
+.np-age-badge__icon {
+    width: 18px;
+    height: 18px;
+    color: var(--np-orange-primary);
+}
+
+/* === ADDITIFS === */
+.np-additives-section {
+    margin-top: var(--np-spacing-4);
+}
+
+.np-additive-card {
+    display: flex;
+    gap: var(--np-spacing-3);
+    padding: var(--np-spacing-3);
+    background-color: var(--np-white);
+    border: 1px solid var(--np-gray-100);
+    border-radius: var(--np-radius-md);
+    margin-bottom: var(--np-spacing-2);
+}
+
+.np-additive-card__code {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    background-color: var(--np-gray-100);
+    border-radius: var(--np-radius-md);
+    font-family: monospace;
+    font-weight: var(--np-font-weight-bold);
+    color: var(--np-gray-800);
+}
+
+.np-additive-card__name {
+    flex: 1;
+    font-size: var(--np-font-size-sm);
+    color: var(--np-gray-800);
+}
+
+/* === EMPREINTE CARBONE === */
+.np-carbon-card {
+    padding: var(--np-spacing-4);
+    background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+    border-left: 4px solid #43A047;
+    border-radius: var(--np-radius-md);
+    margin-top: var(--np-spacing-3);
+}
+
+.np-carbon-card__title {
+    display: flex;
+    align-items: center;
+    gap: var(--np-spacing-2);
+    font-size: var(--np-font-size-base);
+    font-weight: var(--np-font-weight-bold);
+    color: #1B5E20;
+    margin-bottom: var(--np-spacing-2);
+}
+
+.np-carbon-card__icon {
+    width: 22px;
+    height: 22px;
+}
+
+.np-carbon-card__value {
+    font-size: var(--np-font-size-xl);
+    font-weight: var(--np-font-weight-bold);
+    color: #1B5E20;
+}
+
+.np-carbon-card__equivalent {
+    font-size: var(--np-font-size-sm);
+    color: var(--np-gray-700);
+    margin-top: var(--np-spacing-1);
+}
+
+.np-age-info--warning {
+    background-color: var(--np-score-discouraged-bg);
+    border-left-color: var(--np-score-discouraged);
+}
+
+.np-age-info--warning .np-age-info__icon {
+    color: var(--np-score-discouraged);
+}

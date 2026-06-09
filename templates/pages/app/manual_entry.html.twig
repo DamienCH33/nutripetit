@@ -1,8 +1,48 @@
 {% extends 'base/pwa.html.twig' %}
+
 {% block title %}Saisie manuelle - NutriPetit{% endblock %}
+
 {% block body %}
-<div class="np-container np-page-content">
-    <h1 class="np-title-lg np-text-center">Saisie manuelle EAN</h1>
-    <p class="np-text-body np-text-center">À développer en J8.</p>
+<div class="np-manual-entry" {{ stimulus_controller('manual-entry') }}>
+    <header class="np-manual-entry__header">
+        <h1 class="np-manual-entry__title">
+            {{ ux_icon('lucide:keyboard', {class: 'np-manual-entry__title-icon'}) }}
+            Saisie manuelle
+        </h1>
+        <p class="np-manual-entry__lead">
+            Entrez le code-barres EAN-13 (13 chiffres) du produit.
+        </p>
+    </header>
+
+    <div class="np-manual-entry__form">
+        <label for="ean-input" class="np-manual-entry__label">Code-barres</label>
+        <input type="text"
+               id="ean-input"
+               class="np-manual-entry__input"
+               data-manual-entry-target="input"
+               inputmode="numeric"
+               pattern="\d{13}"
+               maxlength="13"
+               placeholder="3017620422003"
+               {{ stimulus_action('manual-entry', 'validate', 'input') }}>
+
+        <p class="np-manual-entry__hint" data-manual-entry-target="hint">
+            13 chiffres restants
+        </p>
+
+        <button type="button"
+                class="np-manual-entry__btn"
+                data-manual-entry-target="submitBtn"
+                {{ stimulus_action('manual-entry', 'submit') }}
+                disabled>
+            {{ ux_icon('lucide:search', {class: 'np-manual-entry__btn-icon'}) }}
+            Analyser le produit
+        </button>
+
+        <a href="{{ path('app_pwa_scanner') }}" class="np-manual-entry__back">
+            {{ ux_icon('lucide:arrow-left', {class: 'np-manual-entry__back-icon'}) }}
+            Revenir au scanner
+        </a>
+    </div>
 </div>
 {% endblock %}
