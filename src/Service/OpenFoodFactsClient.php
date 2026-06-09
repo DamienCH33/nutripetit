@@ -31,14 +31,16 @@ final readonly class OpenFoodFactsClient
 
     public function __construct(
         private HttpClientInterface $httpClient,
-        #[Autowire(service: 'cache.nutripetit.off_api')]
+        #[Autowire(service: 'nutripetit.off_api')]
         private CacheItemPoolInterface $cache,
         private LoggerInterface $logger,
-    ) {}
+    ) {
+    }
+
     /**
      * Récupère un produit par son code-barres EAN.
      *
-     * @throws ProductNotFoundException          Si le produit n'existe pas dans OFF
+     * @throws ProductNotFoundException Si le produit n'existe pas dans OFF
      * @throws OpenFoodFactsUnavailableException Si l'API est indisponible
      */
     public function fetchByEan(string $ean): ProductDto
@@ -73,9 +75,9 @@ final readonly class OpenFoodFactsClient
     /**
      * Appel HTTP brut à l'API OpenFoodFacts.
      *
-     * @return array<string, mixed>
-     *
      * @throws OpenFoodFactsUnavailableException
+     *
+     * @return array<string, mixed>
      */
     private function callOffApi(string $ean): array
     {
@@ -98,9 +100,7 @@ final readonly class OpenFoodFactsClient
                     'status' => $statusCode,
                 ]);
 
-                throw new OpenFoodFactsUnavailableException(
-                    \sprintf('Server returned HTTP %d', $statusCode),
-                );
+                throw new OpenFoodFactsUnavailableException(\sprintf('Server returned HTTP %d', $statusCode));
             }
 
             return $response->toArray(false);
