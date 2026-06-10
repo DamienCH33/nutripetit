@@ -18,7 +18,8 @@ final class HistoryController extends AbstractController
     public function __construct(
         private readonly ScanSessionManager $scanSessionManager,
         private readonly ScoreResultRepository $scoreResultRepository,
-    ) {}
+    ) {
+    }
 
     #[Route('/app/historique', name: 'app_pwa_history', methods: ['GET'])]
     public function index(Request $request): Response
@@ -38,10 +39,10 @@ final class HistoryController extends AbstractController
         }
 
         return $this->render('pages/app/history.html.twig', [
-            'results'  => $results,
-            'page'     => $page,
+            'results' => $results,
+            'page' => $page,
             'lastPage' => (int) max(1, ceil($total / self::PER_PAGE)),
-            'total'    => $total,
+            'total' => $total,
         ]);
     }
 }

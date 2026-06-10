@@ -131,6 +131,7 @@ final class EnvironmentAnalyzer
 
         return true;
     }
+
     private function translatePackaging(string $tag): string
     {
         $translations = [

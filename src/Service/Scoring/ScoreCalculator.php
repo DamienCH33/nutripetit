@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service\Scoring;
 
-use App\Enum\ScoreLevel;
-use App\Enum\ScoringAlgorithm;
 use App\Dto\AppliedRuleDto;
 use App\Dto\ScoreCalculationResultDto;
 use App\Entity\Product;
+use App\Enum\ScoreLevel;
+use App\Enum\ScoringAlgorithm;
 use App\Repository\ScoringRuleRepository;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
@@ -27,7 +27,8 @@ final readonly class ScoreCalculator
         private ScoringRuleRepository $ruleRepository,
         #[AutowireIterator('app.rule_evaluator')]
         private iterable $evaluators,
-    ) {}
+    ) {
+    }
 
     public function calculate(Product $product, ?int $babyAgeMonths = null): ScoreCalculationResultDto
     {
@@ -46,7 +47,7 @@ final readonly class ScoreCalculator
         }
 
         $totalImpact = array_sum(
-            array_map(static fn(AppliedRuleDto $r): int => $r->pointsImpact, $appliedRules),
+            array_map(static fn (AppliedRuleDto $r): int => $r->pointsImpact, $appliedRules),
         );
 
         $finalScore = max(0, min(100, self::SCORE_BASE + $totalImpact));

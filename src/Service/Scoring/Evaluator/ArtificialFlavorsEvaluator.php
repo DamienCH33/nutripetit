@@ -42,7 +42,7 @@ final class ArtificialFlavorsEvaluator implements RuleEvaluator
             return null;
         }
         $pattern = '/\b(' . implode('|', array_map(
-            static fn(string $w): string => preg_quote($w, '/'),
+            static fn (string $w): string => preg_quote($w, '/'),
             self::ARTIFICIAL_FLAVOR_KEYWORDS,
         )) . ')\b/iu';
 
@@ -54,7 +54,7 @@ final class ArtificialFlavorsEvaluator implements RuleEvaluator
 
         $reason = \sprintf(
             'Arôme(s) artificiel(s) détecté(s) : %s. Déconseillés chez le jeune enfant (PNNS 4).',
-            implode(', ', (\array_slice($found, 0, 3))),
+            implode(', ', \array_slice($found, 0, 3)),
         );
 
         return new AppliedRuleDto(

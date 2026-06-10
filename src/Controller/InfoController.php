@@ -15,7 +15,8 @@ final class InfoController extends AbstractController
 {
     public function __construct(
         private readonly ScoringRuleRepository $ruleRepository,
-    ) {}
+    ) {
+    }
 
     #[Route('/app/infos', name: 'app_pwa_info', methods: ['GET'])]
     public function index(): Response
@@ -23,11 +24,11 @@ final class InfoController extends AbstractController
         $rules = $this->ruleRepository->findActiveByVersion('1.0.0');
 
         $scoreScale = array_map(
-            static fn(ScoreLevel $l): array => [
-                'level'       => $l->value,
-                'min'         => $l->min(),
-                'max'         => $l->max(),
-                'label'       => $l->label(ScoringAlgorithm::Food),
+            static fn (ScoreLevel $l): array => [
+                'level' => $l->value,
+                'min' => $l->min(),
+                'max' => $l->max(),
+                'label' => $l->label(ScoringAlgorithm::Food),
                 'description' => $l->description(),
             ],
             ScoreLevel::cases(),

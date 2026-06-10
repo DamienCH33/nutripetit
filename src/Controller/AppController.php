@@ -21,7 +21,8 @@ final class AppController extends AbstractController
     public function __construct(
         private readonly ScanSessionManager $scanSessionManager,
         private readonly ScoreResultRepository $scoreResultRepository,
-    ) {}
+    ) {
+    }
 
     #[Route('/app', name: 'app_pwa_home', methods: ['GET'])]
     public function home(Request $request): Response
