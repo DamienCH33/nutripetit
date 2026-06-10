@@ -8,6 +8,7 @@ use App\Entity\Product;
 use App\Entity\ScanSession;
 use App\Entity\ScoreResult;
 use App\Repository\ProductRepository;
+use App\Repository\ScoreResultRepository;
 use App\Service\Ean13Validator;
 use App\Service\Exception\OpenFoodFactsUnavailableException;
 use App\Service\Exception\ProductNotFoundException;
@@ -31,10 +32,11 @@ final class ScanProductHandler
         private readonly InfantFormulaDetector $infantFormulaDetector,
         private readonly InfantFormulaScoreCalculator $infantFormulaScoreCalculator,
         private readonly EntityManagerInterface $em,
-    ) {
-    }
+        private readonly ScoreResultRepository $scoreResultRepository,
+    ) {}
 
     /**
+     * @throws \InvalidArgumentException
      * @throws ProductNotFoundException
      * @throws OpenFoodFactsUnavailableException
      */
@@ -57,6 +59,20 @@ final class ScanProductHandler
     }
 
     /**
+     * Âge du bébé : query param (?age=N), miroir de localStorage np_baby_age_months côté scanner.
+     * Donnée transitoire — utilisée pour le calcul, jamais persistée ailleurs que dans le snapshot ScoreResult.
+     */
+    private function resolveBabyAgeMonths(Request $request): ?int
+    {
+        if (!$request->query->has('age')) {
+            return null; // âge inconnu : le moteur n'appliquera que les règles sans tranche d'âge
+        }
+
+        // Borne 0–36 mois : un ?age=999 trafiqué ne doit pas fausser le score.
+        return max(0, min(36, $request->query->getInt('age')));
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function processScan(
@@ -65,7 +81,7 @@ final class ScanProductHandler
         ScanSession $scanSession,
     ): array {
         // Âge du bébé
-        $babyAgeMonths = $request->cookies->getInt('np_baby_age');
+        $babyAgeMonths = $this->resolveBabyAgeMonths($request);
 
         // Calcul du score
         $isInfantFormula = $this->infantFormulaDetector->isInfantFormula($product);
@@ -76,16 +92,13 @@ final class ScanProductHandler
             $scoreDto = $this->scoreCalculator->calculate($product, $babyAgeMonths);
         }
 
-        $scoreResult = new ScoreResult(
-            product: $product,
-            finalScore: $scoreDto->finalScore,
-            level: $scoreDto->level,
-            algoVersion: $scoreDto->algoVersion,
-            babyAgeMonths: $scoreDto->babyAgeMonths,
-            scanSession: $scanSession,
-        );
+        $scoreResult = $this->scoreResultRepository
+            ->findForSessionAndProduct(
+                $scanSession,
+                $product,
+            );
 
-        $scoreResult->setAppliedRules(array_map(
+        $appliedRules = array_map(
             static function ($r): array {
                 $base = $r->toArray();
                 $base['category'] = $base['points'] >= 0 ? 'bonus' : 'malus';
@@ -94,10 +107,32 @@ final class ScanProductHandler
                 return $base;
             },
             $scoreDto->appliedRules,
-        ));
+        );
 
-        $this->em->persist($scoreResult);
+        if (null !== $scoreResult) {
+            $scoreResult->refresh(
+                $scoreDto->finalScore,
+                $scoreDto->level,
+                $appliedRules,
+                $scoreDto->babyAgeMonths,
+            );
+        } else {
+            $scoreResult = new ScoreResult(
+                product: $product,
+                finalScore: $scoreDto->finalScore,
+                level: $scoreDto->level,
+                algoVersion: $scoreDto->algoVersion,
+                babyAgeMonths: $scoreDto->babyAgeMonths,
+                scanSession: $scanSession,
+            );
+
+            $scoreResult->setAppliedRules($appliedRules);
+
+            $this->em->persist($scoreResult);
+        }
+
         $scanSession->touch();
+
         $this->em->flush();
 
         return [

@@ -72,4 +72,14 @@ class ScoreResultRepository extends ServiceEntityRepository
 
         return $result;
     }
+
+    public function findForSessionAndProduct(
+        ScanSession $session,
+        Product $product,
+    ): ?ScoreResult {
+        return $this->findOneBy([
+            'scanSession' => $session,
+            'product' => $product,
+        ]);
+    }
 }
