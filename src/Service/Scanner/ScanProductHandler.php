@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace App\Service\Scanner;
 
 use App\Entity\Product;
+use App\Entity\ScanSession;
+use App\Entity\ScoreResult;
 use App\Repository\ProductRepository;
 use App\Service\Ean13Validator;
 use App\Service\Exception\OpenFoodFactsUnavailableException;
 use App\Service\Exception\ProductNotFoundException;
 use App\Service\OpenFoodFactsClient;
 use App\Service\Product\ProductImporter;
-use App\Entity\ScanSession;
-use App\Entity\ScoreResult;
-use App\Service\Scoring\ScoreCalculator;
 use App\Service\Scoring\Evaluator\InfantFormulaDetector;
 use App\Service\Scoring\Evaluator\InfantFormulaScoreCalculator;
+use App\Service\Scoring\ScoreCalculator;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 
 final class ScanProductHandler
@@ -30,7 +31,8 @@ final class ScanProductHandler
         private readonly InfantFormulaDetector $infantFormulaDetector,
         private readonly InfantFormulaScoreCalculator $infantFormulaScoreCalculator,
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws ProductNotFoundException
@@ -39,9 +41,7 @@ final class ScanProductHandler
     public function findOrFetchProduct(string $ean): Product
     {
         if (!$this->eanValidator->isValid($ean)) {
-            throw new \InvalidArgumentException(
-                'Code-barres invalide'
-            );
+            throw new InvalidArgumentException('Code-barres invalide');
         }
 
         $product = $this->productRepository->findByEan($ean);
@@ -55,16 +55,15 @@ final class ScanProductHandler
         return $this->productImporter
             ->createProductFromDto($dto);
     }
+
     /**
      * @return array<string, mixed>
      */
-
     public function processScan(
         Product $product,
         Request $request,
         ScanSession $scanSession,
     ): array {
-
         // Âge du bébé
         $babyAgeMonths = $request->cookies->getInt('np_baby_age');
 

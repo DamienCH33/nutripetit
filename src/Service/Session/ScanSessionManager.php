@@ -18,7 +18,8 @@ final class ScanSessionManager
     public function __construct(
         private readonly ScanSessionRepository $scanSessionRepository,
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     public function getSessionFromRequest(Request $request): ?ScanSession
     {

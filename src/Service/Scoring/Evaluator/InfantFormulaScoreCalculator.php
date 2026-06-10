@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service\Scoring\Evaluator;
 
-use App\Enum\ScoreLevel;
-use App\Enum\ScoringAlgorithm;
 use App\Dto\AppliedRuleDto;
 use App\Dto\ScoreCalculationResultDto;
 use App\Entity\Product;
+use App\Enum\ScoreLevel;
+use App\Enum\ScoringAlgorithm;
 
 /**
  * Calcule le score d'un lait infantile.

@@ -13,9 +13,8 @@ use App\Service\Scoring\RuleEvaluator;
  * Détecte les poisson(s) à risque (contaminants/mercure) détecté(s)
  * Source : ANSES Avis 0-3 ans (2019).
  */
-final class  ContaminatedFishEvaluator implements RuleEvaluator
+final class ContaminatedFishEvaluator implements RuleEvaluator
 {
-
     private const RISKY_FISH = [
         // À éviter (grands prédateurs, mercure)
         'espadon',
@@ -64,7 +63,7 @@ final class  ContaminatedFishEvaluator implements RuleEvaluator
         }
 
         $pattern = '/\b(' . implode('|', array_map(
-            static fn(string $w): string => preg_quote($w, '/'),
+            static fn (string $w): string => preg_quote($w, '/'),
             self::RISKY_FISH,
         )) . ')\b/iu';
 

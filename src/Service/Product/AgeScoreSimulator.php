@@ -11,7 +11,8 @@ final class AgeScoreSimulator
 {
     public function __construct(
         private readonly ScoreCalculator $scoreCalculator,
-    ) {}
+    ) {
+    }
 
     /**
      * @return list<array{months: int, score: int, level: string, label: string}>
@@ -29,7 +30,7 @@ final class AgeScoreSimulator
         $ages = [6, 12, 18, 24, 36];
 
         if (null !== $minAgeMonths) {
-            $ages = array_values(array_filter($ages, static fn($a) => $a >= $minAgeMonths));
+            $ages = array_values(array_filter($ages, static fn ($a) => $a >= $minAgeMonths));
         }
 
         $result = [];

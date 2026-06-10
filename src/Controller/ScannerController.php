@@ -27,7 +27,8 @@ final class ScannerController extends AbstractController
         private readonly ScanProductHandler $scanProductHandler,
         private readonly ProductPreviewBuilder $productPreviewBuilder,
         private readonly ScanSessionCookieManager $scanSessionCookieManager,
-    ) {}
+    ) {
+    }
 
     #[Route('/app/scanner', name: 'app_pwa_scanner', methods: ['GET'])]
     public function scanner(): Response
@@ -82,6 +83,7 @@ final class ScannerController extends AbstractController
                 $response,
                 $scanSession
             );
+
         return $response;
     }
 }

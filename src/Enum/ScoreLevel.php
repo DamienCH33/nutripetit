@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Enum;
 
-use App\Enum\ScoringAlgorithm;
-
 enum ScoreLevel: string
 {
     case Ideal = 'ideal';
@@ -23,14 +21,14 @@ enum ScoreLevel: string
                 $score >= 70 => self::Good,
                 $score >= 50 => self::Occasional,
                 $score >= 30 => self::Limit,
-                default      => self::Discouraged,
+                default => self::Discouraged,
             },
             // Laits infantiles : base conforme, jamais "déconseillé"
             ScoringAlgorithm::InfantFormula => match (true) {
                 $score >= 95 => self::Ideal,
                 $score >= 85 => self::Good,
                 $score >= 70 => self::Occasional,
-                default      => self::Limit,
+                default => self::Limit,
             },
         };
     }
@@ -40,16 +38,16 @@ enum ScoreLevel: string
     {
         return match ($algorithm) {
             ScoringAlgorithm::Food => match ($this) {
-                self::Ideal       => 'Idéal pour bébé',
-                self::Good        => 'Bon choix',
-                self::Occasional  => 'Occasionnel',
-                self::Limit       => 'À limiter',
+                self::Ideal => 'Idéal pour bébé',
+                self::Good => 'Bon choix',
+                self::Occasional => 'Occasionnel',
+                self::Limit => 'À limiter',
                 self::Discouraged => 'Déconseillé',
             },
             ScoringAlgorithm::InfantFormula => match ($this) {
                 self::Ideal => 'Excellent pour bébé',
-                self::Good  => 'Bon choix',
-                default     => 'Conforme',
+                self::Good => 'Bon choix',
+                default => 'Conforme',
             },
         };
     }
@@ -80,10 +78,10 @@ enum ScoreLevel: string
     public function description(): string
     {
         return match ($this) {
-            self::Ideal       => 'Composition optimale, recommandé',
-            self::Good        => 'Adapté à votre enfant',
-            self::Occasional  => 'Acceptable de temps en temps',
-            self::Limit       => 'À consommer rarement',
+            self::Ideal => 'Composition optimale, recommandé',
+            self::Good => 'Adapté à votre enfant',
+            self::Occasional => 'Acceptable de temps en temps',
+            self::Limit => 'À consommer rarement',
             self::Discouraged => 'Non recommandé pour bébé',
         };
     }

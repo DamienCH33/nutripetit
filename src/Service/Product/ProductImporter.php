@@ -12,7 +12,9 @@ final class ProductImporter
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
+
     public function createProductFromDto(ProductDto $dto): Product
     {
         $product = new Product($dto->ean, $dto->name);

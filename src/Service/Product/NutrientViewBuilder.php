@@ -21,6 +21,7 @@ final class NutrientViewBuilder
 
         return $this->buildBabyFoodNutrients($n);
     }
+
     /**
      * @param array<string, mixed> $n
      *

@@ -31,6 +31,7 @@ final class ChokingHazardEvaluator implements RuleEvaluator
         'raisins secs',
         'fruits secs',
     ];
+
     public function supports(ScoringRule $rule): bool
     {
         return 'choking_hazard' === $rule->getCode();
@@ -47,7 +48,7 @@ final class ChokingHazardEvaluator implements RuleEvaluator
         }
 
         $pattern = '/\b(' . implode('|', array_map(
-            static fn(string $w): string => preg_quote($w, '/'),
+            static fn (string $w): string => preg_quote($w, '/'),
             self::HAZARD_KEYWORDS,
         )) . ')\b/iu';
 
