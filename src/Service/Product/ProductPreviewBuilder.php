@@ -40,6 +40,12 @@ final class ProductPreviewBuilder
         $environment   = $this->environmentAnalyzer->buildEnvironment($product);
         $scoresByAge   = $this->ageScoreSimulator->buildScoresByAge($product, $isInfantFormula, $babyAgeMonths, $minAgeMonths);
 
+        $appliedRules = [];
+        foreach ($scoreResult->getAppliedRules() as $rule) {
+            $rule['category'] = $rule['points'] > 0 ? 'bonus' : 'malus';
+            $appliedRules[] = $rule;
+        }
+
         return [
             'product' => [
                 'ean'       => $product->getEan(),
@@ -47,8 +53,14 @@ final class ProductPreviewBuilder
                 'brand'     => $product->getBrand(),
                 'image_url' => $product->getImageUrl(),
             ],
+            'babyAgeMonths'   => $babyAgeMonths,
+            'finalScore'      => $scoreResult->getFinalScore(),
+            'level'           => $scoreResult->getLevel(),
+            'algoVersion'     => $scoreResult->getAlgoVersion(),
+            'isInfantFormula' => $isInfantFormula,
             'scoresByAge'     => $scoresByAge,
             'criticalAlert'   => $criticalAlert,
+            'appliedRules'    => $appliedRules,
             'nutrients'       => $nutrients,
             'environment'     => $environment,
             'uniqueSources'   => $uniqueSources,

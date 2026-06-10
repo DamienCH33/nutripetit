@@ -52,4 +52,18 @@
 			</div>
 		{% endif %}
 	</div>
+	{% if lastPage > 1 %}
+		<nav class="np-pagination" aria-label="Pagination de l'historique">
+			{% if page > 1 %}
+				<a href="{{ path('app_pwa_history', {page: page - 1}) }}" class="np-pagination__link" rel="prev">← Précédent</a>
+			{% endif %}
+			<span class="np-pagination__info">Page
+				{{ page }}
+				sur
+				{{ lastPage }}</span>
+			{% if page < lastPage %}
+				<a href="{{ path('app_pwa_history', {page: page + 1}) }}" class="np-pagination__link" rel="next">Suivant →</a>
+			{% endif %}
+		</nav>
+	{% endif %}
 {% endblock %}

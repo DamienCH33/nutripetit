@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Repository\ScoreResultRepository;
+use App\Service\Session\ScanSessionManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -15,32 +18,19 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 final class AppController extends AbstractController
 {
+    public function __construct(
+        private readonly ScanSessionManager $scanSessionManager,
+        private readonly ScoreResultRepository $scoreResultRepository,
+    ) {}
+
     #[Route('/app', name: 'app_pwa_home', methods: ['GET'])]
-    public function home(): Response
+    public function home(Request $request): Response
     {
-        $recentScans = [
-            [
-                'brand' => 'Blédina',
-                'name' => 'Petits Pots Carottes',
-                'date' => 'Aujourd\'hui',
-                'score' => 82,
-                'level' => 'excellent',
-            ],
-            [
-                'brand' => 'Good Goût',
-                'name' => 'Pommes Bananes',
-                'date' => 'Hier',
-                'score' => 74,
-                'level' => 'good',
-            ],
-            [
-                'brand' => 'Nestlé',
-                'name' => 'P\'tite Céréale Vanille',
-                'date' => 'Il y a 2 jours',
-                'score' => 58,
-                'level' => 'medium',
-            ],
-        ];
+        $recentScans = [];
+        $session = $this->scanSessionManager->getSessionFromRequest($request);
+        if (null !== $session) {
+            $recentScans = $this->scoreResultRepository->findRecentBySession($session, 3);
+        }
 
         return $this->render('pages/app/home.html.twig', [
             'recentScans' => $recentScans,

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Enum\ScoreLevel;
+use App\Enum\ScoringAlgorithm;
 use App\Repository\ScoringRuleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,21 +15,23 @@ final class InfoController extends AbstractController
 {
     public function __construct(
         private readonly ScoringRuleRepository $ruleRepository,
-    ) {
-    }
+    ) {}
 
     #[Route('/app/infos', name: 'app_pwa_info', methods: ['GET'])]
     public function index(): Response
     {
         $rules = $this->ruleRepository->findActiveByVersion('1.0.0');
 
-        $scoreScale = [
-            ['level' => 'ideal', 'min' => 85, 'max' => 100, 'label' => 'Idéal pour bébé', 'description' => 'Composition optimale, recommandé'],
-            ['level' => 'good', 'min' => 70, 'max' => 84, 'label' => 'Bon choix', 'description' => 'Adapté à votre enfant'],
-            ['level' => 'occasional', 'min' => 50, 'max' => 69, 'label' => 'Occasionnel', 'description' => 'Acceptable de temps en temps'],
-            ['level' => 'limit', 'min' => 30, 'max' => 49, 'label' => 'À limiter', 'description' => 'À consommer rarement'],
-            ['level' => 'discouraged', 'min' => 0, 'max' => 29, 'label' => 'Déconseillé', 'description' => 'Non recommandé pour bébé'],
-        ];
+        $scoreScale = array_map(
+            static fn(ScoreLevel $l): array => [
+                'level'       => $l->value,
+                'min'         => $l->min(),
+                'max'         => $l->max(),
+                'label'       => $l->label(ScoringAlgorithm::Food),
+                'description' => $l->description(),
+            ],
+            ScoreLevel::cases(),
+        );
 
         $infantFormulaRules = [
             ['code' => 'formula_dha_present', 'label' => 'DHA (Oméga 3) présent', 'points' => 5, 'reason' => 'Le DHA est obligatoire depuis 2020, essentiel au développement cérébral et visuel.', 'source' => 'Règlement UE 2016/127', 'category' => 'bonus'],
