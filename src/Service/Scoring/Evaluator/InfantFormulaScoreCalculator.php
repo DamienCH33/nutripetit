@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service\Scoring\Evaluator;
 
+use App\Enum\ScoreLevel;
+use App\Enum\ScoringAlgorithm;
 use App\Dto\AppliedRuleDto;
 use App\Dto\ScoreCalculationResultDto;
 use App\Entity\Product;
@@ -210,11 +212,6 @@ final class InfantFormulaScoreCalculator
 
     private function determineLevel(int $score): string
     {
-        return match (true) {
-            $score >= 95 => 'ideal',
-            $score >= 85 => 'good',
-            $score >= 70 => 'occasional',
-            default => 'limit',
-        };
+        return ScoreLevel::fromScore($score, ScoringAlgorithm::InfantFormula)->value;
     }
 }
