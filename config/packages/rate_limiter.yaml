@@ -1,0 +1,6 @@
+framework:
+    rate_limiter:
+        scan:
+            policy: "sliding_window"
+            limit: 15
+            interval: "1 minute"

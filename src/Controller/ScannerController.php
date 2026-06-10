@@ -15,6 +15,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 
 /**
  * Contrôleur du scanner de code-barres.
@@ -27,6 +29,7 @@ final class ScannerController extends AbstractController
         private readonly ScanProductHandler $scanProductHandler,
         private readonly ProductPreviewBuilder $productPreviewBuilder,
         private readonly ScanSessionCookieManager $scanSessionCookieManager,
+        private readonly RateLimiterFactory $scanLimiter,
     ) {}
 
     #[Route('/app/scanner', name: 'app_pwa_scanner', methods: ['GET'])]
@@ -44,6 +47,10 @@ final class ScannerController extends AbstractController
     #[Route('/app/scan/{ean}', name: 'app_pwa_scan', methods: ['GET'], requirements: ['ean' => '\d{13}'])]
     public function scan(string $ean, Request $request): Response
     {
+        $limiter = $this->scanLimiter->create($request->getClientIp() ?? 'anonymous');
+        if (!$limiter->consume(1)->isAccepted()) {
+            throw new TooManyRequestsHttpException(null, 'Trop de scans, réessaie dans un instant.');
+        }
         try {
             $product = $this->scanProductHandler->findOrFetchProduct($ean);
         } catch (ProductNotFoundException) {
