@@ -22,9 +22,7 @@
 					<p class="np-formula-notice__title">Lait infantile — Notation spécifique</p>
 					<p class="np-formula-notice__message">
 						Tous les laits infantiles vendus en Europe sont strictement réglementés
-																																																																																																																																																																																																																								                (Règlement UE 2016/127) et garantis sûrs. NutriPetit compare uniquement
-																																																																																																																																																																																																																								                la qualité optionnelle entre produits déjà conformes. Toute substitution
-																																																																																																																																																																																																																								                doit faire l'objet d'un avis pédiatrique.
+												doit faire l'objet d'un avis pédiatrique.
 					</p>
 				</div>
 			</aside>
@@ -48,10 +46,11 @@
 			</div>
 
 			{% include '_partials/_product/_score_circle.html.twig' with {
-            score: finalScore,
-            level: level,
-            babyAgeMonths: babyAgeMonths
-        } %}
+                score: finalScore,
+                level: level,
+                babyAgeMonths: babyAgeMonths,
+                isInfantFormula: isInfantFormula
+            } %}
 		</section>
 
 		{# Onglets #}
@@ -166,7 +165,7 @@
 						Ce produit est recommandé dès
 						{{ minAgeMonths }}
 						mois selon le fabricant.
-																		                Votre enfant a
+																							Votre enfant a
 						{{ babyAgeMonths }}
 						mois.
 					</p>

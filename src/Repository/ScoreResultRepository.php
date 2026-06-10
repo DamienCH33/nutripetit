@@ -34,7 +34,7 @@ class ScoreResultRepository extends ServiceEntityRepository
     }
 
     /** @return list<ScoreResult> */
-    public function findRecentBySession(ScanSession $session, int $limit = 10): array
+    public function findRecentBySession(ScanSession $session, int $limit = 10, int $offset = 0): array
     {
         /** @var list<ScoreResult> $result */
         $result = $this->createQueryBuilder('s')
@@ -42,10 +42,21 @@ class ScoreResultRepository extends ServiceEntityRepository
             ->setParameter('session', $session)
             ->orderBy('s.calculatedAt', 'DESC')
             ->setMaxResults($limit)
+            ->setFirstResult($offset)
             ->getQuery()
             ->getResult();
 
         return $result;
+    }
+
+    public function countBySession(ScanSession $session): int
+    {
+        return (int) $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->andWhere('s.scanSession = :session')
+            ->setParameter('session', $session)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     public function findLatestForProduct(Product $product): ?ScoreResult

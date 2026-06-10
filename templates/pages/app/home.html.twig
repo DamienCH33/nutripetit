@@ -51,51 +51,33 @@
 			{% endif %}
 		</div>
 
-		{% if recentScans|length > 0 %}
-			<div class="np-app-history-list">
-				{% for scan in recentScans %}
-					{% set circumference = 125.6 %}
-					{% set offset = (100 - scan.score) * 1.256 %}
+		{% for scan in recentScans %}
+			{% set circumference = 125.6 %}
+			{% set offset = (100 - scan.finalScore) * 1.256 %}
 
-					<article class="np-product-card">
-						<div class="np-product-card__image">
-							<svg class="np-product-card__image-icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-								<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-							</svg>
-						</div>
-
-						<div class="np-product-card__content">
-							<p class="np-product-card__brand">{{ scan.brand }}</p>
-							<p class="np-product-card__name">{{ scan.name }}</p>
-							<p class="np-product-card__date">{{ scan.date }}</p>
-						</div>
-
-						<div class="np-mini-score" aria-label="Score {{ scan.score }} sur 100, {{ scan.level }}">
-							<svg class="np-mini-score__svg" viewbox="0 0 48 48">
-								<circle class="np-mini-score__bg" cx="24" cy="24" r="20"/>
-								<circle class="np-mini-score__progress np-mini-score__progress--{{ scan.level }}" cx="24" cy="24" r="20" stroke-dasharray="{{ circumference }}" stroke-dashoffset="{{ offset }}"/>
-							</svg>
-							<span class="np-mini-score__value">{{ scan.score }}</span>
-						</div>
-					</article>
-				{% endfor %}
-			</div>
-		{% else %}
-			{# Empty state #}
-			<div class="np-empty-state">
-				<div class="np-empty-state__icon-wrapper">
-					<svg class="np-empty-state__icon" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<rect x="3" y="3" width="7" height="7" rx="1"/>
-						<rect x="14" y="3" width="7" height="7" rx="1"/>
-						<rect x="3" y="14" width="7" height="7" rx="1"/>
-						<line x1="14" y1="14" x2="21" y2="14"/>
-						<line x1="14" y1="17" x2="21" y2="17"/>
-						<line x1="14" y1="20" x2="21" y2="20"/>
-					</svg>
+			<a href="{{ path('app_pwa_scan', {ean: scan.product.ean}) }}" class="np-product-card">
+				<div class="np-product-card__image">
+					{% if scan.product.imageUrl %}
+						<img src="{{ scan.product.imageUrl }}" alt="{{ scan.product.name }}">
+					{% else %}
+						{{ ux_icon('lucide:package', {class: 'np-product-card__image-icon'}) }}
+					{% endif %}
 				</div>
-				<h3 class="np-empty-state__title">Aucun scan pour le moment</h3>
-				<p class="np-empty-state__text">Scannez votre premier produit pour commencer à analyser l'alimentation de votre bébé.</p>
-			</div>
-		{% endif %}
+
+				<div class="np-product-card__content">
+					<p class="np-product-card__brand">{{ scan.product.brand|default('-') }}</p>
+					<p class="np-product-card__name">{{ scan.product.name }}</p>
+					<p class="np-product-card__date">{{ scan.calculatedAt|date('d/m/Y à H:i') }}</p>
+				</div>
+
+				<div class="np-mini-score" aria-label="Score {{ scan.finalScore }} sur 100, {{ scan.level }}">
+					<svg class="np-mini-score__svg" viewbox="0 0 48 48">
+						<circle class="np-mini-score__bg" cx="24" cy="24" r="20"/>
+						<circle class="np-mini-score__progress np-mini-score__progress--{{ scan.level }}" cx="24" cy="24" r="20" stroke-dasharray="{{ circumference }}" stroke-dashoffset="{{ offset }}"/>
+					</svg>
+					<span class="np-mini-score__value">{{ scan.finalScore }}</span>
+				</div>
+			</a>
+		{% endfor %}
 	</section>
 {% endblock %}

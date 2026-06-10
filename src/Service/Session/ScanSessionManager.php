@@ -20,15 +20,22 @@ final class ScanSessionManager
         private readonly EntityManagerInterface $em,
     ) {}
 
-    public function resolveScanSession(Request $request): ScanSession
+    public function getSessionFromRequest(Request $request): ?ScanSession
     {
         $cookieValue = $request->cookies->get(self::SESSION_COOKIE_NAME);
 
         if (\is_string($cookieValue) && Uuid::isValid($cookieValue)) {
-            $session = $this->scanSessionRepository->findById(Uuid::fromString($cookieValue));
-            if (null !== $session) {
-                return $session;
-            }
+            return $this->scanSessionRepository->findById(Uuid::fromString($cookieValue));
+        }
+
+        return null;
+    }
+
+    public function resolveScanSession(Request $request): ScanSession
+    {
+        $session = $this->getSessionFromRequest($request);
+        if (null !== $session) {
+            return $session;
         }
 
         $session = new ScanSession($request->headers->get('User-Agent', 'unknown'));
