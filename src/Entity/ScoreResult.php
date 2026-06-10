@@ -13,6 +13,10 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ScoreResultRepository::class)]
 #[ORM\Table(name: 'score_results')]
+#[ORM\UniqueConstraint(
+    name: 'uniq_session_product',
+    columns: ['scan_session_id', 'product_ean']
+)]
 #[ORM\Index(columns: ['product_ean'], name: 'idx_score_product')]
 #[ORM\Index(columns: ['calculated_at'], name: 'idx_score_calculated_at')]
 class ScoreResult
@@ -34,6 +38,15 @@ class ScoreResult
 
     #[ORM\Column(length: 20)]
     private string $level;
+
+    #[ORM\Column]
+    private int $scanCount = 1;
+
+    #[ORM\Column]
+    private DateTimeImmutable $firstScannedAt;
+
+    #[ORM\Column]
+    private DateTimeImmutable $lastScannedAt;
 
     /**
      * @var list<array{rule_code: string, rule_label: string, points: int, reason: string, source_name: string, source_url: string}>
@@ -58,6 +71,8 @@ class ScoreResult
         ?int $babyAgeMonths = null,
         ?ScanSession $scanSession = null,
     ) {
+        $now = new DateTimeImmutable();
+
         $this->id = Uuid::v7();
         $this->product = $product;
         $this->finalScore = max(0, min(100, $finalScore));
@@ -65,7 +80,10 @@ class ScoreResult
         $this->algoVersion = $algoVersion;
         $this->babyAgeMonths = $babyAgeMonths;
         $this->scanSession = $scanSession;
-        $this->calculatedAt = new DateTimeImmutable();
+
+        $this->calculatedAt = $now;
+        $this->firstScannedAt = $now;
+        $this->lastScannedAt = $now;
     }
 
     public function getId(): Uuid
@@ -120,5 +138,41 @@ class ScoreResult
     public function getCalculatedAt(): DateTimeImmutable
     {
         return $this->calculatedAt;
+    }
+
+    public function getScanCount(): int
+    {
+        return $this->scanCount;
+    }
+
+    public function getFirstScannedAt(): DateTimeImmutable
+    {
+        return $this->firstScannedAt;
+    }
+
+    public function getLastScannedAt(): DateTimeImmutable
+    {
+        return $this->lastScannedAt;
+    }
+    /**
+     * @param list<array<string, mixed>> $appliedRules
+     */
+    public function refresh(
+        int $finalScore,
+        string $level,
+        array $appliedRules,
+        ?int $babyAgeMonths,
+    ): void {
+        $this->finalScore = max(0, min(100, $finalScore));
+        $this->level = $level;
+        $this->appliedRules = $appliedRules;
+        $this->babyAgeMonths = $babyAgeMonths;
+
+        ++$this->scanCount;
+
+        $now = new DateTimeImmutable();
+
+        $this->calculatedAt = $now;
+        $this->lastScannedAt = $now;
     }
 }

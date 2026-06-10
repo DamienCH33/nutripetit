@@ -27,8 +27,7 @@ final class ScannerController extends AbstractController
         private readonly ScanProductHandler $scanProductHandler,
         private readonly ProductPreviewBuilder $productPreviewBuilder,
         private readonly ScanSessionCookieManager $scanSessionCookieManager,
-    ) {
-    }
+    ) {}
 
     #[Route('/app/scanner', name: 'app_pwa_scanner', methods: ['GET'])]
     public function scanner(): Response
@@ -65,7 +64,8 @@ final class ScannerController extends AbstractController
         if (!$this->babyProductDetector->isBabyProduct($product)) {
             return $this->render('pages/app/scan_error.html.twig', [
                 'errorTitle' => 'Produit non destiné aux 0-3 ans',
-                'errorMessage' => 'NutriPetit analyse uniquement les produits alimentaires destinés aux nourrissons et jeunes enfants (0-3 ans). Pour les autres produits, nous vous invitons à utiliser une application généraliste comme Yuka ou Open Food Facts.',
+                'errorMessage' => 'NutriPetit analyse uniquement les produits alimentaires destinés aux nourrissons et jeunes enfants (0-3 ans). 
+                Pour les autres produits, nous vous invitons à utiliser une application généraliste.',
             ], new Response('', Response::HTTP_OK));
         }
 
