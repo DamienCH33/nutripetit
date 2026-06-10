@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service\Scoring;
 
+use App\Enum\ScoreLevel;
+use App\Enum\ScoringAlgorithm;
 use App\Dto\AppliedRuleDto;
 use App\Dto\ScoreCalculationResultDto;
 use App\Entity\Product;
@@ -25,8 +27,7 @@ final readonly class ScoreCalculator
         private ScoringRuleRepository $ruleRepository,
         #[AutowireIterator('app.rule_evaluator')]
         private iterable $evaluators,
-    ) {
-    }
+    ) {}
 
     public function calculate(Product $product, ?int $babyAgeMonths = null): ScoreCalculationResultDto
     {
@@ -45,7 +46,7 @@ final readonly class ScoreCalculator
         }
 
         $totalImpact = array_sum(
-            array_map(static fn (AppliedRuleDto $r): int => $r->pointsImpact, $appliedRules),
+            array_map(static fn(AppliedRuleDto $r): int => $r->pointsImpact, $appliedRules),
         );
 
         $finalScore = max(0, min(100, self::SCORE_BASE + $totalImpact));
@@ -82,12 +83,6 @@ final readonly class ScoreCalculator
      */
     private function determineLevel(int $score): string
     {
-        return match (true) {
-            $score >= 95 => 'ideal',
-            $score >= 85 => 'good',
-            $score >= 75 => 'occasional',
-            $score >= 70 => 'limit',
-            default => 'discouraged',
-        };
+        return ScoreLevel::fromScore($score, ScoringAlgorithm::Food)->value;
     }
 }
