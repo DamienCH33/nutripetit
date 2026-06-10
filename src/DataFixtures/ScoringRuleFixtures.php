@@ -140,10 +140,10 @@ final class ScoringRuleFixtures extends Fixture
             [
                 'code' => 'soy_products',
                 'label' => 'Produits à base de soja',
-                'description' => 'Présence de soja transformé (tofu, yaourts au soja, boissons végétales). L\'ANSES indique que ces aliments ne sont pas adaptés aux nourrissons de moins de 1 an.',
+                'description' => 'Présence de soja transformé (tofu, yaourts au soja, boissons végétales). L\'ANSES indique que ces aliments ne sont pas adaptés aux enfants de moins de 3 ans.',
                 'pointsImpact' => -15,
                 'ageMinMonths' => 0,
-                'ageMaxMonths' => 12,
+                'ageMaxMonths' => 36,
                 'sourceName' => 'ANSES Avis 0-3 ans (2019)',
                 'sourceUrl' => 'https://www.anses.fr/fr/system/files/NUT2017SA0145.pdf',
             ],
@@ -154,7 +154,7 @@ final class ScoringRuleFixtures extends Fixture
             [
                 'code' => 'choking_hazard',
                 'label' => 'Risque d\'étouffement',
-                'description' => 'Aliments présentant un risque d\'étouffement : cacahuètes entières, fruits à coque entiers, raisins entiers, bonbons durs. À ne pas proposer entiers avant 3 ans.',
+                'description' => 'Aliments présentant un risque d\'étouffement : cacahuètes entières, fruits à coque entiers, raisins entiers, fruits à coque, raisins entiers. À ne pas proposer entiers avant 3 ans.',
                 'pointsImpact' => -30,
                 'ageMinMonths' => 0,
                 'ageMaxMonths' => 36,
