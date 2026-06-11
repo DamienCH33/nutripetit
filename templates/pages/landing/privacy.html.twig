@@ -3,7 +3,7 @@
 {% block title %}Politique de confidentialité - NutriPetit
 {% endblock %}
 
-{% block description %}Politique de confidentialité de NutriPetit. Aucune donnée nominative collectée, pseudonymisation par session anonyme, conformité RGPD maximale.
+{% block description %}Politique de confidentialité de NutriPetit. Aucune donnée nominative, identifiant de session anonyme, conformité RGPD.
 {% endblock %}
 
 {% block body %}
@@ -20,15 +20,15 @@
 				<p>
 					NutriPetit est conçu selon le principe de
 					<strong>privacy by design</strong>
-					(Article 25 RGPD).
-										                Cette politique décrit de manière transparente quelles données nous collectons et pourquoi.
+					(Article 25 RGPD). Cette politique décrit de manière transparente quelles données nous collectons et pourquoi.
 				</p>
 
 				<div class="np-legal__highlight">
 					<p class="np-legal__highlight-title">En résumé</p>
 					<ul class="np-legal__highlight-list">
-						<li>Aucune donnée nominative (pas de nom, pas d'email, pas d'adresse IP stockée)</li>
+						<li>Aucune donnée nominative (ni nom, ni email, ni adresse postale)</li>
 						<li>Aucun compte utilisateur requis pour utiliser l'application</li>
+						<li>Adresse IP utilisée uniquement, en mémoire, pour limiter les abus — jamais conservée en base</li>
 						<li>Aucune donnée vendue, partagée ou exploitée commercialement</li>
 						<li>Aucun cookie de tracking publicitaire</li>
 						<li>Aucun transfert hors Union européenne</li>
@@ -57,16 +57,14 @@
 
 				<h3 class="np-legal__subtitle">2.1. Données stockées sur votre appareil (localStorage)</h3>
 				<p>
-					Les informations suivantes sont stockées
-					<strong>uniquement sur votre appareil</strong>, dans le localStorage de votre navigateur. Elles ne sont jamais transmises à nos serveurs :
+					L'information suivante est stockée
+					<strong>sur votre appareil</strong>, dans le localStorage de votre navigateur :
 				</p>
 				<ul>
 					<li>
 						<strong>Âge de votre enfant en mois</strong>
-						: utilisé pour adapter le score nutritionnel à la tranche d'âge.</li>
-					<li>
-						<strong>Identifiant de session anonyme (ULID)</strong>
-						: un identifiant aléatoire généré localement pour vous reconnaître entre vos visites.</li>
+						: conservé localement pour ne pas le ressaisir. Il est transmis à nos serveurs
+						<strong>uniquement au moment d'un scan</strong>, afin d'adapter le score à la tranche d'âge (voir 2.2).</li>
 				</ul>
 
 				<h3 class="np-legal__subtitle">2.2. Données enregistrées sur nos serveurs</h3>
@@ -75,11 +73,11 @@
 				</p>
 				<ul>
 					<li>
-						<strong>Identifiant de session anonyme (ULID)</strong>
-						: transmis depuis votre appareil, sans aucun lien avec votre identité.</li>
+						<strong>Identifiant de session anonyme (UUID v7)</strong>
+						: déposé dans un cookie technique (httpOnly), sans aucun lien avec votre identité, pour retrouver vos scans entre vos visites.</li>
 					<li>
 						<strong>Âge en mois associé au scan</strong>
-						: nécessaire à la traçabilité juridique du score affiché.</li>
+						: transmis lors du scan et conservé avec le résultat, pour la traçabilité du score affiché.</li>
 					<li>
 						<strong>Code-barres (EAN) scanné</strong>
 						: identifiant universel du produit.</li>
@@ -88,17 +86,25 @@
 						: pour pouvoir prouver, en cas de litige, quel score a été affiché à quel moment.</li>
 					<li>
 						<strong>User-Agent du navigateur</strong>
-						: information technique (type de navigateur), pas nominative.</li>
+						: information technique (type de navigateur), tronquée et non nominative.</li>
 					<li>
 						<strong>Date de scan et de dernière activité</strong>
 						: pour appliquer la durée de conservation.</li>
 				</ul>
+				<p>
+					<strong>Adresse IP</strong>
+					: traitée
+					<strong>temporairement et en mémoire</strong>
+					(environ une minute) à des fins de limitation de débit, pour empêcher les abus de scan. Elle n'est
+					<strong>jamais enregistrée</strong>
+					dans notre base de données.
+				</p>
 
 				<h3 class="np-legal__subtitle">2.3. Ce que nous ne collectons jamais</h3>
 				<ul>
 					<li>Nom, prénom, date de naissance, sexe</li>
 					<li>Adresse email, numéro de téléphone, adresse postale</li>
-					<li>Adresse IP (anonymisée dans les logs serveur)</li>
+					<li>Adresse IP conservée durablement ou stockée en base</li>
 					<li>Géolocalisation</li>
 					<li>Identifiants publicitaires</li>
 					<li>Historique de navigation</li>
@@ -117,8 +123,8 @@
 						<strong>Conserver une trace technique</strong>
 						du score affiché, pour vous permettre de retrouver votre historique et pour la traçabilité juridique de l'application.</li>
 					<li>
-						<strong>Améliorer l'application</strong>
-						grâce à des statistiques anonymes d'utilisation (User-Agent agrégé).</li>
+						<strong>Protéger le service</strong>
+						contre les abus (limitation de débit basée sur l'adresse IP, sans conservation).</li>
 				</ul>
 				<p>
 					Aucune donnée n'est utilisée à des fins de profilage publicitaire, de revente, ou de partage avec des tiers commerciaux.
@@ -130,7 +136,7 @@
 				<p>
 					Le traitement repose sur
 					<strong>l'intérêt légitime</strong>
-					(Article 6.1.f du RGPD) : fournir un service d'information nutritionnelle adapté aux nourrissons, dans l'intérêt de l'enfant.
+					(Article 6.1.f du RGPD) : fournir un service d'information nutritionnelle adapté aux nourrissons, dans l'intérêt de l'enfant, et garantir la sécurité du service.
 				</p>
 				<p>
 					Conformément à
@@ -150,19 +156,23 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td>Profil bébé (localStorage)</td>
+							<td>Âge enfant (localStorage)</td>
 							<td>Jusqu'à effacement par l'utilisateur</td>
 						</tr>
 						<tr>
-							<td>Session anonyme (ULID)</td>
-							<td>3 ans d'inactivité maximum, puis suppression automatique</td>
+							<td>Session anonyme (UUID v7)</td>
+							<td>13 mois d'inactivité maximum, puis suppression automatique</td>
 						</tr>
 						<tr>
 							<td>Scores calculés (ScoreResult)</td>
-							<td>Lié à la session, supprimés en même temps</td>
+							<td>Liés à la session, supprimés en même temps</td>
 						</tr>
 						<tr>
-							<td>Cache produit OpenFoodFacts</td>
+							<td>Adresse IP (limitation de débit)</td>
+							<td>Environ 1 minute, en mémoire, jamais en base</td>
+						</tr>
+						<tr>
+							<td>Cache produit Open Food Facts</td>
 							<td>7 jours (renouvellement automatique)</td>
 						</tr>
 					</tbody>
@@ -176,9 +186,15 @@
 					<strong>n'utilise aucun cookie de tracking publicitaire</strong>. Aucun outil d'analyse tiers (Google Analytics, Meta Pixel, etc.) n'est intégré à l'application.
 				</p>
 				<p>
-					Seul un
-					<strong>identifiant de session anonyme (ULID)</strong>
-					est stocké dans le localStorage de votre navigateur, exclusivement pour le fonctionnement technique de l'application.
+					Un seul cookie est utilisé : un
+					<strong>cookie de session strictement nécessaire</strong>
+					contenant un identifiant anonyme (UUID v7, en
+					<em>httpOnly</em>), indispensable au fonctionnement de l'application (historique de vos scans). Étant purement fonctionnel, il est
+					<strong>exempté de consentement</strong>
+					conformément aux recommandations de la CNIL.
+				</p>
+				<p>
+					Votre âge enfant est, lui, stocké séparément dans le localStorage de votre navigateur (et non dans un cookie).
 				</p>
 			</section>
 
@@ -231,19 +247,19 @@
 			<section class="np-legal__section">
 				<h2 class="np-legal__section-title">8. Sécurité des données</h2>
 				<ul>
-					<li>Connexions HTTPS chiffrées (TLS 1.3) sur l'ensemble de l'application.</li>
+					<li>Connexions HTTPS chiffrées (TLS) sur l'ensemble de l'application.</li>
 					<li>Base de données hébergée en Union européenne (Railway, infrastructure dans l'UE).</li>
 					<li>Sauvegardes chiffrées automatiques.</li>
 					<li>Aucun accès humain aux données autre que le responsable du traitement.</li>
-					<li>Logs serveur anonymisés (IP non stockées en clair).</li>
+					<li>Adresse IP non conservée en base : utilisée uniquement, en mémoire, pour la limitation de débit.</li>
 				</ul>
 			</section>
 
 			<section class="np-legal__section">
 				<h2 class="np-legal__section-title">9. Transferts hors Union européenne</h2>
 				<p>
-					Aucune donnée n'est transférée hors de l'Union européenne. NutriPetit n'utilise pas d'intelligence artificielle américaine, ni d'outils d'analyse étrangers. La seule source externe est
-					<strong>Open Food Facts</strong>, association française à but non lucratif.
+					Aucune donnée n'est transférée hors de l'Union européenne. La seule source externe est
+					<strong>Open Food Facts</strong>, association française à but non lucratif, dont les données sont publiées sous licence ODbL.
 				</p>
 			</section>
 
@@ -256,8 +272,7 @@
 
 			<footer class="np-legal__footer">
 				<p>
-					Document soumis au droit français et au Règlement (UE) 2016/679 (RGPD).
-										                En cas de litige, les juridictions françaises sont compétentes.
+					Document soumis au droit français et au Règlement (UE) 2016/679 (RGPD). En cas de litige, les juridictions françaises sont compétentes.
 				</p>
 			</footer>
 
