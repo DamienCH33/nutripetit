@@ -12,7 +12,7 @@ use App\Repository\ScoreResultRepository;
 use App\Service\Ean13Validator;
 use App\Service\Exception\OpenFoodFactsUnavailableException;
 use App\Service\Exception\ProductNotFoundException;
-use App\Service\OpenFoodFactsClient;
+use App\Service\OpenFoodFactsClientInterface;
 use App\Service\Product\ProductImporter;
 use App\Service\Scoring\Evaluator\InfantFormulaDetector;
 use App\Service\Scoring\Evaluator\InfantFormulaScoreCalculator;
@@ -26,7 +26,7 @@ final class ScanProductHandler
     public function __construct(
         private readonly Ean13Validator $eanValidator,
         private readonly ProductRepository $productRepository,
-        private readonly OpenFoodFactsClient $offClient,
+        private readonly OpenFoodFactsClientInterface $offClient,
         private readonly ProductImporter $productImporter,
         private readonly ScoreCalculator $scoreCalculator,
         private readonly InfantFormulaDetector $infantFormulaDetector,

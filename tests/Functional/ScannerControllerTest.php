@@ -7,9 +7,9 @@ namespace App\Tests\Functional;
 use App\Entity\Product;
 use App\Service\Exception\OpenFoodFactsUnavailableException;
 use App\Service\Exception\ProductNotFoundException;
-use App\Service\OpenFoodFactsClient;
+use App\Service\OpenFoodFactsClientInterface;
 use App\Service\Product\ProductPreviewBuilder;
-use App\Service\Scoring\BabyProductDetector;
+use App\Service\Scoring\BabyProductDetectorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,9 +53,9 @@ final class ScannerControllerTest extends WebTestCase
         $client = static::createClient();
         $this->persistProduct(self::VALID_EAN, 'Produit adulte');
 
-        $detector = $this->createStub(BabyProductDetector::class);
+        $detector = $this->createMock(BabyProductDetectorInterface::class);
         $detector->method('isBabyProduct')->willReturn(false);
-        static::getContainer()->set(BabyProductDetector::class, $detector);
+        static::getContainer()->set(BabyProductDetectorInterface::class, $detector);
 
         $client->request('GET', '/app/scan/' . self::VALID_EAN, [], [], ['REMOTE_ADDR' => '203.0.113.4']);
 
@@ -68,9 +68,9 @@ final class ScannerControllerTest extends WebTestCase
         $client = static::createClient();
         $this->persistProduct(self::VALID_EAN_2, 'Petit pot carottes');
 
-        $detector = $this->createStub(BabyProductDetector::class);
+        $detector = $this->createMock(BabyProductDetectorInterface::class);
         $detector->method('isBabyProduct')->willReturn(true);
-        static::getContainer()->set(BabyProductDetector::class, $detector);
+        static::getContainer()->set(BabyProductDetectorInterface::class, $detector);
 
         $builder = $this->createStub(ProductPreviewBuilder::class);
         $builder->method('build')->willReturn($this->minimalViewData('Petit pot carottes', self::VALID_EAN_2));
@@ -103,9 +103,9 @@ final class ScannerControllerTest extends WebTestCase
 
     private function mockOffClient(Throwable $exception): void
     {
-        $off = $this->createStub(OpenFoodFactsClient::class);
+        $off = $this->createMock(OpenFoodFactsClientInterface::class);
         $off->method('fetchByEan')->willThrowException($exception);
-        static::getContainer()->set(OpenFoodFactsClient::class, $off);
+        static::getContainer()->set(OpenFoodFactsClientInterface::class, $off);
     }
 
     private function persistProduct(string $ean, string $name): void

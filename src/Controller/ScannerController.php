@@ -8,7 +8,7 @@ use App\Service\Exception\OpenFoodFactsUnavailableException;
 use App\Service\Exception\ProductNotFoundException;
 use App\Service\Product\ProductPreviewBuilder;
 use App\Service\Scanner\ScanProductHandler;
-use App\Service\Scoring\BabyProductDetector;
+use App\Service\Scoring\BabyProductDetectorInterface;
 use App\Service\Session\ScanSessionCookieManager;
 use App\Service\Session\ScanSessionManager;
 use InvalidArgumentException;
@@ -25,14 +25,13 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ScannerController extends AbstractController
 {
     public function __construct(
-        private readonly BabyProductDetector $babyProductDetector,
+        private readonly BabyProductDetectorInterface $babyProductDetector,
         private readonly ScanSessionManager $scanSessionManager,
         private readonly ScanProductHandler $scanProductHandler,
         private readonly ProductPreviewBuilder $productPreviewBuilder,
         private readonly ScanSessionCookieManager $scanSessionCookieManager,
         private readonly RateLimiterFactory $scanLimiter,
-    ) {
-    }
+    ) {}
 
     #[Route('/app/scanner', name: 'app_pwa_scanner', methods: ['GET'])]
     public function scanner(): Response

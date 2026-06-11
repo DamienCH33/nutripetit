@@ -11,7 +11,7 @@ use App\Entity\Product;
  *
  * Combine 2 signaux : categories_tags OFF + mots-clés du nom.
  */
-final class BabyProductDetector
+final class BabyProductDetector implements BabyProductDetectorInterface
 {
     private const CATEGORY_TAGS = [
         // Aliments solides bébé
