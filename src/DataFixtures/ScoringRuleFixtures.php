@@ -9,7 +9,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * Fixtures des 15 règles de scoring NutriPetit v1.0.0.
+ * Fixtures des 16 règles de scoring NutriPetit v1.0.0.
  *
  * Sources officielles :
  * - ANSES Avis 0-3 ans (2019)
@@ -20,7 +20,7 @@ use Doctrine\Persistence\ObjectManager;
  */
 final class ScoringRuleFixtures extends Fixture
 {
-    private const ALGO_VERSION = '1.0.0';
+    public const ALGO_VERSION = '1.0.0';
 
     public function load(ObjectManager $manager): void
     {
