@@ -325,6 +325,76 @@ nutripetit/
 
 ---
 
+# Tests — NutriPetit
+
+Suite de tests du moteur de scoring et des composants critiques.
+
+## Lancer les tests
+
+```bash
+vendor/bin/phpunit                      # toute la suite
+vendor/bin/phpunit --testdox            # sortie lisible (1 ligne par cas)
+vendor/bin/phpunit tests/Unit/Scoring   # un dossier
+vendor/bin/phpunit --coverage-text      # couverture (nécessite Xdebug ou pcov)
+```
+
+## Stratégie
+
+Deux niveaux, deux objectifs distincts :
+
+- **Unit** (`tests/Unit/`) — rapides, sans base de données. Couvrent la logique
+  métier pure : moteurs de scoring, evaluators, enum, validation, entités.
+  Le repository est mocké, les evaluators sont des bouchons quand on teste le
+  moteur isolément.
+- **Functional** (`tests/Functional/`) — bout-en-bout via `WebTestCase` :
+  routing + rate limiter + handler + base + template. Nécessite une base de
+  test dédiée (`.env.test`).
+
+Cible de couverture : ~70-80 % sur `src/Service` (le cœur). Les contrôleurs
+sont couverts par les tests fonctionnels, pas par de l'unitaire.
+
+## Ce qui est couvert
+
+### Cœur du scoring
+
+- `ScoreCalculatorTest` — moteur aliments : base 100, somme des impacts,
+  clamp 0-100, filtrage par tranche d'âge.
+- `InfantFormulaScoreCalculatorTest` — 2e algorithme (laits infantiles) :
+  plancher (jamais « déconseillé »), plafond, bonus/malus spécifiques.
+- `RuleEvaluatorCoverageTest` — **garde-fou** : vérifie que chaque règle
+  active des fixtures possède un evaluator. Empêche qu'une règle soit
+  annoncée mais jamais appliquée (la cause du bug des 6 règles fantômes).
+
+### Evaluators (16 — un fichier chacun, `tests/Unit/Scoring/Evaluator/`)
+
+Chaque evaluator est testé sur 3 axes : `supports()` ne répond qu'à sa
+règle, un cas qui déclenche, un cas qui ne déclenche pas. Cas limites
+inclus selon le type : bornes exactes de seuil (fer, oméga-3, sel,
+protéines), valeurs en chaîne (format réel d'Open Food Facts), données
+malformées, division par zéro, faux positifs de mots-clés.
+
+### Composants transverses
+
+- `ScoreLevelTest` — fige l'échelle (85/70/50/30) et les libellés des deux
+  algorithmes. Empêche tout désalignement moteur ↔ affichage.
+- `Ean13ValidatorTest` — checksum EAN-13 (valides, mauvaise clé, longueur,
+  caractères non numériques).
+- `ScoringRuleAppliesToAgeTest` — logique de tranche d'âge, toutes bornes.
+- `ScoreResultTest` — clamp du score, `refresh()` (upsert : scanCount,
+  dates, immutabilité de firstScannedAt).
+
+## Conventions
+
+- Un fichier de test par classe testée, chemin en miroir de `src/`.
+- Namespace aligné sur le chemin (`App\Tests\Unit\...`).
+- Pas de docblock redondant : le nom du test décrit le comportement vérifié.
+- `#[DataProvider]` (attribut PHP, pas annotation) pour les jeux de données.
+
+## Reste à couvrir (voir docs/A_FAIRE.md)
+
+ScannerControllerTest (fonctionnel), ProductImporter, détecteurs,
+OpenFoodFactsClient, golden tests sur de vrais JSON OFF.
+
 ## 👤 Auteur
 
 **Damien Chauveau** — Développeur PHP/Symfony basé à Bordeaux
