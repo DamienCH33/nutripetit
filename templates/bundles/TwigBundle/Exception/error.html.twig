@@ -1,0 +1,20 @@
+{% extends 'base/pwa.html.twig' %}
+{% block title %}Une erreur est survenue - NutriPetit{% endblock %}
+{% block body %}
+<div class="np-scan-error">
+    <div class="np-scan-error__icon-wrapper">
+        {{ ux_icon('lucide:alert-triangle', {class: 'np-scan-error__icon'}) }}
+    </div>
+    <h1 class="np-scan-error__title">Oups, une erreur est survenue</h1>
+    <p class="np-scan-error__message">Quelque chose s'est mal passé de notre côté. Réessaie ou reviens un peu plus tard.</p>
+    <div class="np-scan-error__actions">
+        <a href="{{ path('app_pwa_scanner') }}" class="np-scan-error__btn np-scan-error__btn--primary">
+            {{ ux_icon('lucide:scan-line', {class: 'np-scan-error__btn-icon'}) }}
+            Scanner un produit
+        </a>
+        <a href="{{ path('app_pwa_home') }}" class="np-scan-error__btn np-scan-error__btn--ghost">
+            Retour à l'accueil
+        </a>
+    </div>
+</div>
+{% endblock %}

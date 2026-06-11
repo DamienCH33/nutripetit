@@ -1,0 +1,20 @@
+{% extends 'base/pwa.html.twig' %}
+{% block title %}Page introuvable - NutriPetit{% endblock %}
+{% block body %}
+<div class="np-scan-error">
+    <div class="np-scan-error__icon-wrapper">
+        {{ ux_icon('lucide:map-pin-off', {class: 'np-scan-error__icon'}) }}
+    </div>
+    <h1 class="np-scan-error__title">Page introuvable</h1>
+    <p class="np-scan-error__message">Cette page a filé du caddie. Le lien est peut-être erroné ou la page n'existe plus.</p>
+    <div class="np-scan-error__actions">
+        <a href="{{ path('app_pwa_scanner') }}" class="np-scan-error__btn np-scan-error__btn--primary">
+            {{ ux_icon('lucide:scan-line', {class: 'np-scan-error__btn-icon'}) }}
+            Scanner un produit
+        </a>
+        <a href="{{ path('app_pwa_home') }}" class="np-scan-error__btn np-scan-error__btn--ghost">
+            Retour à l'accueil
+        </a>
+    </div>
+</div>
+{% endblock %}
