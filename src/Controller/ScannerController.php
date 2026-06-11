@@ -11,6 +11,7 @@ use App\Service\Scanner\ScanProductHandler;
 use App\Service\Scoring\BabyProductDetector;
 use App\Service\Session\ScanSessionCookieManager;
 use App\Service\Session\ScanSessionManager;
+use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,6 +55,11 @@ final class ScannerController extends AbstractController
         }
         try {
             $product = $this->scanProductHandler->findOrFetchProduct($ean);
+        } catch (InvalidArgumentException) {
+            return $this->render('pages/app/scan_error.html.twig', [
+                'errorTitle' => 'Code-barres invalide',
+                'errorMessage' => 'Ce code-barres n\'est pas valide.',
+            ], new Response('', Response::HTTP_NOT_FOUND));
         } catch (ProductNotFoundException) {
             return $this->render('pages/app/scan_error.html.twig', [
                 'errorTitle' => 'Produit inconnu',
