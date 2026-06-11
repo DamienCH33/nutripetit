@@ -138,4 +138,13 @@ final class ScannerControllerTest extends WebTestCase
             'carbonFootprint' => null,
         ];
     }
+
+    public function testReturns404OnInvalidChecksum(): void
+    {
+        $client = static::createClient();
+        // 13 chiffres mais checksum invalide -> rejeté par Ean13Validator.
+        $client->request('GET', '/app/scan/3017620422000', [], [], ['REMOTE_ADDR' => '203.0.113.7']);
+
+        self::assertSame(Response::HTTP_NOT_FOUND, $client->getResponse()->getStatusCode());
+    }
 }
