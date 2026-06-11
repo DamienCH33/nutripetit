@@ -21,7 +21,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  * Récupère les produits par code-barres EAN avec cache Redis (7 jours).
  * Source : https://wiki.openfoodfacts.org/API
  */
-final readonly class OpenFoodFactsClient
+final readonly class OpenFoodFactsClient implements OpenFoodFactsClientInterface
 {
     private const API_URL = 'https://world.openfoodfacts.org/api/v2/product/%s.json';
     private const USER_AGENT = 'NutriPetit/1.0 (https://github.com/DamienCH33/nutripetit; contact@monavispro.fr)';
