@@ -67,7 +67,6 @@ final class ScannerController extends AbstractController
 
         $scanSession = $this->scanSessionManager->resolveScanSession($request);
 
-        // Vérifier que c'est un produit bébé/nourrisson (NutriPetit 0-3 ans)
         if (!$this->babyProductDetector->isBabyProduct($product)) {
             return $this->render('pages/app/scan_error.html.twig', [
                 'errorTitle' => 'Produit non destiné aux 0-3 ans',
