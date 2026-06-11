@@ -24,7 +24,7 @@ final class ScoringRuleFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        foreach ($this->getRules() as $ruleData) {
+        foreach (self::getRules() as $ruleData) {
             $rule = new ScoringRule(
                 code: $ruleData['code'],
                 label: $ruleData['label'],
@@ -57,7 +57,7 @@ final class ScoringRuleFixtures extends Fixture
     /**
      * @return list<array<string, mixed>>
      */
-    private function getRules(): array
+    public static function getRules(): array
     {
         return [
             //
