@@ -14,9 +14,9 @@ use App\Service\Session\ScanSessionManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Contrôleur du scanner de code-barres.
@@ -30,7 +30,8 @@ final class ScannerController extends AbstractController
         private readonly ProductPreviewBuilder $productPreviewBuilder,
         private readonly ScanSessionCookieManager $scanSessionCookieManager,
         private readonly RateLimiterFactory $scanLimiter,
-    ) {}
+    ) {
+    }
 
     #[Route('/app/scanner', name: 'app_pwa_scanner', methods: ['GET'])]
     public function scanner(): Response

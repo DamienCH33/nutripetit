@@ -27,7 +27,7 @@ final class MajorAllergensEvaluatorTest extends TestCase
 
     public function testTriggersAndTranslatesAllergens(): void
     {
-        $product = (new Product('3000000000250', 'Yaourt'))
+        $product = new Product('3000000000250', 'Yaourt')
             ->setAllergens(['en:milk', 'en:nuts']);
 
         $applied = $this->evaluator->evaluate($product, $this->rule('major_allergens', -5), null);
@@ -39,7 +39,7 @@ final class MajorAllergensEvaluatorTest extends TestCase
 
     public function testUnknownAllergenFallsBackToRawLabel(): void
     {
-        $product = (new Product('3000000000251', 'Produit'))
+        $product = new Product('3000000000251', 'Produit')
             ->setAllergens(['en:kiwi']);
 
         $applied = $this->evaluator->evaluate($product, $this->rule('major_allergens'), null);
@@ -50,7 +50,7 @@ final class MajorAllergensEvaluatorTest extends TestCase
 
     public function testDoesNotTriggerWithoutAllergens(): void
     {
-        $product = (new Product('3000000000252', 'Compote'))->setAllergens([]);
+        $product = new Product('3000000000252', 'Compote')->setAllergens([]);
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('major_allergens'), null));
     }

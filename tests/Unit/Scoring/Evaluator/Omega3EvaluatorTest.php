@@ -28,7 +28,7 @@ final class Omega3EvaluatorTest extends TestCase
 
     public function testTriggersAboveThreshold(): void
     {
-        $product = (new Product('3000000000150', 'Poisson gras'))
+        $product = new Product('3000000000150', 'Poisson gras')
             ->setNutriments(['omega-3_100g' => 0.005]);
 
         $applied = $this->evaluator->evaluate($product, $this->rule(), null);
@@ -39,7 +39,7 @@ final class Omega3EvaluatorTest extends TestCase
 
     public function testDoesNotTriggerBelowThreshold(): void
     {
-        $product = (new Product('3000000000151', 'Produit'))
+        $product = new Product('3000000000151', 'Produit')
             ->setNutriments(['omega-3_100g' => 0.0005]);
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule(), null));

@@ -27,7 +27,7 @@ final class PalmOilEvaluatorTest extends TestCase
 
     public function testTriggersOnPalmOil(): void
     {
-        $product = (new Product('3000000000270', 'Pâte à tartiner'))
+        $product = new Product('3000000000270', 'Pâte à tartiner')
             ->setIngredientsRaw('Sucre, huile de palme, noisettes');
 
         $applied = $this->evaluator->evaluate($product, $this->rule('palm_oil', -10), null);
@@ -38,7 +38,7 @@ final class PalmOilEvaluatorTest extends TestCase
 
     public function testDoesNotTriggerWithoutPalmOil(): void
     {
-        $product = (new Product('3000000000271', 'Compote'))
+        $product = new Product('3000000000271', 'Compote')
             ->setIngredientsRaw('Pommes, huile de colza');
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('palm_oil'), null));

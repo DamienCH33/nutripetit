@@ -20,16 +20,16 @@ final class ScoreLevelTest extends TestCase
      */
     public static function foodScores(): iterable
     {
-        yield 'haut Ideal'        => [100, ScoreLevel::Ideal];
-        yield 'borne Ideal'       => [85, ScoreLevel::Ideal];
-        yield 'borne Good'        => [84, ScoreLevel::Good];
-        yield 'Good'              => [70, ScoreLevel::Good];
-        yield 'borne Occasional'  => [69, ScoreLevel::Occasional];
-        yield 'Occasional'        => [50, ScoreLevel::Occasional];
-        yield 'borne Limit'       => [49, ScoreLevel::Limit];
-        yield 'Limit'             => [30, ScoreLevel::Limit];
+        yield 'haut Ideal' => [100, ScoreLevel::Ideal];
+        yield 'borne Ideal' => [85, ScoreLevel::Ideal];
+        yield 'borne Good' => [84, ScoreLevel::Good];
+        yield 'Good' => [70, ScoreLevel::Good];
+        yield 'borne Occasional' => [69, ScoreLevel::Occasional];
+        yield 'Occasional' => [50, ScoreLevel::Occasional];
+        yield 'borne Limit' => [49, ScoreLevel::Limit];
+        yield 'Limit' => [30, ScoreLevel::Limit];
         yield 'borne Discouraged' => [29, ScoreLevel::Discouraged];
-        yield 'zero'              => [0, ScoreLevel::Discouraged];
+        yield 'zero' => [0, ScoreLevel::Discouraged];
     }
 
     #[DataProvider('foodScores')]

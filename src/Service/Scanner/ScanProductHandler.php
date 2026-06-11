@@ -33,10 +33,11 @@ final class ScanProductHandler
         private readonly InfantFormulaScoreCalculator $infantFormulaScoreCalculator,
         private readonly EntityManagerInterface $em,
         private readonly ScoreResultRepository $scoreResultRepository,
-    ) {}
+    ) {
+    }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws ProductNotFoundException
      * @throws OpenFoodFactsUnavailableException
      */

@@ -27,7 +27,7 @@ final class ContaminatedFishEvaluatorTest extends TestCase
 
     public function testTriggersOnRiskyFish(): void
     {
-        $product = (new Product('3000000000120', 'Plat poisson'))
+        $product = new Product('3000000000120', 'Plat poisson')
             ->setIngredientsRaw('Espadon, eau, sel');
 
         $applied = $this->evaluator->evaluate($product, $this->rule('contaminated_fish', -25), null);
@@ -38,7 +38,7 @@ final class ContaminatedFishEvaluatorTest extends TestCase
 
     public function testDoesNotTriggerOnSafeFish(): void
     {
-        $product = (new Product('3000000000121', 'Plat poisson'))
+        $product = new Product('3000000000121', 'Plat poisson')
             ->setIngredientsRaw('Cabillaud, eau, sel');
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('contaminated_fish'), null));
