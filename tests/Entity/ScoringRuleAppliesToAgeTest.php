@@ -16,17 +16,17 @@ final class ScoringRuleAppliesToAgeTest extends TestCase
     public static function cases(): iterable
     {
         // [ageMin, ageMax, babyAge, attendu]
-        yield 'sans borne, âge inconnu'        => [null, null, null, true];
-        yield 'sans borne, âge fourni'         => [null, null, 12, true];
-        yield 'borne min, âge inconnu'         => [6, null, null, false];
-        yield 'borne min, âge en dessous'      => [6, null, 3, false];
-        yield 'borne min, âge pile'            => [6, null, 6, true];
-        yield 'borne min, âge au dessus'       => [6, null, 24, true];
-        yield 'borne max, âge au dessus'       => [null, 12, 24, false];
-        yield 'borne max, âge pile'            => [null, 12, 12, true];
-        yield 'fourchette, dans la plage'      => [6, 12, 9, true];
-        yield 'fourchette, trop jeune'         => [6, 12, 3, false];
-        yield 'fourchette, trop vieux'         => [6, 12, 18, false];
+        yield 'sans borne, âge inconnu' => [null, null, null, true];
+        yield 'sans borne, âge fourni' => [null, null, 12, true];
+        yield 'borne min, âge inconnu' => [6, null, null, false];
+        yield 'borne min, âge en dessous' => [6, null, 3, false];
+        yield 'borne min, âge pile' => [6, null, 6, true];
+        yield 'borne min, âge au dessus' => [6, null, 24, true];
+        yield 'borne max, âge au dessus' => [null, 12, 24, false];
+        yield 'borne max, âge pile' => [null, 12, 12, true];
+        yield 'fourchette, dans la plage' => [6, 12, 9, true];
+        yield 'fourchette, trop jeune' => [6, 12, 3, false];
+        yield 'fourchette, trop vieux' => [6, 12, 18, false];
     }
 
     #[DataProvider('cases')]

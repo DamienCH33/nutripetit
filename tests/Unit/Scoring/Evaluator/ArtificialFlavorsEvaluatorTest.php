@@ -27,7 +27,7 @@ final class ArtificialFlavorsEvaluatorTest extends TestCase
 
     public function testTriggersOnArtificialFlavorKeyword(): void
     {
-        $product = (new Product('3000000000100', 'Dessert'))
+        $product = new Product('3000000000100', 'Dessert')
             ->setIngredientsRaw('Sucre, eau, arôme synthétique');
 
         $applied = $this->evaluator->evaluate($product, $this->rule('artificial_flavors', -15), null);
@@ -39,7 +39,7 @@ final class ArtificialFlavorsEvaluatorTest extends TestCase
 
     public function testDoesNotTriggerOnNaturalFlavor(): void
     {
-        $product = (new Product('3000000000101', 'Compote'))
+        $product = new Product('3000000000101', 'Compote')
             ->setIngredientsRaw('Pommes, arôme naturel de vanille');
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('artificial_flavors'), null));

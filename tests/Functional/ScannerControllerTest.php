@@ -13,6 +13,7 @@ use App\Service\Scoring\BabyProductDetector;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * Tests bout-en-bout de la route app_pwa_scan.
@@ -100,7 +101,7 @@ final class ScannerControllerTest extends WebTestCase
         self::assertTrue($blocked, 'Le limiter "scan" doit refuser au-delà de sa limite.');
     }
 
-    private function mockOffClient(\Throwable $exception): void
+    private function mockOffClient(Throwable $exception): void
     {
         $off = $this->createStub(OpenFoodFactsClient::class);
         $off->method('fetchByEan')->willThrowException($exception);

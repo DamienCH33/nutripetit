@@ -6,3 +6,7 @@ parameters:
     excludePaths:
         - src/Kernel.php
         - tests/bootstrap.php
+    ignoreErrors:
+        -
+            identifier: method.unresolvableReturnType
+            path: tests/Functional/ScannerControllerTest.php

@@ -84,7 +84,7 @@ final class ScoreCalculatorTest extends TestCase
                 return true;
             }
 
-            public function evaluate(Product $product, ScoringRule $rule, ?int $babyAgeMonths): ?AppliedRuleDto
+            public function evaluate(Product $product, ScoringRule $rule, ?int $babyAgeMonths): AppliedRuleDto
             {
                 return new AppliedRuleDto(
                     $rule->getCode(),

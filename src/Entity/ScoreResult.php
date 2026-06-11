@@ -154,6 +154,7 @@ class ScoreResult
     {
         return $this->lastScannedAt;
     }
+
     /**
      * @param list<array<string, mixed>> $appliedRules
      */

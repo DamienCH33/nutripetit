@@ -27,7 +27,7 @@ final class ControversialAdditivesEvaluatorTest extends TestCase
 
     public function testTriggersOnControversialECode(): void
     {
-        $product = (new Product('3000000000220', 'Bonbons'))
+        $product = new Product('3000000000220', 'Bonbons')
             ->setAdditives(['en:e171', 'en:e330']);
 
         $applied = $this->evaluator->evaluate($product, $this->rule('controversial_additives', -30), null);
@@ -39,7 +39,7 @@ final class ControversialAdditivesEvaluatorTest extends TestCase
     public function testDoesNotTriggerOnHarmlessAdditives(): void
     {
         // E330 = acide citrique, anodin.
-        $product = (new Product('3000000000221', 'Compote'))
+        $product = new Product('3000000000221', 'Compote')
             ->setAdditives(['en:e330']);
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('controversial_additives'), null));
@@ -47,7 +47,7 @@ final class ControversialAdditivesEvaluatorTest extends TestCase
 
     public function testDoesNotTriggerWithoutAdditives(): void
     {
-        $product = (new Product('3000000000222', 'Purée'))->setAdditives([]);
+        $product = new Product('3000000000222', 'Purée')->setAdditives([]);
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('controversial_additives'), null));
     }

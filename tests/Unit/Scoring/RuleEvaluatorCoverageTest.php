@@ -8,6 +8,7 @@ use App\DataFixtures\ScoringRuleFixtures;
 use App\Entity\ScoringRule;
 use App\Service\Scoring\RuleEvaluator;
 use App\Service\Scoring\ScoreCalculator;
+use ReflectionProperty;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -20,7 +21,7 @@ final class RuleEvaluatorCoverageTest extends KernelTestCase
         self::bootKernel();
 
         $calculator = self::getContainer()->get(ScoreCalculator::class);
-        $property = new \ReflectionProperty(ScoreCalculator::class, 'evaluators');
+        $property = new ReflectionProperty(ScoreCalculator::class, 'evaluators');
         /** @var list<RuleEvaluator> $evaluators */
         $evaluators = iterator_to_array($property->getValue($calculator), false);
 
