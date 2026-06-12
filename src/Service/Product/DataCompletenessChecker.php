@@ -19,7 +19,7 @@ final class DataCompletenessChecker
 
         $hasNutriments = [] !== array_filter(
             $product->getNutriments(),
-            static fn($v): bool => is_numeric($v),
+            static fn ($v): bool => is_numeric($v),
         );
 
         return $hasIngredients || $hasNutriments;

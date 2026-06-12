@@ -1,89 +1,106 @@
 name: CI
 
 on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main]
+    push:
+        branches: [main, develop]
+    pull_request:
+        branches: [main]
 
 jobs:
-  quality:
-    runs-on: ubuntu-latest
-    name: Code Quality
+    quality:
+        runs-on: ubuntu-latest
+        name: Code Quality
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
 
-      - name: Setup PHP 8.4
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.4'
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_pgsql, redis
-          coverage: none
-          tools: composer:v2
+            - name: Setup PHP 8.4
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.4"
+                  extensions: mbstring, xml, ctype, iconv, intl, pdo_pgsql, redis
+                  coverage: none
+                  tools: composer:v2
 
-      - name: Validate composer.json
-        run: composer validate --strict --no-check-publish
+            - name: Validate composer.json
+              run: composer validate --strict --no-check-publish
 
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+            - name: Get composer cache directory
+              id: composer-cache
+              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-      - name: Cache composer dependencies
-        uses: actions/cache@v5
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+            - name: Cache composer dependencies
+              uses: actions/cache@v5
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: ${{ runner.os }}-composer-
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-interaction
+            - name: Install dependencies
+              run: composer install --prefer-dist --no-progress --no-interaction
 
-      - name: Security audit (CVE check)
-        run: composer audit
+            - name: Security audit (CVE check)
+              run: composer audit
 
-      - name: PHP CS Fixer (style)
-        run: composer cs:check
+            - name: PHP CS Fixer (style)
+              run: composer cs:check
 
-      - name: PHPStan (static analysis)
-        run: composer stan
+            - name: PHPStan (static analysis)
+              run: composer stan
 
-  tests:
-    runs-on: ubuntu-latest
-    name: Tests
+    tests:
+        runs-on: ubuntu-latest
+        name: Tests
 
-    services:
-      postgres:
-        image: postgres:16-alpine
+        services:
+            postgres:
+                image: postgres:16-alpine
+                env:
+                    POSTGRES_USER: nutripetit
+                    POSTGRES_PASSWORD: nutripetit
+                    POSTGRES_DB: nutripetit
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+
+            redis:
+                image: redis:7-alpine
+                ports:
+                    - 6379:6379
+                options: >-
+                    --health-cmd "redis-cli ping"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+
         env:
-          POSTGRES_USER: nutripetit
-          POSTGRES_PASSWORD: nutripetit
-          POSTGRES_DB: nutripetit_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+            DATABASE_URL: "postgresql://nutripetit:nutripetit@127.0.0.1:5432/nutripetit?serverVersion=16&charset=utf8"
+            REDIS_URL: "redis://127.0.0.1:6379/15"
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
 
-      - name: Setup PHP 8.4
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.4'
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_pgsql
-          coverage: none
-          tools: composer:v2
+            - name: Setup PHP 8.4
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.4"
+                  extensions: mbstring, xml, ctype, iconv, intl, pdo_pgsql, redis
+                  coverage: none
+                  tools: composer:v2
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-interaction
+            - name: Install dependencies
+              run: composer install --prefer-dist --no-progress --no-interaction
 
-      - name: Run tests
-        env:
-          DATABASE_URL: "postgresql://nutripetit:nutripetit@127.0.0.1:5432/nutripetit_test?serverVersion=16&charset=utf8"
-        run: composer test
+            - name: Create test database & run migrations
+              run: |
+                  php bin/console --env=test doctrine:database:create --if-not-exists
+                  php bin/console --env=test doctrine:migrations:migrate -n
+
+            - name: Run tests
+              run: composer test
