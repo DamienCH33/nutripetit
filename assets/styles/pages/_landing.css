@@ -344,7 +344,7 @@
 /* COMMENT ÇA MARCHE */
 .np-landing-steps {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: var(--np-spacing-8);
     position: relative;
 }
@@ -380,7 +380,17 @@
     color: var(--np-gray-600);
     line-height: 1.6;
 }
+@media (max-width: 992px) {
+    .np-landing-steps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
 
+@media (max-width: 576px) {
+    .np-landing-steps {
+        grid-template-columns: 1fr;
+    }
+}
 /* SOURCES */
 .np-landing-sources {
     display: grid;
