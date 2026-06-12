@@ -2,7 +2,6 @@ FROM dunglas/frankenphp:php8.4-bookworm
 
 RUN apt-get update && apt-get install -y git unzip libpq-dev \
     && docker-php-ext-install pdo_pgsql \
-    && install-php-extensions redis \
     && apt-get clean
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
