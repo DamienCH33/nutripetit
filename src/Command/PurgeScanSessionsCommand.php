@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -32,7 +33,7 @@ final class PurgeScanSessionsCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $cutoff = new \DateTimeImmutable(\sprintf('-%d months', self::RETENTION_MONTHS));
+        $cutoff = new DateTimeImmutable(\sprintf('-%d months', self::RETENTION_MONTHS));
 
         // Les ScoreResult liés d'abord (FK), puis les sessions.
         $deletedResults = $this->em->createQuery(

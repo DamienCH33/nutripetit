@@ -31,7 +31,8 @@ final class ScannerController extends AbstractController
         private readonly ProductPreviewBuilder $productPreviewBuilder,
         private readonly ScanSessionCookieManager $scanSessionCookieManager,
         private readonly RateLimiterFactory $scanLimiter,
-    ) {}
+    ) {
+    }
 
     #[Route('/app/scanner', name: 'app_pwa_scanner', methods: ['GET'])]
     public function scanner(): Response

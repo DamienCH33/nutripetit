@@ -19,7 +19,8 @@ final class ProductPreviewBuilder
         private readonly MinimumAgeExtractor $minimumAgeExtractor,
         private readonly CarbonFootprintExtractor $carbonFootprintExtractor,
         private readonly DataCompletenessChecker $completenessChecker,
-    ) {}
+    ) {
+    }
 
     /**
      * Construit les données de vue de la page produit.
