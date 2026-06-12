@@ -6,6 +6,7 @@ namespace App\Command;
 
 use App\DataFixtures\ScoringRuleFixtures;
 use App\Entity\ScoringRule;
+use App\Scoring\ScoringRulesProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -30,7 +31,7 @@ final class SyncScoringRulesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $version = ScoringRuleFixtures::ALGO_VERSION;
+        $version = ScoringRulesProvider::ALGO_VERSION;
 
         $deleted = $this->em->createQuery(
             'DELETE FROM App\Entity\ScoringRule r WHERE r.algoVersion = :v',
