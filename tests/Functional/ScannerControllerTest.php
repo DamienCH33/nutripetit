@@ -136,6 +136,7 @@ final class ScannerControllerTest extends WebTestCase
             'minAgeMonths' => null,
             'additives' => [],
             'carbonFootprint' => null,
+            'dataIncomplete' => false,
         ];
     }
 
