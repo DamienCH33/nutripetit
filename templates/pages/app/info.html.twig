@@ -8,7 +8,7 @@
 	<section class="np-info-hero">
 		<h1 class="np-info-hero__title">Comprendre le score</h1>
 		<p class="np-info-hero__subtitle">
-			NutriPetit calcule un score nutritionnel adapté à votre bébé en s'appuyant sur les recommandations officielles ANSES, PNNS 4, OMS et EFSA.
+			NutriPetit calcule un score nutritionnel adapté à votre bébé en s'appuyant sur les recommandations officielles ANSES, PNNS 4, OMS, EFSA et la réglementation européenne.
 		</p>
 		<div class="np-info-hero__version">
 			<span>Algorithme v{{ algoVersion }}
@@ -80,24 +80,43 @@
 			{% endfor %}
 		</div>
 	</section>
-	{# Règles spécifiques laits infantiles #}
-	<div class="np-info-hero__version">
-		<h2>Algorithme spécifique laits infantiles ({{ infantFormulaAlgoVersion }})</h2>
-	</div>
-	<p>Les laits infantiles sont strictement réglementés par le Règlement UE 2016/127. Notre algorithme dédié compare la qualité optionnelle entre produits déjà conformes.</p>
 
-	{% for rule in infantFormulaRules %}
-		<article class="np-rule-card np-rule-card--{{ rule.category }}">
-			<h4>{{ rule.label }}
-				<span>{{ rule.points >= 0 ? '+' : '' }}{{ rule.points }}
-					pts</span>
-			</h4>
-			<p>{{ rule.reason }}</p>
-			<p>
-				<strong>Source :</strong>
-				{{ rule.source }}</p>
-		</article>
-	{% endfor %}
+	{# Règles spécifiques laits infantiles — uniformisé avec np-info-* #}
+	<section class="np-info-section">
+		<h2 class="np-info-section__title">Algorithme spécifique laits infantiles</h2>
+		<div class="np-info-hero__version">
+			<span>{{ infantFormulaAlgoVersion }}</span>
+		</div>
+		<p class="np-info-section__lead">
+			Les laits infantiles sont strictement réglementés par le Règlement UE 2016/127. Notre algorithme dédié compare la qualité optionnelle entre produits déjà conformes.
+		</p>
+
+		<div class="np-info-rules">
+			{% for rule in infantFormulaRules %}
+				<article class="np-info-rule">
+					<div class="np-info-rule__header">
+						<h3 class="np-info-rule__label">{{ rule.label }}</h3>
+						<span class="np-info-rule__impact np-info-rule__impact--{{ rule.points < 0 ? 'negative' : (rule.points > 0 ? 'positive' : 'neutral') }}">
+							{% if rule.points > 0 %}+
+							{% endif %}
+							{{ rule.points }}
+							pts
+						</span>
+					</div>
+
+					<p class="np-info-rule__description">{{ rule.reason }}</p>
+
+					<div class="np-info-rule__meta">
+						<span class="np-info-rule__source">
+							{{ ux_icon('lucide:file-text', {class: 'np-info-rule__icon'}) }}
+							{{ rule.source }}
+						</span>
+					</div>
+				</article>
+			{% endfor %}
+		</div>
+	</section>
+
 	{# Pourquoi pas Nutri-Score adulte #}
 	<section class="np-info-section np-info-section--highlight">
 		<h2 class="np-info-section__title">Pourquoi pas le Nutri-Score adulte ?</h2>
