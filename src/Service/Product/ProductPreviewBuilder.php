@@ -18,8 +18,8 @@ final class ProductPreviewBuilder
         private readonly NutrientViewBuilder $nutrientViewBuilder,
         private readonly MinimumAgeExtractor $minimumAgeExtractor,
         private readonly CarbonFootprintExtractor $carbonFootprintExtractor,
-    ) {
-    }
+        private readonly DataCompletenessChecker $completenessChecker,
+    ) {}
 
     /**
      * Construit les données de vue de la page produit.
@@ -68,6 +68,7 @@ final class ProductPreviewBuilder
             'minAgeMonths' => $minAgeMonths,
             'additives' => $this->additiveExtractor->extractAdditives($product),
             'carbonFootprint' => $this->carbonFootprintExtractor->extractCarbonFootprint($product),
+            'dataIncomplete' => !$this->completenessChecker->hasSufficientData($product),
         ];
     }
 }

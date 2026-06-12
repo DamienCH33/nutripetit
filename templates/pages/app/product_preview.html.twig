@@ -10,6 +10,12 @@
 		class="np-product" {{ stimulus_controller('product-tabs') }}>
 
 		{# Bandeau alerte critique #}
+		{% if dataIncomplete %}
+			<div class="np-alert np-alert--warning">
+				{{ ux_icon('lucide:alert-triangle', {class: 'np-alert__icon'}) }}
+				<span>Données nutritionnelles insuffisantes sur ce produit : le score est indicatif et peut être surévalué.</span>
+			</div>
+		{% endif %}
 		{% if criticalAlert %}
 			{% include '_partials/_product/_critical_alert.html.twig' with { alert: criticalAlert } %}
 		{% endif %}
@@ -22,7 +28,7 @@
 					<p class="np-formula-notice__title">Lait infantile — Notation spécifique</p>
 					<p class="np-formula-notice__message">
 						Tous les laits infantiles vendus en Europe sont strictement réglementés
-												doit faire l'objet d'un avis pédiatrique.
+																																				doit faire l'objet d'un avis pédiatrique.
 					</p>
 				</div>
 			</aside>
@@ -165,7 +171,7 @@
 						Ce produit est recommandé dès
 						{{ minAgeMonths }}
 						mois selon le fabricant.
-																							Votre enfant a
+																																															Votre enfant a
 						{{ babyAgeMonths }}
 						mois.
 					</p>
