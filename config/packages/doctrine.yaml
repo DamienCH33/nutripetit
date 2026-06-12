@@ -1,6 +1,7 @@
 doctrine:
     dbal:
         url: "%env(resolve:DATABASE_URL)%"
+        server_version: "16"
         profiling_collect_backtrace: "%kernel.debug%"
         types:
             ulid: Symfony\Bridge\Doctrine\Types\UlidType
