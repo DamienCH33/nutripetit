@@ -16,13 +16,11 @@
 		<meta property="og:description" content="{% block og_description %}L'app qui analyse les produits alimentaires bébé selon les recommandations officielles.{% endblock %}">
 		<meta property="og:type" content="website">
 		<meta property="og:image" content="{{ absolute_url(asset('images/logo/nutripetit.svg')) }}">
+		<meta name="mobile-web-app-capable" content="yes">
 
 		<meta name="theme-color" content="#FDF7F1">
 
 		<link rel="icon" type="image/svg+xml" href="{{ asset('images/logo/nutripetit.svg') }}">
-
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 		{% block stylesheets %}
 			{{ importmap('app') }}
