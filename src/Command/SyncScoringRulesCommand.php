@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\DataFixtures\ScoringRuleFixtures;
 use App\Entity\ScoringRule;
 use App\Scoring\ScoringRulesProvider;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,7 +37,7 @@ final class SyncScoringRulesCommand extends Command
         )->setParameter('v', $version)->execute();
 
         $written = 0;
-        foreach (ScoringRuleFixtures::getRules() as $data) {
+        foreach (ScoringRulesProvider::getRules() as $data) {
             $rule = new ScoringRule(
                 code: $data['code'],
                 label: $data['label'],
