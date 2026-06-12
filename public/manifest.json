@@ -1,0 +1,26 @@
+{
+  "name": "NutriPetit",
+  "short_name": "NutriPetit",
+  "description": "Le score nutritionnel des produits alimentaires pour bébés et jeunes enfants.",
+  "start_url": "/app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FDF7F1",
+  "theme_color": "#FDF7F1",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
