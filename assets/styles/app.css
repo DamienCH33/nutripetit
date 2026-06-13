@@ -17,6 +17,7 @@
 @import "./components/_navigation.css";
 @import "./components/_forms.css";
 @import "./components/_disclaimer.css";
+@import "./components/_pwa-install.css";
 
 /* PAGES */
 @import "./pages/_home.css";
