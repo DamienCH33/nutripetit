@@ -131,17 +131,18 @@
 }
 
 .np-landing-hero__inner {
-    max-width: 1200px;
+    max-width: 760px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--np-spacing-12);
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    text-align: center;
 }
 
 .np-landing-hero__content {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: var(--np-spacing-4);
 }
 
@@ -155,7 +156,6 @@
     border-radius: var(--np-radius-pill);
     font-size: var(--np-font-size-sm);
     font-weight: var(--np-font-weight-semibold);
-    width: fit-content;
 }
 
 .np-landing-hero__title {
@@ -174,14 +174,15 @@
     font-size: var(--np-font-size-lg);
     color: var(--np-gray-600);
     line-height: 1.6;
-    max-width: 480px;
+    max-width: 560px;
 }
 
 .np-landing-hero__actions {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: var(--np-spacing-3);
     margin-top: var(--np-spacing-4);
-    flex-wrap: wrap;
 }
 
 .np-landing-hero__cta-primary {
@@ -222,84 +223,26 @@
     background-color: var(--np-gray-50);
 }
 
-.np-landing-hero__visual {
-    display: flex;
+.np-landing-hero__cta-install {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-}
-
-.np-landing-hero__visual-img {
-    max-width: 100%;
-    height: auto;
-}
-
-/* Mockup d'app dans le hero */
-.np-landing-mockup {
-    width: 320px;
-    background-color: var(--np-white);
-    border-radius: 36px;
-    padding: var(--np-spacing-4);
-    box-shadow:
-        var(--np-shadow-lg),
-        0 0 0 8px var(--np-gray-100);
-}
-
-.np-landing-mockup__product {
-    background-color: var(--np-cream-light);
-    border-radius: var(--np-radius-lg);
-    padding: var(--np-spacing-4);
-    text-align: center;
-}
-
-.np-landing-mockup__product-name {
-    font-size: var(--np-font-size-base);
-    font-weight: var(--np-font-weight-semibold);
-    margin-bottom: var(--np-spacing-1);
-}
-
-.np-landing-mockup__product-brand {
-    font-size: var(--np-font-size-sm);
-    color: var(--np-gray-500);
-    margin-bottom: var(--np-spacing-4);
-}
-
-.np-landing-mockup__score-circle {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    border: 6px solid var(--np-score-excellent);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto var(--np-spacing-3);
-    background-color: var(--np-white);
-}
-
-.np-landing-mockup__score-value {
-    font-size: 2.5rem;
-    font-weight: var(--np-font-weight-bold);
-    color: var(--np-gray-900);
-    line-height: 1;
-}
-
-.np-landing-mockup__score-label {
-    font-size: var(--np-font-size-xs);
-    color: var(--np-gray-500);
-    font-weight: var(--np-font-weight-medium);
-}
-
-.np-landing-mockup__badge {
-    display: inline-block;
-    padding: 4px 12px;
-    background-color: var(--np-score-excellent);
-    color: var(--np-white);
+    gap: var(--np-spacing-2);
+    padding: 16px 32px;
+    border: 2px solid var(--np-orange-primary);
     border-radius: var(--np-radius-pill);
-    font-size: var(--np-font-size-sm);
+    background: transparent;
+    color: var(--np-orange-primary);
     font-weight: var(--np-font-weight-semibold);
+    font-size: var(--np-font-size-lg);
+    transition: all 200ms ease-out;
 }
 
-/* Concept */
+.np-landing-hero__cta-install:hover {
+    background: var(--np-orange-primary);
+    color: #fff;
+}
+
+/* Concept / piliers */
 .np-landing-pillars {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -341,6 +284,22 @@
     line-height: 1.6;
 }
 
+/* POURQUOI 0-3 ANS : texte 2 colonnes */
+.np-landing-why-text {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--np-spacing-8);
+    max-width: 900px;
+    margin: 0 auto var(--np-spacing-12);
+}
+
+.np-landing-why-text p {
+    font-size: var(--np-font-size-lg);
+    color: var(--np-gray-600);
+    line-height: 1.7;
+    text-align: left;
+}
+
 /* COMMENT ÇA MARCHE */
 .np-landing-steps {
     display: grid;
@@ -380,6 +339,7 @@
     color: var(--np-gray-600);
     line-height: 1.6;
 }
+
 @media (max-width: 992px) {
     .np-landing-steps {
         grid-template-columns: repeat(2, 1fr);
@@ -390,7 +350,15 @@
     .np-landing-steps {
         grid-template-columns: 1fr;
     }
+    .np-landing-pillars {
+        grid-template-columns: 1fr;
+        gap: var(--np-spacing-4);
+    }
+    .np-landing-sources {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
+
 /* SOURCES */
 .np-landing-sources {
     display: grid;
@@ -567,27 +535,8 @@
         padding: 40px var(--np-spacing-4) 60px;
     }
 
-    .np-landing-hero__inner {
-        grid-template-columns: 1fr;
-        gap: var(--np-spacing-8);
-        text-align: center;
-    }
-
     .np-landing-hero__title {
         font-size: 2.25rem;
-    }
-
-    .np-landing-hero__subtitle {
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .np-landing-hero__actions {
-        justify-content: center;
-    }
-
-    .np-landing-hero__eyebrow {
-        margin: 0 auto;
     }
 
     .np-landing-section {
@@ -596,6 +545,11 @@
 
     .np-landing-section__title {
         font-size: 1.875rem;
+    }
+
+    .np-landing-why-text {
+        grid-template-columns: 1fr;
+        gap: var(--np-spacing-4);
     }
 
     .np-landing-pillars {

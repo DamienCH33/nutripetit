@@ -1,0 +1,4 @@
+.np-landing-hero__cta-install{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;border:2px solid var(--np-orange-primary);border-radius:9999px;background:transparent;color:var(--np-orange-primary);font-weight:var(--np-font-weight-semibold);}
+.np-landing-hero__cta-install:hover{background:var(--np-orange-primary);color:#fff;}
+.np-install-help{position:fixed;inset:auto 1rem 1rem 1rem;z-index:1001;padding:1rem;border-radius:1rem;background:#fff;color:var(--np-gray-900);font-size:var(--np-font-size-sm);line-height:var(--np-line-height-normal);box-shadow:0 4px 20px rgba(0,0,0,.25);}
+.np-install-help__ok{margin-top:.75rem;padding:.4rem .9rem;border-radius:9999px;background:var(--np-orange-primary);color:#fff;font-weight:var(--np-font-weight-semibold);}
