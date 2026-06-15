@@ -43,7 +43,7 @@ final class ArtificialFlavorsEvaluator implements RuleEvaluator
         }
 
         $pattern = '/\b(' . implode('|', array_map(
-            static fn(string $w): string => preg_quote($w, '/'),
+            static fn (string $w): string => preg_quote($w, '/'),
             self::ARTIFICIAL_FLAVOR_KEYWORDS,
         )) . ')\b/iu';
 

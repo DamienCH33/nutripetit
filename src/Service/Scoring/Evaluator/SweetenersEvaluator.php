@@ -73,7 +73,7 @@ final class SweetenersEvaluator implements RuleEvaluator
         $found = [];
 
         $additivesLower = array_map(
-            static fn(string $a): string => mb_strtolower($a),
+            static fn (string $a): string => mb_strtolower($a),
             $additives,
         );
         foreach (self::SWEETENER_E_CODES as $code) {

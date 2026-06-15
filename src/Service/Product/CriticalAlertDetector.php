@@ -14,7 +14,6 @@ final class CriticalAlertDetector
     public function detect(array $appliedRules): ?array
     {
         foreach ($appliedRules as $rule) {
-
             if (($rule['status'] ?? 'triggered') === 'satisfied') {
                 continue;
             }

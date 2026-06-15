@@ -28,7 +28,7 @@ final class AddedSugarsEvaluatorTest extends TestCase
 
     public function testTriggersOnSugarKeyword(): void
     {
-        $product = (new Product('3000000000200', 'Biscuit'))
+        $product = new Product('3000000000200', 'Biscuit')
             ->setIngredientsRaw('Farine, sirop de glucose, beurre');
 
         $applied = $this->evaluator->evaluate($product, $this->rule('added_sugars', -25), null);
@@ -40,7 +40,7 @@ final class AddedSugarsEvaluatorTest extends TestCase
 
     public function testCaseInsensitive(): void
     {
-        $product = (new Product('3000000000201', 'Biscuit'))
+        $product = new Product('3000000000201', 'Biscuit')
             ->setIngredientsRaw('Farine, SUCRE de canne');
 
         self::assertNotNull($this->evaluator->evaluate($product, $this->rule('added_sugars'), null));
@@ -48,7 +48,7 @@ final class AddedSugarsEvaluatorTest extends TestCase
 
     public function testSatisfiedWithoutSugar(): void
     {
-        $product = (new Product('3000000000202', 'Purée'))
+        $product = new Product('3000000000202', 'Purée')
             ->setIngredientsRaw('Carottes, eau');
         $applied = $this->evaluator->evaluate($product, $this->rule('added_sugars'), null);
         self::assertInstanceOf(AppliedRuleDto::class, $applied);
@@ -58,7 +58,7 @@ final class AddedSugarsEvaluatorTest extends TestCase
 
     public function testReturnsNullOnEmptyIngredients(): void
     {
-        $product = (new Product('3000000000203', 'Produit'))->setIngredientsRaw('   ');
+        $product = new Product('3000000000203', 'Produit')->setIngredientsRaw('   ');
         self::assertNull($this->evaluator->evaluate($product, $this->rule('added_sugars'), null));
     }
 

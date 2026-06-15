@@ -207,7 +207,6 @@ class ScoringRule
     public function appliesToAge(?int $babyAgeMonths): bool
     {
         if (null === $babyAgeMonths) {
-
             return (null === $this->ageMinMonths || 0 === $this->ageMinMonths)
                 && (null === $this->ageMaxMonths || 36 === $this->ageMaxMonths);
         }
@@ -217,6 +216,7 @@ class ScoringRule
         if (null !== $this->ageMaxMonths && $babyAgeMonths > $this->ageMaxMonths) {
             return false;
         }
+
         return true;
     }
 }

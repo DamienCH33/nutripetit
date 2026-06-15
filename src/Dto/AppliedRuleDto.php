@@ -22,7 +22,8 @@ final readonly class AppliedRuleDto
         public string $sourceName,
         public string $sourceUrl,
         public RuleStatus $status = RuleStatus::Triggered,
-    ) {}
+    ) {
+    }
 
     /**
      * Sérialisation pour stockage JSON dans ScoreResult.appliedRules.

@@ -28,7 +28,7 @@ final class SoyProductsEvaluatorTest extends TestCase
 
     public function testTriggersOnSoyKeyword(): void
     {
-        $product = (new Product('3000000000130', 'Dessert végétal'))
+        $product = new Product('3000000000130', 'Dessert végétal')
             ->setIngredientsRaw('Tofu, eau, sel');
 
         $applied = $this->evaluator->evaluate($product, $this->rule('soy_products', -10), null);
@@ -40,7 +40,7 @@ final class SoyProductsEvaluatorTest extends TestCase
 
     public function testSatisfiedWithoutSoy(): void
     {
-        $product = (new Product('3000000000131', 'Compote'))
+        $product = new Product('3000000000131', 'Compote')
             ->setIngredientsRaw('Pommes, poires');
 
         $applied = $this->evaluator->evaluate($product, $this->rule('soy_products'), null);
