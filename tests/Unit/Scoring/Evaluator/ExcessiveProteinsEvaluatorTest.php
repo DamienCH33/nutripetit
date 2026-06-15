@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Enum\RuleStatus;
 use App\Service\Scoring\Evaluator\ExcessiveProteinsEvaluator;
 use PHPUnit\Framework\TestCase;
 
@@ -28,45 +29,51 @@ final class ExcessiveProteinsEvaluatorTest extends TestCase
     public function testTriggersAboveAetThreshold(): void
     {
         // 10g prot × 4 kcal / 100 kcal = 40% AET > 15%.
-        $product = new Product('3000000000230', 'Plat viande')
+        $product = (new Product('3000000000230', 'Plat viande'))
             ->setNutriments(['proteins_100g' => 10, 'energy-kcal_100g' => 100]);
 
         $applied = $this->evaluator->evaluate($product, $this->rule('excessive_proteins', -15), null);
 
         self::assertInstanceOf(AppliedRuleDto::class, $applied);
         self::assertStringContainsString('40', $applied->reason);
+        self::assertSame(RuleStatus::Triggered, $applied->status);
     }
 
-    public function testDoesNotTriggerAtThreshold(): void
+    public function testSatisfiedAtOrBelowThreshold(): void
     {
-        // 3.75g × 4 / 100 = 15% : le code exige strictement > seuil.
-        $product = new Product('3000000000231', 'Plat')
+        // 3.75g × 4 / 100 = 15% : sous ou égal au seuil -> contrôle passé.
+        $product = (new Product('3000000000231', 'Plat'))
             ->setNutriments(['proteins_100g' => 3.75, 'energy-kcal_100g' => 100]);
 
-        self::assertNull($this->evaluator->evaluate($product, $this->rule('excessive_proteins'), null));
+        $applied = $this->evaluator->evaluate($product, $this->rule('excessive_proteins'), null);
+
+        self::assertInstanceOf(AppliedRuleDto::class, $applied);
+        self::assertSame(0, $applied->pointsImpact);
+        self::assertSame(RuleStatus::Satisfied, $applied->status);
     }
 
     public function testHandlesStringValuesFromOff(): void
     {
-        // OFF renvoie souvent des chaînes : is_numeric doit les accepter.
-        $product = new Product('3000000000232', 'Plat')
+        $product = (new Product('3000000000232', 'Plat'))
             ->setNutriments(['proteins_100g' => '10', 'energy-kcal_100g' => '100']);
 
-        self::assertNotNull($this->evaluator->evaluate($product, $this->rule('excessive_proteins'), null));
+        $applied = $this->evaluator->evaluate($product, $this->rule('excessive_proteins'), null);
+
+        self::assertInstanceOf(AppliedRuleDto::class, $applied);
+        self::assertSame(RuleStatus::Triggered, $applied->status);
     }
 
-    public function testDoesNotCrashOnZeroEnergy(): void
+    public function testReturnsNullOnZeroEnergy(): void
     {
-        // Division par zéro évitée.
-        $product = new Product('3000000000233', 'Eau')
+        $product = (new Product('3000000000233', 'Eau'))
             ->setNutriments(['proteins_100g' => 5, 'energy-kcal_100g' => 0]);
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('excessive_proteins'), null));
     }
 
-    public function testDoesNotTriggerWhenDataMissing(): void
+    public function testReturnsNullWhenDataMissing(): void
     {
-        $product = new Product('3000000000234', 'Produit')
+        $product = (new Product('3000000000234', 'Produit'))
             ->setNutriments(['proteins_100g' => 10]);
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('excessive_proteins'), null));

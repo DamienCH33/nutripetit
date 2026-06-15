@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Enum\RuleStatus;
 use App\Service\Scoring\Evaluator\ArtificialFlavorsEvaluator;
 use PHPUnit\Framework\TestCase;
 
@@ -27,7 +28,7 @@ final class ArtificialFlavorsEvaluatorTest extends TestCase
 
     public function testTriggersOnArtificialFlavorKeyword(): void
     {
-        $product = new Product('3000000000100', 'Dessert')
+        $product = (new Product('3000000000100', 'Dessert'))
             ->setIngredientsRaw('Sucre, eau, arôme synthétique');
 
         $applied = $this->evaluator->evaluate($product, $this->rule('artificial_flavors', -15), null);
@@ -35,17 +36,22 @@ final class ArtificialFlavorsEvaluatorTest extends TestCase
         self::assertInstanceOf(AppliedRuleDto::class, $applied);
         self::assertSame('artificial_flavors', $applied->ruleCode);
         self::assertSame(-15, $applied->pointsImpact);
+        self::assertSame(RuleStatus::Triggered, $applied->status);
     }
 
-    public function testDoesNotTriggerOnNaturalFlavor(): void
+    public function testSatisfiedOnNaturalFlavor(): void
     {
-        $product = new Product('3000000000101', 'Compote')
+        $product = (new Product('3000000000101', 'Compote'))
             ->setIngredientsRaw('Pommes, arôme naturel de vanille');
 
-        self::assertNull($this->evaluator->evaluate($product, $this->rule('artificial_flavors'), null));
+        $applied = $this->evaluator->evaluate($product, $this->rule('artificial_flavors'), null);
+
+        self::assertInstanceOf(AppliedRuleDto::class, $applied);
+        self::assertSame(0, $applied->pointsImpact);
+        self::assertSame(RuleStatus::Satisfied, $applied->status);
     }
 
-    public function testDoesNotTriggerWithoutIngredients(): void
+    public function testReturnsNullWithoutIngredients(): void
     {
         $product = new Product('3000000000102', 'Produit');
 

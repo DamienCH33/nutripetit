@@ -27,7 +27,7 @@ final class IronRichEvaluatorTest extends TestCase
 
     public function testTriggersAboveThreshold(): void
     {
-        $product = new Product('3000000000140', 'Céréales fer')
+        $product = (new Product('3000000000140', 'Céréales fer'))
             ->setNutriments(['iron_100g' => 0.005]);
 
         $applied = $this->evaluator->evaluate($product, $this->rule(), null);
@@ -38,7 +38,7 @@ final class IronRichEvaluatorTest extends TestCase
 
     public function testDoesNotTriggerBelowThreshold(): void
     {
-        $product = new Product('3000000000141', 'Produit')
+        $product = (new Product('3000000000141', 'Produit'))
             ->setNutriments(['iron_100g' => 0.0005]);
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule(), null));

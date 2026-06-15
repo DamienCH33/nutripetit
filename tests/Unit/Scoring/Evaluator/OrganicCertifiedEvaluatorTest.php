@@ -27,7 +27,7 @@ final class OrganicCertifiedEvaluatorTest extends TestCase
 
     public function testTriggersOnOffLabel(): void
     {
-        $product = new Product('3000000000260', 'Purée')
+        $product = (new Product('3000000000260', 'Purée'))
             ->setOffRawData(['labels_tags' => ['en:organic']]);
 
         $applied = $this->evaluator->evaluate($product, $this->rule('organic_certified', 10), null);
@@ -37,7 +37,7 @@ final class OrganicCertifiedEvaluatorTest extends TestCase
 
     public function testTriggersOnNameFallback(): void
     {
-        $product = new Product('3000000000261', 'Compote pomme bio')
+        $product = (new Product('3000000000261', 'Compote pomme bio'))
             ->setOffRawData([]);
 
         self::assertNotNull($this->evaluator->evaluate($product, $this->rule('organic_certified'), null));
@@ -45,7 +45,7 @@ final class OrganicCertifiedEvaluatorTest extends TestCase
 
     public function testRobustToMalformedLabels(): void
     {
-        $product = new Product('3000000000262', 'Yaourt')
+        $product = (new Product('3000000000262', 'Yaourt'))
             ->setOffRawData(['labels_tags' => 'en:organic']);
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('organic_certified'), null));
@@ -53,7 +53,7 @@ final class OrganicCertifiedEvaluatorTest extends TestCase
 
     public function testDoesNotTriggerOnNonOrganic(): void
     {
-        $product = new Product('3000000000263', 'Chips')
+        $product = (new Product('3000000000263', 'Chips'))
             ->setOffRawData(['labels_tags' => ['en:gluten-free']]);
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('organic_certified'), null));
