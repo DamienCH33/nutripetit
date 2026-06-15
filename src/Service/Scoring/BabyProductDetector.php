@@ -9,12 +9,12 @@ use App\Entity\Product;
 /**
  * Détecte si un produit est destiné aux nourrissons/enfants 0-3 ans.
  *
- * Combine 2 signaux : categories_tags OFF + mots-clés du nom.
+ * Combine 3 signaux : categories_tags OFF (EN + FR) + marques 100% bébé + mots-clés du nom.
  */
 final class BabyProductDetector implements BabyProductDetectorInterface
 {
     private const CATEGORY_TAGS = [
-        // Aliments solides bébé
+        // Aliments solides bébé (EN)
         'en:baby-foods',
         'en:baby-food',
         'en:baby-snacks',
@@ -25,6 +25,15 @@ final class BabyProductDetector implements BabyProductDetectorInterface
         'en:baby-drinks',
         'en:baby-juices',
         'en:weaning-foods',
+
+        // Aliments solides bébé (FR) — OFF ne traduit pas toujours
+        'fr:gateaux-pour-bebe',
+        'fr:aliments-pour-bebe',
+        'fr:desserts-pour-bebe',
+        'fr:cereales-pour-bebe',
+        'fr:plats-pour-bebe',
+        'fr:petits-pots',
+        'fr:repas-pour-bebe',
 
         // Laits infantiles - âges
         'en:baby-milks',
@@ -104,6 +113,37 @@ final class BabyProductDetector implements BabyProductDetectorInterface
         'en:liquid-infant-formulas',
     ];
 
+    /**
+     * Marques exclusivement destinées aux 0-3 ans.
+     * Signal très fiable : ces marques ne font que du bébé.
+     * NE PAS ajouter de marques généralistes (Nestlé, Danone…) = faux positifs.
+     * Comparées en minuscules sans accents.
+     */
+    private const BABY_BRANDS = [
+        'hipp',
+        'bledina',
+        'bledilait',
+        'gallia',
+        'guigoz',
+        'nidal',
+        'modilac',
+        'novalac',
+        'picot',
+        'physiolac',
+        'babybio',
+        'holle',
+        'aptamil',
+        'milupa',
+        'kendamil',
+        'capricare',
+        'biostime',
+        'lemiel',
+        'good gout',
+        'goodgout',
+        'good goût',
+        'la marmite-bebe',
+    ];
+
     private const NAME_KEYWORDS = [
         // Génériques bébé
         'bébé',
@@ -149,6 +189,9 @@ final class BabyProductDetector implements BabyProductDetectorInterface
         'dès la naissance',
         'lait de croissance',
         'lait croissance',
+        'croissance',
+        'bledidej',
+        'blédidej',
         'lait infantile',
         'lait nourrisson',
         'préparation pour nourrisson',
@@ -234,7 +277,7 @@ final class BabyProductDetector implements BabyProductDetectorInterface
         // Mots seuls détecteurs forts (laits)
         ' ar ',
         ' ar',
-        'ar ',  // attention espaces, sinon "art", "bar" matchent
+        'ar ',
         ' ac ',
         ' ac',
         'ac ',
@@ -242,6 +285,7 @@ final class BabyProductDetector implements BabyProductDetectorInterface
         ' ha',
         'ha ',
     ];
+
     /**
      * Tokens isolés (mot entier) — pour détecter AR, AC, HA sans matcher "art" ou "bar".
      */
@@ -278,8 +322,9 @@ final class BabyProductDetector implements BabyProductDetectorInterface
     public function isBabyProduct(Product $product): bool
     {
         $raw = $product->getOffRawData();
-        $categories = $raw['categories_tags'] ?? [];
 
+        // Signal 1 : catégories OFF (EN + FR).
+        $categories = $raw['categories_tags'] ?? [];
         if (\is_array($categories)) {
             foreach (self::CATEGORY_TAGS as $tag) {
                 if (\in_array($tag, $categories, true)) {
@@ -288,16 +333,30 @@ final class BabyProductDetector implements BabyProductDetectorInterface
             }
         }
 
+        // Signal 2 : marque exclusivement bébé (très fiable).
+        $brands = $raw['brands_tags'] ?? [];
+        if (\is_array($brands)) {
+            foreach ($brands as $brand) {
+                if (!\is_string($brand)) {
+                    continue;
+                }
+                $normalized = $this->normalize($brand);
+                if (\in_array($normalized, self::BABY_BRANDS, true)) {
+                    return true;
+                }
+            }
+        }
+
         $name = mb_strtolower($product->getName());
 
-        // Recherche substring classique
+        // Signal 3 : recherche substring dans le nom.
         foreach (self::NAME_KEYWORDS as $keyword) {
             if (str_contains($name, $keyword)) {
                 return true;
             }
         }
 
-        // Recherche par tokens (mots isolés) pour AR, AC, HA, etc.
+        // Signal 4 : recherche par tokens (mots isolés) pour AR, AC, HA, etc.
         $tokens = preg_split('/[\s\-_\.,]+/', $name) ?: [];
         $tokens = array_filter($tokens, static fn ($t) => '' !== $t);
         foreach (self::NAME_TOKENS as $token) {
@@ -307,5 +366,16 @@ final class BabyProductDetector implements BabyProductDetectorInterface
         }
 
         return false;
+    }
+
+    /**
+     * Normalise une marque : minuscules, sans accents, sans espaces superflus.
+     */
+    private function normalize(string $value): string
+    {
+        $value = mb_strtolower(trim($value));
+        $map = ['é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e', 'à' => 'a', 'â' => 'a', 'î' => 'i', 'ï' => 'i', 'ô' => 'o', 'ö' => 'o', 'û' => 'u', 'ü' => 'u', 'ç' => 'c'];
+
+        return strtr($value, $map);
     }
 }
