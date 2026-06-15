@@ -11,7 +11,7 @@ if (class_exists(DG\BypassFinals::class)) {
 }
 
 if (method_exists(Dotenv::class, 'bootEnv')) {
-    (new Dotenv())->bootEnv(dirname(__DIR__) . '/.env');
+    new Dotenv()->bootEnv(dirname(__DIR__) . '/.env');
 }
 
 if ($_SERVER['APP_DEBUG']) {

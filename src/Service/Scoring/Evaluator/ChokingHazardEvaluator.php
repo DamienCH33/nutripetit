@@ -49,7 +49,7 @@ final class ChokingHazardEvaluator implements RuleEvaluator
         }
 
         $pattern = '/\b(' . implode('|', array_map(
-            static fn(string $w): string => preg_quote($w, '/'),
+            static fn (string $w): string => preg_quote($w, '/'),
             self::HAZARD_KEYWORDS,
         )) . ')\b/iu';
 

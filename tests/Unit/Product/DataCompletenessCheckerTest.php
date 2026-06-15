@@ -26,7 +26,7 @@ final class DataCompletenessCheckerTest extends TestCase
 
     public function testIngredientsOnlyIsSufficient(): void
     {
-        $product = (new Product('3000000000002', 'Avec ingrédients'))
+        $product = new Product('3000000000002', 'Avec ingrédients')
             ->setIngredientsRaw('farine, eau, sucre');
 
         self::assertTrue($this->checker->hasSufficientData($product));
@@ -34,7 +34,7 @@ final class DataCompletenessCheckerTest extends TestCase
 
     public function testNutrimentsOnlyIsSufficient(): void
     {
-        $product = (new Product('3000000000003', 'Avec nutriments'))
+        $product = new Product('3000000000003', 'Avec nutriments')
             ->setNutriments(['energy-kcal_100g' => 250, 'proteins_100g' => 5.2]);
 
         self::assertTrue($this->checker->hasSufficientData($product));
@@ -42,7 +42,7 @@ final class DataCompletenessCheckerTest extends TestCase
 
     public function testBlankIngredientsAndNonNumericNutrimentsAreInsufficient(): void
     {
-        $product = (new Product('3000000000004', 'Vide déguisé'))
+        $product = new Product('3000000000004', 'Vide déguisé')
             ->setIngredientsRaw('   ')
             ->setNutriments(['nutrition-score' => 'unknown', 'grade' => '']);
 

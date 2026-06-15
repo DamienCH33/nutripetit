@@ -28,7 +28,7 @@ final class ChokingHazardEvaluatorTest extends TestCase
 
     public function testTriggersOnHazardKeyword(): void
     {
-        $product = (new Product('3000000000110', 'Mélange'))
+        $product = new Product('3000000000110', 'Mélange')
             ->setIngredientsRaw('Flocons d\'avoine, raisins secs');
 
         $applied = $this->evaluator->evaluate($product, $this->rule('choking_hazard', -20), null);
@@ -40,7 +40,7 @@ final class ChokingHazardEvaluatorTest extends TestCase
 
     public function testSatisfiedOnSafeIngredients(): void
     {
-        $product = (new Product('3000000000111', 'Purée'))
+        $product = new Product('3000000000111', 'Purée')
             ->setIngredientsRaw('Carottes, pommes de terre');
 
         $applied = $this->evaluator->evaluate($product, $this->rule('choking_hazard'), null);

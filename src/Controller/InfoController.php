@@ -15,7 +15,8 @@ final class InfoController extends AbstractController
 {
     public function __construct(
         private readonly ScoringRuleRepository $ruleRepository,
-    ) {}
+    ) {
+    }
 
     #[Route('/app/infos', name: 'app_pwa_info', methods: ['GET'])]
     public function index(): Response
@@ -23,7 +24,7 @@ final class InfoController extends AbstractController
         $rules = $this->ruleRepository->findActiveByVersion('1.0.0');
 
         $scoreScale = array_map(
-            static fn(ScoreLevel $l): array => [
+            static fn (ScoreLevel $l): array => [
                 'level' => $l->value,
                 'min' => $l->min(),
                 'max' => $l->max(),
@@ -59,6 +60,7 @@ final class InfoController extends AbstractController
             ['name' => 'Règlement UE 2018/848', 'description' => 'Production biologique (label AB)', 'url' => 'https://eur-lex.europa.eu/eli/reg/2018/848/oj'],
             ['name' => 'Directive UE 2006/125/CE', 'description' => 'Aliments à base de céréales pour bébés', 'url' => 'https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX%3A32006L0125'],
         ];
+
         return $this->render('pages/app/info.html.twig', [
             'rules' => $rules,
             'algoVersion' => '1.0.0',

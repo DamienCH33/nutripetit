@@ -28,7 +28,7 @@ final class HighFruitVegetableEvaluatorTest extends TestCase
     public function testTriggersAt50PercentBoundary(): void
     {
         // Le code exige >= 50 : la borne exacte doit déclencher.
-        $product = (new Product('3000000000240', 'Purée'))
+        $product = new Product('3000000000240', 'Purée')
             ->setNutriments(['fruits-vegetables-legumes-estimate-from-ingredients_100g' => 50.0]);
 
         $applied = $this->evaluator->evaluate($product, $this->rule('high_fruit_vegetable', 10), null);
@@ -38,7 +38,7 @@ final class HighFruitVegetableEvaluatorTest extends TestCase
 
     public function testUsesFallbackNutrimentKey(): void
     {
-        $product = (new Product('3000000000241', 'Purée'))
+        $product = new Product('3000000000241', 'Purée')
             ->setNutriments(['fruits-vegetables-nuts-estimate-from-ingredients_100g' => 80]);
 
         self::assertNotNull($this->evaluator->evaluate($product, $this->rule('high_fruit_vegetable'), null));
@@ -46,7 +46,7 @@ final class HighFruitVegetableEvaluatorTest extends TestCase
 
     public function testDoesNotTriggerBelow50(): void
     {
-        $product = (new Product('3000000000242', 'Biscuit'))
+        $product = new Product('3000000000242', 'Biscuit')
             ->setNutriments(['fruits-vegetables-legumes-estimate-from-ingredients_100g' => 49.9]);
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('high_fruit_vegetable'), null));
@@ -54,7 +54,7 @@ final class HighFruitVegetableEvaluatorTest extends TestCase
 
     public function testDoesNotTriggerWhenEstimateMissing(): void
     {
-        $product = (new Product('3000000000243', 'Produit'))->setNutriments([]);
+        $product = new Product('3000000000243', 'Produit')->setNutriments([]);
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('high_fruit_vegetable'), null));
     }

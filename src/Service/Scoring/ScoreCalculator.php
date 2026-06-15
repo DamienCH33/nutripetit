@@ -33,7 +33,6 @@ final class ScoreCalculator
         #[AutowireIterator('app.rule_evaluator')]
         iterable $evaluators,
     ) {
-
         $this->evaluators = iterator_to_array($evaluators, false);
     }
 
@@ -55,7 +54,7 @@ final class ScoreCalculator
         }
 
         $totalImpact = array_sum(
-            array_map(static fn(AppliedRuleDto $r): int => $r->pointsImpact, $appliedRules),
+            array_map(static fn (AppliedRuleDto $r): int => $r->pointsImpact, $appliedRules),
         );
 
         $finalScore = max(0, min(100, self::SCORE_BASE + $totalImpact));
