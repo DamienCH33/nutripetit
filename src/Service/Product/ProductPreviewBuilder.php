@@ -19,8 +19,7 @@ final class ProductPreviewBuilder
         private readonly MinimumAgeExtractor $minimumAgeExtractor,
         private readonly CarbonFootprintExtractor $carbonFootprintExtractor,
         private readonly DataCompletenessChecker $completenessChecker,
-    ) {
-    }
+    ) {}
 
     /**
      * Construit les données de vue de la page produit.
@@ -44,7 +43,14 @@ final class ProductPreviewBuilder
 
         $appliedRules = [];
         foreach ($scoreResult->getAppliedRules() as $rule) {
-            $rule['category'] = $rule['points'] > 0 ? 'bonus' : 'malus';
+            $status = $rule['status'] ?? 'triggered';
+            if ('satisfied' === $status) {
+                $rule['category'] = 'satisfied';
+            } elseif ($rule['points'] > 0) {
+                $rule['category'] = 'bonus';
+            } else {
+                $rule['category'] = 'malus';
+            }
             $appliedRules[] = $rule;
         }
 

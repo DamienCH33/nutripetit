@@ -98,7 +98,18 @@
 					{% endfor %}
 				</div>
 			{% endif %}
-
+			{% set satisfiedRules = appliedRules|filter(r => r.category == 'satisfied') %}
+			{% if satisfiedRules|length > 0 %}
+				<div class="np-rules-section">
+					<h3 class="np-rules-section__title np-rules-section__title--satisfied">
+						{{ ux_icon('lucide:check-circle', {class: 'np-rules-section__icon'}) }}
+						Contrôles passés
+					</h3>
+					{% for rule in satisfiedRules %}
+						{% include '_partials/_product/_rule_card.html.twig' with { rule: rule } %}
+					{% endfor %}
+				</div>
+			{% endif %}
 			{% set malusRules = appliedRules|filter(r => r.category == 'malus') %}
 			{% if malusRules|length > 0 %}
 				<div class="np-rules-section">
@@ -171,7 +182,7 @@
 						Ce produit est recommandé dès
 						{{ minAgeMonths }}
 						mois selon le fabricant.
-																																															Votre enfant a
+																																																																																			Votre enfant a
 						{{ babyAgeMonths }}
 						mois.
 					</p>

@@ -33,8 +33,7 @@ final class ScanProductHandler
         private readonly InfantFormulaScoreCalculator $infantFormulaScoreCalculator,
         private readonly EntityManagerInterface $em,
         private readonly ScoreResultRepository $scoreResultRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws InvalidArgumentException
@@ -92,7 +91,6 @@ final class ScanProductHandler
         } else {
             $scoreDto = $this->scoreCalculator->calculate($product, $babyAgeMonths);
         }
-
         $scoreResult = $this->scoreResultRepository
             ->findForSessionAndProduct(
                 $scanSession,
