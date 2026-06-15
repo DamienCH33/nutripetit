@@ -49,7 +49,7 @@ class ScoreResult
     private DateTimeImmutable $lastScannedAt;
 
     /**
-     * @var list<array{rule_code: string, rule_label: string, points: int, reason: string, source_name: string, source_url: string}>
+     * @var list<array{rule_code: string, rule_label: string, points: int, reason: string, source_name: string, source_url: string, status?: string}>
      */
     #[ORM\Column(type: Types::JSON, options: ['default' => '[]'])]
     private array $appliedRules = [];
@@ -111,13 +111,13 @@ class ScoreResult
         return $this->level;
     }
 
-    /** @return list<array{rule_code: string, rule_label: string, points: int, reason: string, source_name: string, source_url: string}> */
+    /** @return list<array{rule_code: string, rule_label: string, points: int, reason: string, source_name: string, source_url: string, status?: string}> */
     public function getAppliedRules(): array
     {
         return $this->appliedRules;
     }
 
-    /** @param list<array{rule_code: string, rule_label: string, points: int, reason: string, source_name: string, source_url: string}> $appliedRules */
+    /** @param list<array{rule_code: string, rule_label: string, points: int, reason: string, source_name: string, source_url: string, status?: string}> $appliedRules */
     public function setAppliedRules(array $appliedRules): self
     {
         $this->appliedRules = $appliedRules;
