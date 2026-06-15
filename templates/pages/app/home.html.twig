@@ -10,6 +10,12 @@
 		<p class="np-app-hero__subtitle">Prêt à scanner ?</p>
 	</section>
 
+	{# Invitation à renseigner l'âge (affichée seulement si non réglé) #}
+	<a href="{{ path('app_pwa_baby_profile') }}" class="np-age-prompt" data-controller="age-prompt">
+		{{ ux_icon('lucide:baby', {class: 'np-age-prompt__icon'}) }}
+		<span>Renseignez l'âge de votre enfant pour des analyses adaptées.</span>
+	</a>
+
 	{# Card scan #}
 	<a href="{{ path('app_pwa_scanner') }}" class="np-app-scan-card">
 		<h2 class="np-app-scan-card__title">Scanner un produit</h2>

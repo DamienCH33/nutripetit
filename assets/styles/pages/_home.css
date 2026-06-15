@@ -68,7 +68,30 @@
     color: var(--np-gray-600);
     line-height: 1.5;
 }
-
+.np-age-prompt {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    background: var(--np-orange-light);
+    border-radius: 8px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.np-age-prompt--visible {
+    display: flex;
+}
+.np-age-prompt:hover {
+    background: var(--np-orange-primary);
+    color: #fff;
+}
+.np-age-prompt__icon {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+}
 /* CARD SCAN - Version compacte */
 .np-app-scan-card {
     display: flex;
