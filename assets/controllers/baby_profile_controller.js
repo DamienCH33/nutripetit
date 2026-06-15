@@ -32,7 +32,7 @@ export default class extends Controller {
 
     loadProfile() {
         const savedAge = parseInt(
-            localStorage.getItem("babyAgeMonths") || "12",
+            localStorage.getItem("np_baby_age_months") || "12",
             10,
         );
 
@@ -49,7 +49,7 @@ export default class extends Controller {
     updateAge(event) {
         const age = parseInt(event.target.value, 10);
 
-        localStorage.setItem("babyAgeMonths", age.toString());
+        localStorage.setItem("np_baby_age_months", age.toString());
 
         document.cookie = `np_baby_age=${age}; path=/; max-age=31536000; samesite=lax`;
 
@@ -64,7 +64,7 @@ export default class extends Controller {
             return;
         }
 
-        localStorage.removeItem("babyAgeMonths");
+        localStorage.removeItem("np_baby_age_months");
         document.cookie =
             "np_baby_age=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         localStorage.removeItem("babyName"); // Au cas où une ancienne version aurait stocké
@@ -115,7 +115,7 @@ export default class extends Controller {
         if (!this.hasCurrentProfileTarget) return;
 
         const hasProfile =
-            age !== null && localStorage.getItem("babyAgeMonths");
+            age !== null && localStorage.getItem("np_baby_age_months");
 
         if (hasProfile) {
             this.currentProfileTarget.hidden = false;
