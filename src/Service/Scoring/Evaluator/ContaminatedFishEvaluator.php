@@ -7,22 +7,21 @@ namespace App\Service\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Enum\RuleStatus;
 use App\Service\Scoring\RuleEvaluator;
 
 /**
- * Détecte les poisson(s) à risque (contaminants/mercure) détecté(s)
+ * Détecte les poissons à risque (contaminants/mercure).
  * Source : ANSES Avis 0-3 ans (2019).
  */
 final class ContaminatedFishEvaluator implements RuleEvaluator
 {
     private const RISKY_FISH = [
-        // À éviter (grands prédateurs, mercure)
         'espadon',
         'marlin',
         'siki',
         'requin',
         'lamproie',
-        // Prédateurs sauvages à limiter
         'lotte',
         'baudroie',
         'loup',
@@ -38,7 +37,6 @@ final class ContaminatedFishEvaluator implements RuleEvaluator
         'raie',
         'sabre',
         'thon',
-        // Eau douce bio-accumulateurs (PCB)
         'anguille',
         'barbeau',
         'brème',
@@ -63,14 +61,23 @@ final class ContaminatedFishEvaluator implements RuleEvaluator
         }
 
         $pattern = '/\b(' . implode('|', array_map(
-            static fn (string $w): string => preg_quote($w, '/'),
+            static fn(string $w): string => preg_quote($w, '/'),
             self::RISKY_FISH,
         )) . ')\b/iu';
 
         preg_match_all($pattern, $ingredients, $matches);
         $found = array_unique($matches[1]);
+
         if ([] === $found) {
-            return null;
+            return new AppliedRuleDto(
+                ruleCode: $rule->getCode(),
+                ruleLabel: 'Sans poisson à risque',
+                pointsImpact: 0,
+                reason: 'Aucun poisson à risque (contaminants/mercure) détecté dans la liste d\'ingrédients.',
+                sourceName: $rule->getSourceName(),
+                sourceUrl: $rule->getSourceUrl(),
+                status: RuleStatus::Satisfied,
+            );
         }
 
         $reason = \sprintf(
@@ -85,6 +92,7 @@ final class ContaminatedFishEvaluator implements RuleEvaluator
             reason: $reason,
             sourceName: $rule->getSourceName(),
             sourceUrl: $rule->getSourceUrl(),
+            status: RuleStatus::Triggered,
         );
     }
 }

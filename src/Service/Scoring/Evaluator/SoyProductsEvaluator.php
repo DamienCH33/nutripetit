@@ -7,14 +7,11 @@ namespace App\Service\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Enum\RuleStatus;
 use App\Service\Scoring\RuleEvaluator;
 
 /**
- * Détecte les aliments à base de soja (protéines, tofu, boissons, yaourts…).
- *
- * Source : ANSES / Afssa, « Sécurité et bénéfices des phyto-estrogènes » (2005).
- * Le soja est riche en isoflavones (phytoestrogènes) ; sa consommation régulière
- * est déconseillée chez l'enfant de moins de 3 ans.
+ * Détecte les aliments à base de soja. Source : ANSES / Afssa (2005).
  */
 final class SoyProductsEvaluator implements RuleEvaluator
 {
@@ -57,14 +54,23 @@ final class SoyProductsEvaluator implements RuleEvaluator
         }
 
         $pattern = '/\b(' . implode('|', array_map(
-            static fn (string $w): string => preg_quote($w, '/'),
+            static fn(string $w): string => preg_quote($w, '/'),
             self::SOY_FOOD_KEYWORDS,
         )) . ')\b/iu';
 
         preg_match_all($pattern, $ingredients, $matches);
         $found = array_unique($matches[1]);
+
         if ([] === $found) {
-            return null;
+            return new AppliedRuleDto(
+                ruleCode: $rule->getCode(),
+                ruleLabel: 'Sans soja',
+                pointsImpact: 0,
+                reason: 'Aucun aliment à base de soja détecté dans la liste d\'ingrédients.',
+                sourceName: $rule->getSourceName(),
+                sourceUrl: $rule->getSourceUrl(),
+                status: RuleStatus::Satisfied,
+            );
         }
 
         return new AppliedRuleDto(
@@ -77,6 +83,7 @@ final class SoyProductsEvaluator implements RuleEvaluator
             ),
             sourceName: $rule->getSourceName(),
             sourceUrl: $rule->getSourceUrl(),
+            status: RuleStatus::Triggered,
         );
     }
 }
