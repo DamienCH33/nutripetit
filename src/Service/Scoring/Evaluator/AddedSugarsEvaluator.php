@@ -7,6 +7,7 @@ namespace App\Service\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Enum\RuleStatus;
 use App\Service\Scoring\RuleEvaluator;
 
 /**
@@ -47,21 +48,30 @@ final class AddedSugarsEvaluator implements RuleEvaluator
     ): ?AppliedRuleDto {
         $ingredients = $product->getIngredientsRaw();
 
+        // Pas de données -> on ne peut pas juger.
         if (null === $ingredients || '' === trim($ingredients)) {
             return null;
         }
 
         $ingredientsLower = mb_strtolower($ingredients);
         $foundKeywords = [];
-
         foreach (self::ADDED_SUGAR_KEYWORDS as $keyword) {
             if (str_contains($ingredientsLower, $keyword)) {
                 $foundKeywords[] = $keyword;
             }
         }
 
+        // Aucun sucre détecté : contrôle passé.
         if ([] === $foundKeywords) {
-            return null;
+            return new AppliedRuleDto(
+                ruleCode: $rule->getCode(),
+                ruleLabel: 'Sans sucre ajouté',
+                pointsImpact: 0,
+                reason: 'Aucun sucre ajouté détecté dans la liste d\'ingrédients.',
+                sourceName: $rule->getSourceName(),
+                sourceUrl: $rule->getSourceUrl(),
+                status: RuleStatus::Satisfied,
+            );
         }
 
         $reason = \sprintf(
@@ -76,6 +86,7 @@ final class AddedSugarsEvaluator implements RuleEvaluator
             reason: $reason,
             sourceName: $rule->getSourceName(),
             sourceUrl: $rule->getSourceUrl(),
+            status: RuleStatus::Triggered,
         );
     }
 }

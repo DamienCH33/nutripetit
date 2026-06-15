@@ -7,13 +7,11 @@ namespace App\Service\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Enum\RuleStatus;
 use App\Service\Scoring\RuleEvaluator;
 
 /**
- * Détecte la présence d'huile de palme.
- *
- * Source : PNNS 4 + ANSES
- * Riche en acides gras saturés, à limiter chez le jeune enfant.
+ * Détecte la présence d'huile de palme. Source : PNNS 4 + ANSES.
  */
 final class PalmOilEvaluator implements RuleEvaluator
 {
@@ -53,10 +51,19 @@ final class PalmOilEvaluator implements RuleEvaluator
                     reason: 'Présence d\'huile de palme détectée dans la liste d\'ingrédients.',
                     sourceName: $rule->getSourceName(),
                     sourceUrl: $rule->getSourceUrl(),
+                    status: RuleStatus::Triggered,
                 );
             }
         }
 
-        return null;
+        return new AppliedRuleDto(
+            ruleCode: $rule->getCode(),
+            ruleLabel: 'Sans huile de palme',
+            pointsImpact: 0,
+            reason: 'Aucune huile de palme détectée dans la liste d\'ingrédients.',
+            sourceName: $rule->getSourceName(),
+            sourceUrl: $rule->getSourceUrl(),
+            status: RuleStatus::Satisfied,
+        );
     }
 }

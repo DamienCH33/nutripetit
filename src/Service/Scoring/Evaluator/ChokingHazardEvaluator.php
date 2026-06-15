@@ -7,6 +7,7 @@ namespace App\Service\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Enum\RuleStatus;
 use App\Service\Scoring\RuleEvaluator;
 
 /**
@@ -48,14 +49,23 @@ final class ChokingHazardEvaluator implements RuleEvaluator
         }
 
         $pattern = '/\b(' . implode('|', array_map(
-            static fn (string $w): string => preg_quote($w, '/'),
+            static fn(string $w): string => preg_quote($w, '/'),
             self::HAZARD_KEYWORDS,
         )) . ')\b/iu';
 
         preg_match_all($pattern, $ingredients, $matches);
         $found = array_unique($matches[1]);
+
         if ([] === $found) {
-            return null;
+            return new AppliedRuleDto(
+                ruleCode: $rule->getCode(),
+                ruleLabel: 'Sans aliment à risque d\'étouffement',
+                pointsImpact: 0,
+                reason: 'Aucun aliment à risque d\'étouffement détecté dans la liste d\'ingrédients.',
+                sourceName: $rule->getSourceName(),
+                sourceUrl: $rule->getSourceUrl(),
+                status: RuleStatus::Satisfied,
+            );
         }
 
         $reason = \sprintf(
@@ -70,6 +80,7 @@ final class ChokingHazardEvaluator implements RuleEvaluator
             reason: $reason,
             sourceName: $rule->getSourceName(),
             sourceUrl: $rule->getSourceUrl(),
+            status: RuleStatus::Triggered,
         );
     }
 }

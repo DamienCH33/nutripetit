@@ -7,13 +7,13 @@ namespace App\Service\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Enum\RuleStatus;
 use App\Service\Scoring\RuleEvaluator;
 
 /**
  * Détecte un excès de sel dans le produit (>0.3g/100g pour les nourrissons).
  *
  * Source : ANSES Avis 0-3 ans (2019), Repères PNNS 4
- * Le sel ajouté est déconseillé avant 12 mois.
  */
 final class AddedSaltEvaluator implements RuleEvaluator
 {
@@ -28,8 +28,6 @@ final class AddedSaltEvaluator implements RuleEvaluator
         ?int $babyAgeMonths,
     ): ?AppliedRuleDto {
         $nutriments = $product->getNutriments();
-
-        // OpenFoodFacts utilise "salt_100g" en grammes pour 100g
         $saltPer100g = $nutriments['salt_100g'] ?? null;
 
         if (null === $saltPer100g || !is_numeric($saltPer100g)) {
@@ -40,7 +38,15 @@ final class AddedSaltEvaluator implements RuleEvaluator
         $saltValue = (float) $saltPer100g;
 
         if ($saltValue <= $threshold) {
-            return null;
+            return new AppliedRuleDto(
+                ruleCode: $rule->getCode(),
+                ruleLabel: 'Teneur en sel maîtrisée',
+                pointsImpact: 0,
+                reason: \sprintf('Teneur en sel de %.2fg/100g, sous le seuil ANSES de %.2fg/100g.', $saltValue, $threshold),
+                sourceName: $rule->getSourceName(),
+                sourceUrl: $rule->getSourceUrl(),
+                status: RuleStatus::Satisfied,
+            );
         }
 
         $reason = \sprintf(
@@ -56,6 +62,7 @@ final class AddedSaltEvaluator implements RuleEvaluator
             reason: $reason,
             sourceName: $rule->getSourceName(),
             sourceUrl: $rule->getSourceUrl(),
+            status: RuleStatus::Triggered,
         );
     }
 }

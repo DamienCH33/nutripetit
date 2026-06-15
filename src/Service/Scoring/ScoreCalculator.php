@@ -7,6 +7,7 @@ namespace App\Service\Scoring;
 use App\Dto\AppliedRuleDto;
 use App\Dto\ScoreCalculationResultDto;
 use App\Entity\Product;
+use App\Entity\ScoringRule;
 use App\Enum\ScoreLevel;
 use App\Enum\ScoringAlgorithm;
 use App\Repository\ScoringRuleRepository;
@@ -15,24 +16,31 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 /**
  * Calcule le score nutritionnel NutriPetit d'un produit.
  */
-final readonly class ScoreCalculator
+final class ScoreCalculator
 {
     public const ALGO_VERSION = '1.0.0';
+
     private const SCORE_BASE = 100;
+
+    /** @var list<RuleEvaluator> */
+    private readonly array $evaluators;
 
     /**
      * @param iterable<RuleEvaluator> $evaluators
      */
     public function __construct(
-        private ScoringRuleRepository $ruleRepository,
+        private readonly ScoringRuleRepository $ruleRepository,
         #[AutowireIterator('app.rule_evaluator')]
-        private iterable $evaluators,
+        iterable $evaluators,
     ) {
+
+        $this->evaluators = iterator_to_array($evaluators, false);
     }
 
     public function calculate(Product $product, ?int $babyAgeMonths = null): ScoreCalculationResultDto
     {
         $rules = $this->ruleRepository->findActiveByVersion(self::ALGO_VERSION);
+
         $appliedRules = [];
 
         foreach ($rules as $rule) {
@@ -47,7 +55,7 @@ final readonly class ScoreCalculator
         }
 
         $totalImpact = array_sum(
-            array_map(static fn (AppliedRuleDto $r): int => $r->pointsImpact, $appliedRules),
+            array_map(static fn(AppliedRuleDto $r): int => $r->pointsImpact, $appliedRules),
         );
 
         $finalScore = max(0, min(100, self::SCORE_BASE + $totalImpact));
@@ -67,7 +75,7 @@ final readonly class ScoreCalculator
      */
     private function evaluateRule(
         Product $product,
-        \App\Entity\ScoringRule $rule,
+        ScoringRule $rule,
         ?int $babyAgeMonths,
     ): ?AppliedRuleDto {
         foreach ($this->evaluators as $evaluator) {

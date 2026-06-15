@@ -7,33 +7,28 @@ namespace App\Service\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Enum\RuleStatus;
 use App\Service\Scoring\RuleEvaluator;
 
 /**
- * Détecte la présence d'additifs controversés évalués comme préoccupants
- * par l'EFSA et l'ANSES, particulièrement pour les jeunes enfants.
+ * Détecte les additifs controversés (EFSA/ANSES).
  *
  * Source : Règlement EU 1333/2008 + Évaluations ANSES
- * Colorants azoïques + dioxyde de titane nanoparticulaire (E171 interdit en France
- * depuis 2020 dans l'alimentation).
  */
 final class ControversialAdditivesEvaluator implements RuleEvaluator
 {
-    /**
-     * Liste des additifs identifiés comme préoccupants.
-     */
     private const CONTROVERSIAL_E_CODES = [
-        'e102', // Tartrazine (colorant azoïque)
-        'e104', // Jaune de quinoléine
-        'e110', // Sunset Yellow FCF
-        'e122', // Carmoisine
-        'e124', // Ponceau 4R
-        'e129', // Rouge allura AC
-        'e171', // Dioxyde de titane (interdit alimentaire en France)
-        'e150c', // Caramel ammoniacal
-        'e150d', // Caramel sulfite-ammoniacal
-        'e249',  // Nitrite de potassium
-        'e250',  // Nitrite de sodium
+        'e102',
+        'e104',
+        'e110',
+        'e122',
+        'e124',
+        'e129',
+        'e171',
+        'e150c',
+        'e150d',
+        'e249',
+        'e250',
     ];
 
     public function supports(ScoringRule $rule): bool
@@ -46,13 +41,18 @@ final class ControversialAdditivesEvaluator implements RuleEvaluator
         ScoringRule $rule,
         ?int $babyAgeMonths,
     ): ?AppliedRuleDto {
+        $additives = $product->getAdditives();
+
+        if ([] === $additives) {
+            return null;
+        }
+
         $additivesLower = array_map(
-            static fn (string $a): string => mb_strtolower($a),
-            $product->getAdditives(),
+            static fn(string $a): string => mb_strtolower($a),
+            $additives,
         );
 
         $found = [];
-
         foreach (self::CONTROVERSIAL_E_CODES as $code) {
             foreach ($additivesLower as $additive) {
                 if (str_contains($additive, $code)) {
@@ -63,7 +63,15 @@ final class ControversialAdditivesEvaluator implements RuleEvaluator
         }
 
         if ([] === $found) {
-            return null;
+            return new AppliedRuleDto(
+                ruleCode: $rule->getCode(),
+                ruleLabel: 'Sans additif controversé',
+                pointsImpact: 0,
+                reason: 'Aucun additif controversé (colorant azoïque, E171, nitrites…) détecté.',
+                sourceName: $rule->getSourceName(),
+                sourceUrl: $rule->getSourceUrl(),
+                status: RuleStatus::Satisfied,
+            );
         }
 
         $reason = \sprintf(
@@ -78,6 +86,7 @@ final class ControversialAdditivesEvaluator implements RuleEvaluator
             reason: $reason,
             sourceName: $rule->getSourceName(),
             sourceUrl: $rule->getSourceUrl(),
+            status: RuleStatus::Triggered,
         );
     }
 }

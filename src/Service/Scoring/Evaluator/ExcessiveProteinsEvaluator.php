@@ -7,13 +7,13 @@ namespace App\Service\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Enum\RuleStatus;
 use App\Service\Scoring\RuleEvaluator;
 
 /**
  * Détecte un excès de protéines (>15% AET) chez le jeune enfant.
  *
  * Source : ANSES Référentiels nutritionnels 0-3 ans (2019)
- * Les protéines excessives favorisent le risque de surpoids ultérieur.
  */
 final class ExcessiveProteinsEvaluator implements RuleEvaluator
 {
@@ -41,14 +41,19 @@ final class ExcessiveProteinsEvaluator implements RuleEvaluator
 
         $proteinsValue = (float) $proteinsPer100g;
         $energyValue = (float) $energyKcalPer100g;
-
-        // Calcul du pourcentage de protéines en % de l'AET
         $proteinsPercentageOfAET = ($proteinsValue * 4) / $energyValue * 100;
-
         $threshold = $rule->getThresholdValue() ?? 15.0;
 
         if ($proteinsPercentageOfAET <= $threshold) {
-            return null;
+            return new AppliedRuleDto(
+                ruleCode: $rule->getCode(),
+                ruleLabel: 'Apport en protéines adapté',
+                pointsImpact: 0,
+                reason: \sprintf('%.1f%% de protéines (AET), sous le seuil ANSES de %.0f%%.', $proteinsPercentageOfAET, $threshold),
+                sourceName: $rule->getSourceName(),
+                sourceUrl: $rule->getSourceUrl(),
+                status: RuleStatus::Satisfied,
+            );
         }
 
         $reason = \sprintf(
@@ -66,6 +71,7 @@ final class ExcessiveProteinsEvaluator implements RuleEvaluator
             reason: $reason,
             sourceName: $rule->getSourceName(),
             sourceUrl: $rule->getSourceUrl(),
+            status: RuleStatus::Triggered,
         );
     }
 }

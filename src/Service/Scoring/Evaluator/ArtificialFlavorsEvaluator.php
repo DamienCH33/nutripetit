@@ -7,11 +7,11 @@ namespace App\Service\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Enum\RuleStatus;
 use App\Service\Scoring\RuleEvaluator;
 
 /**
- * Détecte les arômes artificiels dans les produits alimentaires.
- * source PNNS 4 / Santé publique France, raison = arômes de synthèse déconseillés chez les jeunes enfants.
+ * Détecte les arômes artificiels. Source PNNS 4 / Santé publique France.
  */
 final class ArtificialFlavorsEvaluator implements RuleEvaluator
 {
@@ -41,15 +41,25 @@ final class ArtificialFlavorsEvaluator implements RuleEvaluator
         if (null === $ingredients || '' === trim($ingredients)) {
             return null;
         }
+
         $pattern = '/\b(' . implode('|', array_map(
-            static fn (string $w): string => preg_quote($w, '/'),
+            static fn(string $w): string => preg_quote($w, '/'),
             self::ARTIFICIAL_FLAVOR_KEYWORDS,
         )) . ')\b/iu';
 
         preg_match_all($pattern, $ingredients, $matches);
         $found = array_unique($matches[1]);
+
         if ([] === $found) {
-            return null;
+            return new AppliedRuleDto(
+                ruleCode: $rule->getCode(),
+                ruleLabel: 'Sans arôme artificiel',
+                pointsImpact: 0,
+                reason: 'Aucun arôme artificiel détecté dans la liste d\'ingrédients.',
+                sourceName: $rule->getSourceName(),
+                sourceUrl: $rule->getSourceUrl(),
+                status: RuleStatus::Satisfied,
+            );
         }
 
         $reason = \sprintf(
@@ -64,6 +74,7 @@ final class ArtificialFlavorsEvaluator implements RuleEvaluator
             reason: $reason,
             sourceName: $rule->getSourceName(),
             sourceUrl: $rule->getSourceUrl(),
+            status: RuleStatus::Triggered,
         );
     }
 }
