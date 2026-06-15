@@ -14,8 +14,12 @@ final class CriticalAlertDetector
     public function detect(array $appliedRules): ?array
     {
         foreach ($appliedRules as $rule) {
-            $code = $rule['rule_code'] ?? '';
 
+            if (($rule['status'] ?? 'triggered') === 'satisfied') {
+                continue;
+            }
+
+            $code = $rule['rule_code'] ?? '';
             if (\in_array($code, ['choking_hazard', 'contaminated_fish'], true)) {
                 return [
                     'title' => $rule['rule_label'] ?? 'Alerte critique',
