@@ -33,7 +33,7 @@ final class InfantFormulaScoreCalculatorTest extends TestCase
     public function testScoreNeverGoesBelowFloor(): void
     {
         // Cumule tous les malus : palme + sucres + soja.
-        $product = new Product('3000000000301', 'Lait')
+        $product = (new Product('3000000000301', 'Lait'))
             ->setIngredientsRaw('huile de palme, sirop de glucose, maltodextrine, saccharose, soja')
             ->setNutriments([]);
 
@@ -47,7 +47,7 @@ final class InfantFormulaScoreCalculatorTest extends TestCase
     {
         // Cumule un max de bonus : DHA, ARA, sans palme, bio, GOS, probiotiques,
         // protéines basses, sodium bas -> bien au-delà de 100 avant clamp.
-        $product = new Product('3000000000302', 'Lait premium bio')
+        $product = (new Product('3000000000302', 'Lait premium bio'))
             ->setIngredientsRaw('lactose, dha, ara, galacto-oligosaccharides, bifidobacterium')
             ->setNutriments(['proteins_100g' => 1.2, 'sodium_100g' => 0.02])
             ->setOffRawData(['labels_tags' => ['en:organic']]);
@@ -60,22 +60,22 @@ final class InfantFormulaScoreCalculatorTest extends TestCase
 
     public function testDhaBonusApplied(): void
     {
-        $product = new Product('3000000000303', 'Lait')
+        $product = (new Product('3000000000303', 'Lait'))
             ->setIngredientsRaw('huile de palme, dha'); // palme -8, dha +5
 
         $result = $this->calculator->calculate($product);
 
-        $codes = array_map(static fn ($r) => $r->ruleCode, $result->appliedRules);
+        $codes = array_map(static fn($r) => $r->ruleCode, $result->appliedRules);
         self::assertContains('formula_dha_present', $codes);
     }
 
     public function testPalmOilAsMainIngredientApplied(): void
     {
-        $product = new Product('3000000000304', 'Lait')
+        $product = (new Product('3000000000304', 'Lait'))
             ->setIngredientsRaw('huile de palme, lactose, lactosérum');
 
         $codes = array_map(
-            static fn ($r) => $r->ruleCode,
+            static fn($r) => $r->ruleCode,
             $this->calculator->calculate($product)->appliedRules,
         );
 
@@ -85,13 +85,13 @@ final class InfantFormulaScoreCalculatorTest extends TestCase
     public function testPreparedNutrimentsPreferred(): void
     {
         // proteins_prepared_100g (poudre reconstituée) prioritaire sur proteins_100g.
-        $product = new Product('3000000000305', 'Lait poudre')
+        $product = (new Product('3000000000305', 'Lait poudre'))
             ->setIngredientsRaw('lactose')
             ->setNutriments(['proteins_prepared_100g' => 1.3, 'proteins_100g' => 12]);
 
         $result = $this->calculator->calculate($product);
 
-        $codes = array_map(static fn ($r) => $r->ruleCode, $result->appliedRules);
+        $codes = array_map(static fn($r) => $r->ruleCode, $result->appliedRules);
         self::assertContains('formula_low_protein', $codes);
     }
 }

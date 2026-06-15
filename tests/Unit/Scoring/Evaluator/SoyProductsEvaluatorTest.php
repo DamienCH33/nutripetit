@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Enum\RuleStatus;
 use App\Service\Scoring\Evaluator\SoyProductsEvaluator;
 use PHPUnit\Framework\TestCase;
 
@@ -27,19 +28,31 @@ final class SoyProductsEvaluatorTest extends TestCase
 
     public function testTriggersOnSoyKeyword(): void
     {
-        $product = new Product('3000000000130', 'Dessert végétal')
+        $product = (new Product('3000000000130', 'Dessert végétal'))
             ->setIngredientsRaw('Tofu, eau, sel');
 
         $applied = $this->evaluator->evaluate($product, $this->rule('soy_products', -10), null);
 
         self::assertInstanceOf(AppliedRuleDto::class, $applied);
         self::assertSame('soy_products', $applied->ruleCode);
+        self::assertSame(RuleStatus::Triggered, $applied->status);
     }
 
-    public function testDoesNotTriggerWithoutSoy(): void
+    public function testSatisfiedWithoutSoy(): void
     {
-        $product = new Product('3000000000131', 'Compote')
+        $product = (new Product('3000000000131', 'Compote'))
             ->setIngredientsRaw('Pommes, poires');
+
+        $applied = $this->evaluator->evaluate($product, $this->rule('soy_products'), null);
+
+        self::assertInstanceOf(AppliedRuleDto::class, $applied);
+        self::assertSame(0, $applied->pointsImpact);
+        self::assertSame(RuleStatus::Satisfied, $applied->status);
+    }
+
+    public function testReturnsNullOnEmptyIngredients(): void
+    {
+        $product = new Product('3000000000132', 'Produit');
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('soy_products'), null));
     }

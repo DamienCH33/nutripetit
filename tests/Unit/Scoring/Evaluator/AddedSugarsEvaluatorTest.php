@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Enum\RuleStatus;
 use App\Service\Scoring\Evaluator\AddedSugarsEvaluator;
 use PHPUnit\Framework\TestCase;
 
@@ -27,7 +28,7 @@ final class AddedSugarsEvaluatorTest extends TestCase
 
     public function testTriggersOnSugarKeyword(): void
     {
-        $product = new Product('3000000000200', 'Biscuit')
+        $product = (new Product('3000000000200', 'Biscuit'))
             ->setIngredientsRaw('Farine, sirop de glucose, beurre');
 
         $applied = $this->evaluator->evaluate($product, $this->rule('added_sugars', -25), null);
@@ -39,24 +40,25 @@ final class AddedSugarsEvaluatorTest extends TestCase
 
     public function testCaseInsensitive(): void
     {
-        $product = new Product('3000000000201', 'Biscuit')
+        $product = (new Product('3000000000201', 'Biscuit'))
             ->setIngredientsRaw('Farine, SUCRE de canne');
 
         self::assertNotNull($this->evaluator->evaluate($product, $this->rule('added_sugars'), null));
     }
 
-    public function testDoesNotTriggerWithoutSugar(): void
+    public function testSatisfiedWithoutSugar(): void
     {
-        $product = new Product('3000000000202', 'Purée')
+        $product = (new Product('3000000000202', 'Purée'))
             ->setIngredientsRaw('Carottes, eau');
-
-        self::assertNull($this->evaluator->evaluate($product, $this->rule('added_sugars'), null));
+        $applied = $this->evaluator->evaluate($product, $this->rule('added_sugars'), null);
+        self::assertInstanceOf(AppliedRuleDto::class, $applied);
+        self::assertSame(0, $applied->pointsImpact);
+        self::assertSame(RuleStatus::Satisfied, $applied->status);
     }
 
-    public function testDoesNotTriggerOnEmptyIngredients(): void
+    public function testReturnsNullOnEmptyIngredients(): void
     {
-        $product = new Product('3000000000203', 'Produit')->setIngredientsRaw('   ');
-
+        $product = (new Product('3000000000203', 'Produit'))->setIngredientsRaw('   ');
         self::assertNull($this->evaluator->evaluate($product, $this->rule('added_sugars'), null));
     }
 

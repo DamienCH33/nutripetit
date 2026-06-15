@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Enum\RuleStatus;
 use App\Service\Scoring\Evaluator\ChokingHazardEvaluator;
 use PHPUnit\Framework\TestCase;
 
@@ -27,19 +28,31 @@ final class ChokingHazardEvaluatorTest extends TestCase
 
     public function testTriggersOnHazardKeyword(): void
     {
-        $product = new Product('3000000000110', 'Mélange')
+        $product = (new Product('3000000000110', 'Mélange'))
             ->setIngredientsRaw('Flocons d\'avoine, raisins secs');
 
         $applied = $this->evaluator->evaluate($product, $this->rule('choking_hazard', -20), null);
 
         self::assertInstanceOf(AppliedRuleDto::class, $applied);
         self::assertSame('choking_hazard', $applied->ruleCode);
+        self::assertSame(RuleStatus::Triggered, $applied->status);
     }
 
-    public function testDoesNotTriggerOnSafeIngredients(): void
+    public function testSatisfiedOnSafeIngredients(): void
     {
-        $product = new Product('3000000000111', 'Purée')
+        $product = (new Product('3000000000111', 'Purée'))
             ->setIngredientsRaw('Carottes, pommes de terre');
+
+        $applied = $this->evaluator->evaluate($product, $this->rule('choking_hazard'), null);
+
+        self::assertInstanceOf(AppliedRuleDto::class, $applied);
+        self::assertSame(0, $applied->pointsImpact);
+        self::assertSame(RuleStatus::Satisfied, $applied->status);
+    }
+
+    public function testReturnsNullOnEmptyIngredients(): void
+    {
+        $product = new Product('3000000000112', 'Produit');
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('choking_hazard'), null));
     }

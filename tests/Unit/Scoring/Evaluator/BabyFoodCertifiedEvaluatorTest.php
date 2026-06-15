@@ -27,7 +27,7 @@ final class BabyFoodCertifiedEvaluatorTest extends TestCase
 
     public function testTriggersOnOffCategory(): void
     {
-        $product = new Product('3000000000210', 'Petit pot carottes')
+        $product = (new Product('3000000000210', 'Petit pot carottes'))
             ->setOffRawData(['categories_tags' => ['en:baby-foods', 'en:purees']]);
 
         $applied = $this->evaluator->evaluate($product, $this->rule('baby_food_certified', 10), null);
@@ -38,7 +38,7 @@ final class BabyFoodCertifiedEvaluatorTest extends TestCase
 
     public function testTriggersOnNameKeywordFallback(): void
     {
-        $product = new Product('3000000000211', 'Purée pommes dès 6 mois')
+        $product = (new Product('3000000000211', 'Purée pommes dès 6 mois'))
             ->setOffRawData([]);
 
         self::assertNotNull($this->evaluator->evaluate($product, $this->rule('baby_food_certified'), null));
@@ -47,7 +47,7 @@ final class BabyFoodCertifiedEvaluatorTest extends TestCase
     public function testRobustToMalformedOffData(): void
     {
         // categories_tags non-array et entrées non-string ne doivent pas crasher.
-        $product = new Product('3000000000212', 'Yaourt')
+        $product = (new Product('3000000000212', 'Yaourt'))
             ->setOffRawData(['categories_tags' => 'en:baby-foods']);
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('baby_food_certified'), null));
@@ -55,7 +55,7 @@ final class BabyFoodCertifiedEvaluatorTest extends TestCase
 
     public function testDoesNotTriggerOnAdultProduct(): void
     {
-        $product = new Product('3000000000213', 'Chips paprika')
+        $product = (new Product('3000000000213', 'Chips paprika'))
             ->setOffRawData(['categories_tags' => ['en:snacks']]);
 
         self::assertNull($this->evaluator->evaluate($product, $this->rule('baby_food_certified'), null));
