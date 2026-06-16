@@ -400,7 +400,7 @@ OpenFoodFactsClient, golden tests sur de vrais JSON OFF.
 **Damien Chauveau** — Développeur PHP/Symfony basé à Bordeaux
 
 - 🌐 [Portfolio](https://damienchauveau-dev.fr)
-- 💼 [LinkedIn](https://www.linkedin.com/in/damienchauveau)
+- 💼 [LinkedIn](https://fr.linkedin.com/in/damien-chauveau-747892100)
 - 💻 [GitHub](https://github.com/DamienCH33)
 
 ---
