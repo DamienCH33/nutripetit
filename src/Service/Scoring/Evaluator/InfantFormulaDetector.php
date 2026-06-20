@@ -9,7 +9,12 @@ use App\Entity\Product;
 /**
  * Détecte si un Product est un lait infantile.
  *
- * 2 signaux combinés : categories_tags OFF + nom du produit.
+ * 2 signaux combinés : categories_tags OFF + mots-clés explicites de lait dans le nom.
+ *
+ * IMPORTANT : on ne se base PAS sur la marque (Hipp, Blédina, Gallia…) pour ce détecteur.
+ * Ces marques produisent aussi des compotes, petits pots, biscuits… La marque indique
+ * « produit bébé » (cf. BabyProductDetector), pas « lait ». Utiliser la marque ici
+ * classerait une compote Hipp comme un lait infantile (faux positif).
  */
 final class InfantFormulaDetector
 {
@@ -92,6 +97,9 @@ final class InfantFormulaDetector
         'en:liquid-infant-formulas',
     ];
 
+    /**
+     * Mots-clés EXPLICITES de lait infantile (pas de marque ici).
+     */
     private const NAME_KEYWORDS = [
         // Génériques
         'lait infantile',
@@ -103,7 +111,7 @@ final class InfantFormulaDetector
         'lait de croissance',
         'lait croissance',
 
-        // Âges
+        // Âges (toujours pr\u00e9fix\u00e9s par "lait" pour \u00e9viter de matcher un petit pot "2e \u00e2ge")
         'lait 1er âge',
         'lait 1er age',
         'lait 2ème âge',
@@ -112,12 +120,6 @@ final class InfantFormulaDetector
         'lait 3ème âge',
         'lait 3eme age',
         'lait 3e age',
-        '1er âge',
-        '1er age',
-        '2ème âge',
-        '2eme age',
-        '3ème âge',
-        '3eme age',
 
         // Formulations médicales
         'lait ar',
@@ -130,10 +132,9 @@ final class InfantFormulaDetector
         'anti colique',
         'lait ha',
         'lait h.a',
-        'hypoallergénique',
-        'hypoallergenique',
-        'sans lactose',
-        'lactose free',
+        'lait hypoallergénique',
+        'lait hypoallergenique',
+        'lait sans lactose',
         'lait confort',
         'lait transit',
         'lait bifidus',
@@ -141,16 +142,10 @@ final class InfantFormulaDetector
         'lait satiété',
         'lait satiete',
         'lait pré',
-        'lait pre',
         'lait prématuré',
         'lait premature',
-        'aplv',
         'lait hydrolysé',
         'lait hydrolyse',
-        'hydrolysat',
-        'acides aminés',
-        'acides amines',
-        'amino acid',
 
         // International
         'infant formula',
@@ -159,77 +154,6 @@ final class InfantFormulaDetector
         'growing-up milk',
         'growing up milk',
         'toddler milk',
-
-        // Marques de laits infantiles connues
-        'gallia',
-        'galia',
-        'guigoz',
-        'nestlé nidal',
-        'nidal',
-        'blédilait',
-        'bledilait',
-        'blédina',
-        'bledina',
-        'novalac',
-        'modilac',
-        'picot',
-        'enfamil',
-        'similac',
-        'aptamil',
-        'milupa',
-        'hipp',
-        'babybio bio bébé',
-        'holle',
-        'lemiel',
-        'biostime',
-        'physiolac',
-        'kendamil',
-        'capricare',
-        'sammy capricare',
-
-        // Mots seuls détecteurs forts (laits)
-        ' ar ',
-        ' ar',
-        'ar ',  // attention espaces, sinon "art", "bar" matchent
-        ' ac ',
-        ' ac',
-        'ac ',
-        ' ha ',
-        ' ha',
-        'ha ',
-    ];
-
-    /**
-     * Tokens isolés (mot entier) — pour détecter AR, AC, HA sans matcher "art" ou "bar".
-     */
-    private const NAME_TOKENS = [
-        'ar',
-        'ac',
-        'ha',
-        'aplv',
-        'gallia',
-        'galia',
-        'guigoz',
-        'nidal',
-        'novalac',
-        'modilac',
-        'picot',
-        'enfamil',
-        'similac',
-        'aptamil',
-        'milupa',
-        'hipp',
-        'holle',
-        'physiolac',
-        'kendamil',
-        'capricare',
-        'biostime',
-        'lemiel',
-        'blédilait',
-        'bledilait',
-        'blédina',
-        'bledina',
-        'babybio',
     ];
 
     public function isInfantFormula(Product $product): bool
@@ -248,14 +172,6 @@ final class InfantFormulaDetector
         $name = mb_strtolower($product->getName());
         foreach (self::NAME_KEYWORDS as $keyword) {
             if (str_contains($name, $keyword)) {
-                return true;
-            }
-        }
-        // Recherche par tokens (mots isolés)
-        $tokens = preg_split('/[\s\-_\.,]+/', $name) ?: [];
-        $tokens = array_filter($tokens, static fn ($t) => '' !== $t);
-        foreach (self::NAME_TOKENS as $token) {
-            if (\in_array($token, $tokens, true)) {
                 return true;
             }
         }
