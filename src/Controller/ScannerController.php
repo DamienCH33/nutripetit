@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Service\Exception\OpenFoodFactsUnavailableException;
 use App\Service\Exception\ProductNotFoundException;
+use App\Service\Product\DataCompletenessChecker;
 use App\Service\Product\ProductPreviewBuilder;
 use App\Service\Scanner\ScanProductHandler;
 use App\Service\Scoring\BabyProductDetectorInterface;
@@ -31,6 +32,7 @@ final class ScannerController extends AbstractController
         private readonly ProductPreviewBuilder $productPreviewBuilder,
         private readonly ScanSessionCookieManager $scanSessionCookieManager,
         private readonly RateLimiterFactory $scanLimiter,
+        private readonly DataCompletenessChecker $completenessChecker,
     ) {
     }
 
@@ -74,11 +76,13 @@ final class ScannerController extends AbstractController
 
         $scanSession = $this->scanSessionManager->resolveScanSession($request);
 
-        if (!$this->babyProductDetector->isBabyProduct($product)) {
+        if (
+            !$this->babyProductDetector->isBabyProduct($product)
+            && $this->completenessChecker->hasSufficientData($product)
+        ) {
             return $this->render('pages/app/scan_error.html.twig', [
                 'errorTitle' => 'Produit non destiné aux 0-3 ans',
-                'errorMessage' => 'NutriPetit analyse uniquement les produits alimentaires destinés aux nourrissons et jeunes enfants (0-3 ans). 
-                Pour les autres produits, nous vous invitons à utiliser une application généraliste.',
+                'errorMessage' => 'NutriPetit analyse uniquement les produits alimentaires destinés aux nourrissons et jeunes enfants (0-3 ans). Pour les autres produits, nous vous invitons à utiliser une application généraliste.',
             ], new Response('', Response::HTTP_OK));
         }
 

@@ -51,7 +51,7 @@ final class ScannerControllerTest extends WebTestCase
     public function testReturns200WithNoticeForNonBabyProduct(): void
     {
         $client = static::createClient();
-        $this->persistProduct(self::VALID_EAN, 'Produit adulte');
+        $this->persistProduct(self::VALID_EAN, 'Produit adulte', ['energy-kcal_100g' => 250, 'proteins_100g' => 8]);
 
         $detector = $this->createMock(BabyProductDetectorInterface::class);
         $detector->method('isBabyProduct')->willReturn(false);
@@ -108,10 +108,17 @@ final class ScannerControllerTest extends WebTestCase
         static::getContainer()->set(OpenFoodFactsClientInterface::class, $off);
     }
 
-    private function persistProduct(string $ean, string $name): void
+    /**
+     * @param array<string, int|float|string> $nutriments
+     */
+    private function persistProduct(string $ean, string $name, array $nutriments = []): void
     {
         $em = static::getContainer()->get(EntityManagerInterface::class);
-        $em->persist(new Product($ean, $name));
+        $product = new Product($ean, $name);
+        if ([] !== $nutriments) {
+            $product->setNutriments($nutriments);
+        }
+        $em->persist($product);
         $em->flush();
     }
 
