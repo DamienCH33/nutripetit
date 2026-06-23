@@ -34,8 +34,7 @@ final readonly class OpenFoodFactsClient implements OpenFoodFactsClientInterface
         #[Autowire(service: 'nutripetit.off_api')]
         private CacheItemPoolInterface $cache,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Récupère un produit par son code-barres EAN.
@@ -45,6 +44,10 @@ final readonly class OpenFoodFactsClient implements OpenFoodFactsClientInterface
      */
     public function fetchByEan(string $ean): ProductDto
     {
+        if (!preg_match('/^\d{8,13}$/', $ean)) {
+            throw new ProductNotFoundException($ean);
+        }
+
         $cacheKey = self::CACHE_KEY_PREFIX . $ean;
         $cacheItem = $this->cache->getItem($cacheKey);
 
