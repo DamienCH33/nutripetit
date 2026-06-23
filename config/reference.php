@@ -653,7 +653,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         time_based_uuid_node?: scalar|Param|null,
  *     },
  *     html_sanitizer?: bool|array{ // HtmlSanitizer configuration
- *         enabled?: bool|Param, // Default: false
+ *         enabled?: bool|Param, // Default: true
  *         sanitizers?: array<string, array{ // Default: []
  *             allow_safe_elements?: bool|Param, // Allows "safe" elements and attributes. // Default: false
  *             allow_static_elements?: bool|Param, // Allows all static elements and attributes from the W3C Sanitizer API standard. // Default: false
@@ -1550,6 +1550,555 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     enable_static_query_cache?: bool|Param, // Default: true
  *     connection_keys?: list<mixed>,
  * }
+ * @psalm-type AiConfig = array{
+ *     platform?: array{
+ *         albert?: array{
+ *             api_key?: string|Param,
+ *             base_url?: string|Param,
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         amazeeai?: array{
+ *             base_url?: string|Param,
+ *             api_key?: string|Param,
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         anthropic?: array{
+ *             api_key?: string|Param,
+ *             version?: string|Param, // Default: null
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *             cache_retention?: "none"|"short"|"long"|Param, // Prompt cache retention policy for Anthropic models // Default: "short"
+ *         },
+ *         azure?: array<string, array{ // Default: []
+ *             api_key?: string|Param,
+ *             base_url?: string|Param,
+ *             deployment?: string|Param,
+ *             api_version?: string|Param, // The used API version
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         }>,
+ *         bedrock?: array<string, array{ // Default: []
+ *             bedrock_runtime_client?: string|Param, // Service ID of the Bedrock runtime client to use // Default: null
+ *             model_catalog?: string|Param, // Default: null
+ *         }>,
+ *         cache?: array<string, array{ // Default: []
+ *             platform?: string|Param,
+ *             service?: string|Param, // The cache service id as defined under the "cache" configuration key // Default: "cache.app"
+ *             cache_key?: string|Param, // Key used to store platform results, if not set, the current platform name will be used, the "prompt_cache_key" can be set during platform call to override this value
+ *             ttl?: int|Param,
+ *         }>,
+ *         cartesia?: array{
+ *             api_key?: string|Param,
+ *             version?: string|Param,
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         cerebras?: array{
+ *             api_key?: string|Param,
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         cohere?: array{
+ *             api_key?: string|Param,
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         decart?: array{
+ *             api_key?: string|Param,
+ *             host?: string|Param, // Default: "https://api.decart.ai/v1"
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         deepseek?: array{
+ *             api_key?: string|Param,
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         dockermodelrunner?: array{
+ *             host_url?: string|Param, // Default: "http://127.0.0.1:12434"
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         elevenlabs?: array{
+ *             api_key?: string|Param,
+ *             endpoint?: string|Param, // Default: "https://api.elevenlabs.io/v1/"
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         failover?: array<string, array{ // Default: []
+ *             platforms?: list<scalar|Param|null>,
+ *             rate_limiter?: string|Param,
+ *         }>,
+ *         gemini?: array{
+ *             api_key?: string|Param,
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         generic?: array<string, array{ // Default: []
+ *             base_url?: string|Param,
+ *             api_key?: string|Param,
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *             model_catalog?: string|Param, // Service ID of the model catalog to use
+ *             supports_completions?: bool|Param, // Default: true
+ *             supports_embeddings?: bool|Param, // Default: true
+ *             completions_path?: string|Param, // Default: "/v1/chat/completions"
+ *             embeddings_path?: string|Param, // Default: "/v1/embeddings"
+ *         }>,
+ *         huggingface?: array{
+ *             api_key?: string|Param,
+ *             provider?: string|Param, // Default: "hf-inference"
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         lmstudio?: array{
+ *             host_url?: string|Param, // Default: "http://127.0.0.1:1234"
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         mistral?: array{
+ *             api_key?: string|Param,
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         ollama?: array{
+ *             endpoint?: string|Param, // Endpoint for Ollama (e.g. "http://127.0.0.1:11434" for local, or a cloud endpoint). If null, the http_client is used as-is and must already be configured with a base URI.
+ *             api_key?: string|Param, // API key for Ollama Cloud authentication (optional for local usage)
+ *             http_client?: string|Param, // Service ID of the HTTP client to use. When "endpoint" is null, this client must be pre-configured (e.g. with a base_uri). // Default: "http_client"
+ *         },
+ *         openai?: array{
+ *             api_key?: string|Param,
+ *             region?: scalar|Param|null, // The region for OpenAI API (EU, US, or null for default) // Default: null
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         openresponses?: array<string, array{ // Default: []
+ *             base_url?: string|Param,
+ *             api_key?: string|Param,
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *             model_catalog?: string|Param, // Service ID of the model catalog to use
+ *             responses_path?: string|Param, // Default: "/v1/responses"
+ *         }>,
+ *         openrouter?: array{
+ *             api_key?: string|Param,
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         ovh?: array{
+ *             api_key?: scalar|Param|null,
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         perplexity?: array{
+ *             api_key?: string|Param,
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         scaleway?: array{
+ *             api_key?: scalar|Param|null,
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         transformersphp?: array<mixed>,
+ *         vertexai?: array{
+ *             location?: string|Param, // Required for the project-scoped endpoint. Must be set together with "project_id". // Default: null
+ *             project_id?: string|Param, // Required for the project-scoped endpoint. Must be set together with "location". // Default: null
+ *             api_key?: string|Param, // When set without "location" and "project_id", uses the global endpoint. Note: API keys only identify the project for billing and do not provide identity-based access control. For production use with IAM, audit logging, or data residency, prefer the project-scoped endpoint with service account authentication. // Default: null
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *         voyage?: array{
+ *             api_key?: string|Param,
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *         },
+ *     },
+ *     model?: array<string, array<string, array{ // Default: []
+ *         class?: string|Param, // The fully qualified class name of the model (must extend Symfony\AI\Platform\Model) // Default: "Symfony\\AI\\Platform\\Model"
+ *         capabilities?: list<value-of<\Symfony\AI\Platform\Capability>|\Symfony\AI\Platform\Capability|Param>,
+ *     }>>,
+ *     agent?: array<string, array{ // Default: []
+ *         platform?: string|Param, // Service name of platform // Default: "Symfony\\AI\\Platform\\PlatformInterface"
+ *         model?: mixed,
+ *         memory?: mixed, // Memory configuration: string for static memory, or array with "service" key for service reference // Default: null
+ *         prompt?: string|array{ // The system prompt configuration
+ *             text?: string|Param, // The system prompt text
+ *             file?: string|Param, // Path to file containing the system prompt
+ *             include_tools?: bool|Param, // Include tool definitions at the end of the system prompt // Default: false
+ *             enable_translation?: bool|Param, // Enable translation for the system prompt // Default: false
+ *             translation_domain?: string|Param, // The translation domain for the system prompt // Default: null
+ *         },
+ *         tools?: bool|array{ // Tools are opt-in: set to true to inject all services tagged with "ai.tool", or configure an explicit list of tools. When the option is omitted (or set to null or false), no tools are registered.
+ *             enabled?: bool|Param, // Default: false
+ *             services?: list<string|array{ // Default: []
+ *                 service?: string|Param,
+ *                 agent?: string|Param,
+ *                 name?: string|Param,
+ *                 description?: string|Param,
+ *                 method?: string|Param,
+ *             }>,
+ *         },
+ *         keep_tool_messages?: bool|Param, // Keep tool messages in the conversation history // Default: false
+ *         include_sources?: bool|Param, // Include sources exposed by tools as part of the tool result metadata // Default: false
+ *         max_tool_calls?: scalar|Param|null, // Maximum number of tool calls per agent call, null to disable // Default: 50
+ *         fault_tolerant_toolbox?: bool|Param, // Continue the agent run even if a tool call fails // Default: true
+ *         speech?: bool|array{ // Speech (TTS/STT) decorator configuration
+ *             enabled?: bool|Param, // Default: true
+ *             text_to_speech_platform?: string|Param, // Service name of the TTS platform (e.g. ai.platform.elevenlabs). // Default: null
+ *             speech_to_text_platform?: string|Param, // Service name of the STT platform (e.g. ai.platform.openai). // Default: null
+ *             tts_model?: string|Param, // Text-to-speech model name // Default: null
+ *             tts_options?: mixed, // Provider-specific TTS options // Default: []
+ *             stt_model?: string|Param, // Speech-to-text model name // Default: null
+ *             stt_options?: mixed, // Provider-specific STT options // Default: []
+ *         },
+ *     }>,
+ *     multi_agent?: array<string, array{ // Default: []
+ *         orchestrator?: string|Param, // Service ID of the orchestrator agent
+ *         handoffs?: array<string, list<scalar|Param|null>>,
+ *         fallback?: string|Param, // Service ID of the fallback agent for unmatched requests
+ *     }>,
+ *     store?: array{
+ *         azuresearch?: array<string, array{ // Default: []
+ *             endpoint?: string|Param,
+ *             api_key?: string|Param,
+ *             api_version?: string|Param,
+ *             index_name?: string|Param, // The name of the store will be used if the "index_name" option is not set
+ *             http_client?: string|Param, // Default: "http_client"
+ *             vector_field?: string|Param, // Default: "vector"
+ *         }>,
+ *         cache?: array<string, array{ // Default: []
+ *             service?: string|Param, // Default: "cache.app"
+ *             cache_key?: string|Param, // The name of the store will be used if the key is not set.
+ *             strategy?: string|Param, // Default: "cosine"
+ *         }>,
+ *         chromadb?: array<string, array{ // Default: []
+ *             client?: string|Param, // Default: "Codewithkyrian\\ChromaDB\\Client"
+ *             collection?: string|Param,
+ *         }>,
+ *         clickhouse?: array<string, array{ // Default: []
+ *             dsn?: string|Param,
+ *             http_client?: string|Param,
+ *             database?: string|Param,
+ *             table?: string|Param,
+ *         }>,
+ *         cloudflare?: array<string, array{ // Default: []
+ *             account_id?: string|Param,
+ *             api_key?: string|Param,
+ *             index_name?: string|Param,
+ *             dimensions?: int|Param, // Default: 1536
+ *             metric?: string|Param, // Default: "cosine"
+ *             endpoint?: string|Param,
+ *         }>,
+ *         elasticsearch?: array<string, array{ // Default: []
+ *             endpoint?: string|Param,
+ *             index_name?: string|Param,
+ *             vectors_field?: string|Param, // Default: "_vectors"
+ *             dimensions?: int|Param, // Default: 1536
+ *             similarity?: string|Param, // Default: "cosine"
+ *             http_client?: string|Param, // Default: "http_client"
+ *         }>,
+ *         manticoresearch?: array<string, array{ // Default: []
+ *             endpoint?: string|Param,
+ *             table?: string|Param,
+ *             field?: string|Param, // Default: "_vectors"
+ *             type?: string|Param, // Default: "hnsw"
+ *             similarity?: string|Param, // Default: "cosine"
+ *             dimensions?: int|Param, // Default: 1536
+ *             quantization?: string|Param,
+ *         }>,
+ *         mariadb?: array<string, array{ // Default: []
+ *             connection?: string|Param,
+ *             table_name?: string|Param,
+ *             index_name?: string|Param,
+ *             vector_field_name?: string|Param,
+ *             setup_options?: array{
+ *                 dimensions?: int|Param,
+ *             },
+ *             distance?: "cosine"|"euclidean"|"distance"|Param, // Distance metric to use for vector similarity search // Default: "euclidean"
+ *         }>,
+ *         meilisearch?: array<string, array{ // Default: []
+ *             endpoint?: string|Param,
+ *             api_key?: string|Param,
+ *             index_name?: string|Param,
+ *             http_client?: string|Param, // Default: "http_client"
+ *             embedder?: string|Param, // Default: "default"
+ *             vector_field?: string|Param, // Default: "_vectors"
+ *             dimensions?: int|Param, // Default: 1536
+ *             semantic_ratio?: float|Param, // The ratio between semantic (vector) and full-text search (0.0 to 1.0). Default: 1.0 (100% semantic) // Default: 1.0
+ *         }>,
+ *         memory?: array<string, array{ // Default: []
+ *             strategy?: string|Param,
+ *         }>,
+ *         milvus?: array<string, array{ // Default: []
+ *             endpoint?: string|Param,
+ *             api_key?: string|Param,
+ *             database?: string|Param,
+ *             collection?: string|Param,
+ *             vector_field?: string|Param, // Default: "_vectors"
+ *             dimensions?: int|Param, // Default: 1536
+ *             metric_type?: string|Param, // Default: "COSINE"
+ *         }>,
+ *         mongodb?: array<string, array{ // Default: []
+ *             client?: string|Param, // Default: "MongoDB\\Client"
+ *             database?: string|Param,
+ *             collection?: string|Param,
+ *             index_name?: string|Param,
+ *             vector_field?: string|Param, // Default: "vector"
+ *             bulk_write?: bool|Param, // Default: false
+ *             setup_options?: array{
+ *                 fields?: mixed, // Default: []
+ *             },
+ *         }>,
+ *         neo4j?: array<string, array{ // Default: []
+ *             endpoint?: string|Param,
+ *             username?: string|Param,
+ *             password?: string|Param,
+ *             database?: string|Param,
+ *             vector_index_name?: string|Param,
+ *             node_name?: string|Param,
+ *             vector_field?: string|Param, // Default: "embeddings"
+ *             dimensions?: int|Param, // Default: 1536
+ *             distance?: string|Param, // Default: "cosine"
+ *             quantization?: bool|Param,
+ *         }>,
+ *         opensearch?: array<string, array{ // Default: []
+ *             endpoint?: string|Param,
+ *             index_name?: string|Param,
+ *             vectors_field?: string|Param, // Default: "_vectors"
+ *             dimensions?: int|Param, // Default: 1536
+ *             space_type?: string|Param, // Default: "l2"
+ *             http_client?: string|Param, // Default: "http_client"
+ *         }>,
+ *         pinecone?: array<string, array{ // Default: []
+ *             client?: string|Param, // Default: "Probots\\Pinecone\\Client"
+ *             index_name?: string|Param,
+ *             namespace?: string|Param,
+ *             filter?: list<scalar|Param|null>,
+ *             top_k?: int|Param,
+ *         }>,
+ *         postgres?: array<string, array{ // Default: []
+ *             dsn?: string|Param,
+ *             username?: string|Param,
+ *             password?: string|Param,
+ *             table_name?: string|Param,
+ *             vector_field?: string|Param, // Default: "embedding"
+ *             distance?: "cosine"|"inner_product"|"l1"|"l2"|Param, // Distance metric to use for vector similarity search // Default: "l2"
+ *             lang?: string|Param, // Default: "english"
+ *             dbal_connection?: string|Param,
+ *             setup_options?: array{
+ *                 vector_type?: string|Param, // Default: "vector"
+ *                 vector_size?: int|Param, // Default: 1536
+ *                 index_method?: string|Param, // Default: "ivfflat"
+ *                 index_opclass?: string|Param, // Default: "vector_cosine_ops"
+ *             },
+ *         }>,
+ *         qdrant?: array<string, array{ // Default: []
+ *             endpoint?: string|Param,
+ *             api_key?: string|Param,
+ *             collection_name?: string|Param, // The name of the store will be used if the "collection_name" is not set
+ *             http_client?: string|Param, // Default: "http_client"
+ *             dimensions?: int|Param, // Default: 1536
+ *             distance?: string|Param, // Default: "Cosine"
+ *             async?: bool|Param, // Default: false
+ *         }>,
+ *         redis?: array<string, array{ // Default: []
+ *             connection_parameters?: mixed, // see https://github.com/phpredis/phpredis?tab=readme-ov-file#example-1
+ *             client?: string|Param, // a service id of a Redis client
+ *             index_name?: string|Param,
+ *             key_prefix?: string|Param, // Default: "vector:"
+ *             distance?: "COSINE"|"L2"|"IP"|Param, // Distance metric to use for vector similarity search // Default: "COSINE"
+ *         }>,
+ *         s3vectors?: array<string, array{ // Default: []
+ *             client?: string|Param, // Service reference to an existing S3VectorsClient
+ *             configuration?: array<mixed>,
+ *             vector_bucket_name?: string|Param,
+ *             index_name?: string|Param,
+ *             filter?: array<mixed>,
+ *             top_k?: int|Param, // Default number of results to return // Default: 3
+ *         }>,
+ *         sqlite?: array<string, array{ // Default: []
+ *             dsn?: string|Param,
+ *             connection?: string|Param,
+ *             table_name?: string|Param,
+ *             strategy?: string|Param,
+ *             vec?: bool|Param, // Default: false
+ *             distance?: "cosine"|"L2"|Param, // Default: "cosine"
+ *             vector_dimension?: int|Param, // Default: 1536
+ *         }>,
+ *         supabase?: array<string, array{ // Default: []
+ *             http_client?: string|Param, // Service ID of the HTTP client to use // Default: "http_client"
+ *             url?: string|Param,
+ *             api_key?: string|Param,
+ *             table?: string|Param,
+ *             vector_field?: string|Param, // Default: "embedding"
+ *             vector_dimension?: int|Param, // Default: 1536
+ *             function_name?: string|Param, // Default: "match_documents"
+ *         }>,
+ *         surrealdb?: array<string, array{ // Default: []
+ *             endpoint?: string|Param,
+ *             username?: string|Param,
+ *             password?: string|Param,
+ *             namespace?: string|Param,
+ *             database?: string|Param,
+ *             table?: string|Param,
+ *             vector_field?: string|Param, // Default: "_vectors"
+ *             strategy?: string|Param, // Default: "cosine"
+ *             dimensions?: int|Param, // Default: 1536
+ *             namespaced_user?: bool|Param,
+ *         }>,
+ *         typesense?: array<string, array{ // Default: []
+ *             endpoint?: string|Param,
+ *             api_key?: string|Param,
+ *             collection?: string|Param,
+ *             vector_field?: string|Param, // Default: "_vectors"
+ *             dimensions?: int|Param, // Default: 1536
+ *         }>,
+ *         weaviate?: array<string, array{ // Default: []
+ *             endpoint?: string|Param,
+ *             api_key?: string|Param,
+ *             http_client?: string|Param, // Default: "http_client"
+ *             collection?: string|Param, // The name of the store will be used if the "collection" is not set
+ *         }>,
+ *         vektor?: array<string, array{ // Default: []
+ *             storage_path?: string|Param, // Default: "%kernel.project_dir%/var/share"
+ *             dimensions?: int|Param, // Default: 1536
+ *         }>,
+ *     },
+ *     message_store?: array{
+ *         cache?: array<string, array{ // Default: []
+ *             service?: string|Param, // Default: "cache.app"
+ *             key?: string|Param, // The name of the message store will be used if the key is not set
+ *             ttl?: int|Param,
+ *         }>,
+ *         cloudflare?: array<string, array{ // Default: []
+ *             account_id?: string|Param,
+ *             api_key?: string|Param,
+ *             namespace?: string|Param,
+ *             endpoint_url?: string|Param, // If the version of the Cloudflare API is updated, use this key to support it.
+ *         }>,
+ *         doctrine?: array{
+ *             dbal?: array<string, array{ // Default: []
+ *                 connection?: string|Param,
+ *                 table_name?: string|Param, // The name of the message store will be used if the table_name is not set
+ *             }>,
+ *         },
+ *         meilisearch?: array<string, array{ // Default: []
+ *             endpoint?: string|Param,
+ *             api_key?: string|Param,
+ *             index_name?: string|Param,
+ *         }>,
+ *         memory?: array<string, array{ // Default: []
+ *             identifier?: string|Param,
+ *         }>,
+ *         mongodb?: array<string, array{ // Default: []
+ *             client?: string|Param, // Default: "MongoDB\\Client"
+ *             database?: string|Param,
+ *             collection?: string|Param,
+ *         }>,
+ *         pogocache?: array<string, array{ // Default: []
+ *             endpoint?: string|Param,
+ *             password?: string|Param,
+ *             key?: string|Param,
+ *         }>,
+ *         redis?: array<string, array{ // Default: []
+ *             connection_parameters?: mixed, // see https://github.com/phpredis/phpredis?tab=readme-ov-file#example-1
+ *             client?: string|Param, // a service id of a Redis client
+ *             endpoint?: string|Param,
+ *             index_name?: string|Param,
+ *         }>,
+ *         session?: array<string, array{ // Default: []
+ *             identifier?: string|Param,
+ *         }>,
+ *         surrealdb?: array<string, array{ // Default: []
+ *             endpoint?: string|Param,
+ *             username?: string|Param,
+ *             password?: string|Param,
+ *             namespace?: string|Param,
+ *             database?: string|Param,
+ *             table?: string|Param,
+ *             namespaced_user?: bool|Param, // Using a namespaced user is a good practice to prevent any undesired access to a specific table, see https://surrealdb.com/docs/surrealdb/reference-guide/security-best-practices
+ *         }>,
+ *     },
+ *     chat?: array<string, array{ // Default: []
+ *         agent?: string|Param,
+ *         message_store?: string|Param,
+ *     }>,
+ *     vectorizer?: array<string, array{ // Default: []
+ *         platform?: string|Param, // Service name of platform // Default: "Symfony\\AI\\Platform\\PlatformInterface"
+ *         model?: mixed,
+ *     }>,
+ *     indexer?: array<string, array{ // Default: []
+ *         loader?: string|Param, // Service name of loader // Default: null
+ *         source?: mixed, // Source identifier (file path, URL, etc.) or array of sources // Default: null
+ *         transformers?: list<scalar|Param|null>,
+ *         filters?: list<scalar|Param|null>,
+ *         vectorizer?: scalar|Param|null, // Service name of vectorizer // Default: "Symfony\\AI\\Store\\Document\\VectorizerInterface"
+ *         store?: string|Param, // Service name of store // Default: "Symfony\\AI\\Store\\StoreInterface"
+ *     }>,
+ *     retriever?: array<string, array{ // Default: []
+ *         vectorizer?: scalar|Param|null, // Service name of vectorizer // Default: "Symfony\\AI\\Store\\Document\\VectorizerInterface"
+ *         store?: string|Param, // Service name of store // Default: "Symfony\\AI\\Store\\StoreInterface"
+ *     }>,
+ * }
+ * @psalm-type SymfonySecurityAuditorConfig = array{
+ *     model?: scalar|Param|null, // Model name for both Attacker and Reviewer. Must be supported by the configured platform. // Default: "claude-opus-4-8"
+ *     profile?: "fast"|"balanced"|"thorough"|Param, // One-knob preset bundling the cost/speed/depth levers; any explicitly configured key always wins over the profile. `fast`: one attacker iteration, lean pre-scan (marker-bearing files only), code slicing on, up to 4 concurrent reviewer calls. `balanced` (default): identical to configuring nothing. `thorough`: balanced plus PoC synthesis for high-severity validated findings. // Default: "balanced"
+ *     attacker_model?: scalar|Param|null, // Override: dedicated model for the Attacker role. Falls back to `model` when null. // Default: null
+ *     reviewer_model?: scalar|Param|null, // Override: dedicated model for the Reviewer role. Falls back to `model` when null. // Default: null
+ *     max_output_tokens?: int|Param, // Maximum output tokens per LLM call for both Attacker and Reviewer. Sets `max_tokens` in every platform request. Default 4096; symfony/ai's Anthropic bridge otherwise defaults to a much smaller value (~1000) that silently truncates findings. // Default: 4096
+ *     attacker_max_output_tokens?: int|Param, // Override: dedicated max output tokens for the Attacker role. Falls back to `max_output_tokens` when null. Useful when the attacker needs more headroom for detailed `record_vulnerability` tool-call arguments. // Default: null
+ *     reviewer_max_output_tokens?: int|Param, // Override: dedicated max output tokens for the Reviewer role. Falls back to `max_output_tokens` when null. // Default: null
+ *     provider_json_mode?: bool|Param, // Opt into the provider-native JSON mode by sending `response_format: {type: json_object}` on every LLM call. Honored by OpenAI/Mistral/Ollama; silently ignored by Anthropic (which has no equivalent knob). Default false because behaviour is provider-dependent — only enable if your provider supports it. The prompt contract ("Return ONLY the JSON array") remains authoritative. // Default: false
+ *     scan?: array{
+ *         included_paths?: list<scalar|Param|null>,
+ *         respect_gitignore?: bool|Param, // When true, files ignored by the project .gitignore are excluded from the scan. Default true — matches the host project intent (committed code only) and avoids analyzing generated/cached artefacts. Set false for full-tree scans (rare). // Default: true
+ *         max_file_size_kb?: int|Param, // Skip files larger than this size, in kilobytes. // Default: 512
+ *         custom_risk_patterns?: array<string, array<string, array{ // Default: []
+ *             regex?: scalar|Param|null, // PCRE pattern with delimiters, matched per-line against file content.
+ *             description?: scalar|Param|null, // Short human description rendered in the prompt next to the marker.
+ *         }>>,
+ *         secret_scrubbing?: array{ // Redact credential-shaped strings from file content before it reaches the LLM. Covers AWS/GitHub/Stripe/Slack/Google API keys, JWTs, PEM private keys, and env-style credential assignments.
+ *             enabled?: bool|Param, // When true, file content is run through the configured scrubber before chunking. Default true — credentials in committed sample configs or .env.dist files would otherwise be sent verbatim to the LLM provider. // Default: true
+ *             additional_patterns?: list<scalar|Param|null>,
+ *         },
+ *     },
+ *     audit?: array{
+ *         max_iterations?: int|Param, // Maximum number of attacker/reviewer iterations per audit. Defaults to the active profile (balanced/thorough: 3, fast: 1). // Default: null
+ *         min_confidence?: float|Param, // Minimum attacker self-reported confidence (0.0–1.0) required to forward a finding to the reviewer. // Default: 0.6
+ *         reviewer_batch_size?: int|Param, // Number of findings reviewed per LLM call. 1 = one finding per call (highest precision, highest latency). Higher values reduce cost and latency at the risk of cross-talk between findings in the prompt. // Default: 1
+ *         tools_enabled?: bool|Param, // Give the attacker access to tools (read_file, grep, list_files, lookup_advisory) for cross-file investigation. Default true — without tools, lookup_advisory is dead weight and the attacker is blind across files. Costs more LLM round-trips per chunk; combine with Anthropic prompt caching (`cache_retention` in `ai.yaml`) to offset the input-token cost. // Default: true
+ *         structured_collection?: bool|Param, // When true (default), the attacker emits findings by calling a schema-enforced `record_vulnerability` tool, one call per finding, instead of returning a JSON array. The platform validates each call against the tool's input schema, so malformed shapes (bare strings like "dev"/"test", wrapper objects like `{"vulnerabilities": [...]}` ) become structurally impossible. Works across every provider that supports tool use (Anthropic, OpenAI, Mistral, Ollama with tool-capable models). Set to false to fall back to the tightened JSON-array prompt path. // Default: true
+ *         reviewer_structured_collection?: bool|Param, // When true (the default), the reviewer records each verdict by calling a schema-enforced `record_review` tool instead of returning a JSON array, so a malformed verdict never costs a discarded (but fully billed) response. Verdicts are served from and stored to the reviewer-verdict cache exactly like the JSON path. The explicit opt-ins `reviewer_tools_enabled: true` and `reviewer_max_concurrent` > 1 take precedence and keep the JSON path. Set false to force JSON-array output (for models without tool-use support). // Default: true
+ *         stable_system_prompt?: bool|Param, // When true (the default), the attacker emits the full expert skill set in its system prompt for every chunk, instead of only the skills matching the chunk's file types. This makes the system-prompt prefix byte-identical across chunks so provider prompt caching reads it on every call after the first — Anthropic (`cache_retention` in `ai.yaml`, default `short`), OpenAI, Gemini, and DeepSeek all cache prompt prefixes; a large input-token saving on multi-chunk audits. Set false (relevance-only skills, smaller prompt) for providers without prompt caching. // Default: true
+ *         max_tool_iterations?: int|Param, // Maximum tool-call rounds per chunk before forcing the attacker to commit to a final answer. Bounds runaway tool use. // Default: 8
+ *         reviewer_tools_enabled?: bool|Param, // Give the reviewer access to the same tool registry the attacker uses, so it can verify cross-file context (parent-class guards, access_control rules, upstream sanitizers) instead of guessing from the Full File Context alone. Default false — adds round-trips per finding; opt-in for high-precision audits. // Default: false
+ *         attacker_max_concurrent?: int|Param, // Maximum attacker chunk analyses resolved concurrently in the default structured-collection mode (audit.structured_collection: true), when the configured platform exposes an async transport. The attacker phase is usually the longest; setting this to 4-8 (within your provider rate limit) cuts it proportionally. Defaults to the active profile (balanced/thorough: 1 — sequential, fast: 4). Ignored when audit.tools_enabled gives the attacker a cross-file tool registry or structured_collection is off. // Default: null
+ *         reviewer_max_concurrent?: int|Param, // Maximum reviewer LLM calls resolved concurrently when reviewing one finding per call (reviewer_batch_size <= 1) with reviewer tools off. The reviewer phase is often half the audit wall-clock; setting this to 4-8 (within your provider rate limit) cuts it proportionally. Defaults to the active profile (balanced/thorough: 1 — sequential, fast: 4). Ignored when reviewer tools are enabled or the configured platform has no async transport. // Default: null
+ *         reviewer_max_tool_iterations?: int|Param, // Maximum tool-call rounds per finding before forcing the reviewer to commit to a verdict. Lower default than the attacker because the reviewer's job is verification, not exploration. // Default: 4
+ *         baseline?: scalar|Param|null, // Default path to a baseline file of accepted-finding fingerprints. Findings whose fingerprint is listed are suppressed from the report and excluded from the exit code, so previously-accepted findings no longer fail CI. The --baseline CLI option overrides this path; --generate-baseline writes the file. Null (default) disables baselining. // Default: null
+ *         fail_on?: "safe"|"low"|"medium"|"high"|"critical"|Param, // Minimum aggregate risk level that makes `audit:run` exit 1 (the CI gate). The audit exits 1 when the report's risk level is at or above this threshold, 0 otherwise (a budget abort still exits 2). Default `critical` preserves the historical behaviour (only a CRITICAL risk level fails). Set `high`/`medium`/`low` to fail PRs earlier. `safe` fails on every completed audit. The --fail-on CLI option overrides this per run. // Default: "critical"
+ *         excluded_types?: list<"sql_injection"|"command_injection"|"ldap_injection"|"xpath_injection"|"twig_injection"|"header_injection"|"broken_access_control"|"missing_voter"|"voter_bypass"|"role_escalation"|"insecure_direct_object_reference"|"missing_csrf_protection"|"business_logic_flaw"|"race_condition"|"insecure_workflow"|"price_manipulation"|"state_machine_bypass"|"mass_assignment"|"insecure_deserialization"|"unsafe_parameter_binding"|"exposed_internal_service"|"misconfigured_firewall"|"insecure_redirect"|"over_permissive_serializer_group"|"sensitive_data_exposure"|"log_injection"|"path_traversal"|"ssrf"|"xxe"|"open_redirect"|"weak_cryptography"|"insecure_random"|"hardcoded_secret"|"missing_signature_verification"|"messenger_handler_unsafe"|"missing_rate_limiting"|"cache_poisoning"|"mailer_header_injection"|"webhook_replay"|"authenticator_bypass"|Param>,
+ *         included_types?: list<"sql_injection"|"command_injection"|"ldap_injection"|"xpath_injection"|"twig_injection"|"header_injection"|"broken_access_control"|"missing_voter"|"voter_bypass"|"role_escalation"|"insecure_direct_object_reference"|"missing_csrf_protection"|"business_logic_flaw"|"race_condition"|"insecure_workflow"|"price_manipulation"|"state_machine_bypass"|"mass_assignment"|"insecure_deserialization"|"unsafe_parameter_binding"|"exposed_internal_service"|"misconfigured_firewall"|"insecure_redirect"|"over_permissive_serializer_group"|"sensitive_data_exposure"|"log_injection"|"path_traversal"|"ssrf"|"xxe"|"open_redirect"|"weak_cryptography"|"insecure_random"|"hardcoded_secret"|"missing_signature_verification"|"messenger_handler_unsafe"|"missing_rate_limiting"|"cache_poisoning"|"mailer_header_injection"|"webhook_replay"|"authenticator_bypass"|Param>,
+ *         static_prescan?: array{ // Deterministic zero-token risk-marker scan that runs before the LLM. Flags concrete locations (unserialize, |raw, csrf_protection: false, hardcoded secrets, Doctrine string concatenation, etc.) so the attacker prompt can focus on them. In lean mode, files with zero markers are skipped entirely — biggest token saver on large codebases.
+ *             enabled?: bool|Param, // When true, every chunk is preceded by a "Pre-Scan Risk Markers" section in the user message. Default true — pure win on detection quality, zero token cost for the scan itself. // Default: true
+ *             lean_mode?: bool|Param|null, // When true, files with zero markers are dropped before the LLM ever sees them. Slashes token spend on real codebases (often 40-70%) at the cost of missing patterns the regex pre-scanner doesn't know about. Defaults to the active profile (balanced/thorough: false, fast: true). // Default: null
+ *         },
+ *         chunking?: array{ // How files are grouped into LLM calls. `feature` (default) packs a controller with its entity/repository/form/voter/templates so the LLM can follow cross-file data flow — the biggest detection-quality win. `type` keeps the legacy behaviour of sorting by attack-surface priority and slicing into fixed-size windows.
+ *             strategy?: "feature"|"type"|Param, // Chunking strategy. `feature` colocates related files (UserController + User entity + UserRepository + …) in one chunk; `type` chunks by file-type priority. Default `feature`. // Default: "feature"
+ *         },
+ *         escalation?: array{ // Two-pass attacker. A cheap-model sweep runs on every chunk; the expensive model only re-analyses files the cheap sweep flagged. Cuts attacker token spend ~3-5x on real projects where most files are inert, with detection quality close to running the expensive model on everything. Off by default — opt-in for cost-sensitive audits.
+ *             enabled?: bool|Param, // When true, AttackerAgentInterface is wired to the EscalatingAttackerAgent wrapper. Requires `cheap_model` to be set. // Default: false
+ *             cheap_model?: scalar|Param|null, // Provider model id used for the cheap first pass (e.g. claude-haiku-4-5-20251001, gpt-5-mini, mistral-small). Falls back to the reviewer model when null. // Default: null
+ *         },
+ *         code_slicing?: array{ // Trim large PHP files down to security-relevant slices before they reach the LLM. The slicer keeps imports, attributes, class signatures, properties, and the FULL body of methods that touch security-relevant tokens (Request, Doctrine query builder, unserialize, shell exec, mailer, HttpClient, …). All other lines are replaced one-for-one with a `// elided` placeholder so line numbers stay accurate. Typical saving: 50-70% input tokens on controllers / services over 100 lines.
+ *             enabled?: bool|Param|null, // When true, the configured CodeSlicerInterface runs over every chunked file. Default false — opt-in for cost-sensitive audits; smaller files and unfamiliar idioms keep more signal when sent unsliced. // Default: null
+ *             min_lines_before_slicing?: int|Param, // Skip slicing for files shorter than this. Below ~80 lines the saving is not worth the missing context. // Default: 80
+ *         },
+ *         poc_synthesis?: array{ // Optional follow-up stage that generates a concrete, copy-pasteable proof-of-concept (curl command, console invocation, payload body) for every validated finding at or above the configured severity floor. Spends extra LLM tokens per finding; off by default. Turn on when shipping reports to engineers who need actionable reproduction steps.
+ *             enabled?: bool|Param|null, // When true, the PoCSynthesisStage runs after the audit and attaches a `synthesized_poc` field to qualifying findings. Default false. // Default: null
+ *             severity_floor?: "critical"|"high"|"medium"|"low"|"info"|Param, // Minimum severity that triggers PoC synthesis. Default `high` — synthesize for critical+high only; medium and below keep the attacker's original proof string. // Default: "high"
+ *         },
+ *         budget?: array{ // Hard ceiling on cumulative LLM usage per audit run. Aborts the audit cleanly (exit code 2) with the partial report instead of running away on cost.
+ *             max_tokens?: int|Param, // Maximum total tokens (input + output, across attacker + reviewer) before the audit aborts. `null` (default) = unlimited. // Default: null
+ *             max_cost_usd?: float|Param, // Maximum estimated cost (USD) before the audit aborts. Computed via the configured `PricingProviderInterface`. `null` (default) = unlimited. // Default: null
+ *         },
+ *         retry?: array{ // Bounded exponential-backoff retry around every LLM call. Transient failures (provider 429/5xx, network blips) are retried with jittered delays; non-transient failures (auth, validation) fail fast.
+ *             max_attempts?: int|Param, // Total attempts per LLM call, including the first try. `1` disables retries. // Default: 3
+ *             initial_delay_ms?: int|Param, // Base delay (milliseconds) before the first retry. Subsequent retries multiply by `backoff_multiplier`. // Default: 500
+ *             backoff_multiplier?: float|Param, // Exponential growth factor between retries. With initial 500ms and multiplier 2.0, retries wait ~500, ~1000, ~2000 ms. // Default: 2.0
+ *             jitter_ratio?: float|Param, // Jitter applied to each computed delay, as a fraction in `[0.0, 1.0]`. `0.2` means each delay varies within ±20% of the base. // Default: 0.2
+ *         },
+ *         rate_limit?: array{ // Proactive token-bucket throttle around every LLM call. Each dimension is independently nullable; when all three are `null` (the default) the bundle wires `NullRateLimiter` and behavior matches the pre-existing retry-only path. Configure the limits enforced by your provider tier (e.g. Anthropic RPM/ITPM/OTPM) to avoid hitting 429 in the first place — exhausted retries will still surface, but the steady-state path stays inside quota.
+ *             requests_per_minute?: int|Param, // Maximum LLM requests per minute. `null` (default) disables this dimension. // Default: null
+ *             input_tokens_per_minute?: int|Param, // Maximum input tokens per minute. `null` (default) disables this dimension. A single request whose estimated input exceeds this cap throws `RateLimitRequestTooLargeException`. // Default: null
+ *             output_tokens_per_minute?: int|Param, // Maximum output tokens per minute. `null` (default) disables this dimension. Counted post-hoc from `record()` so the next `acquire()` defers until the window resets when the bucket is full. // Default: null
+ *         },
+ *     },
+ *     cache?: array{
+ *         enabled?: bool|Param, // Enable content-hash cache for attacker chunks. Skips the LLM call when an identical chunk has been analyzed before. Default true — huge cost saver on repeated runs (CI, PR scans). // Default: true
+ *         dir?: scalar|Param|null, // Filesystem path for the attacker cache. Created on first write. // Default: "%kernel.cache_dir%/symfony_security_auditor/attacker"
+ *         prompt_caching?: bool|Param, // Deprecated: The "prompt_caching" option is deprecated and no longer has any effect. Prompt caching is controlled by your Symfony AI platform: set `cache_retention` (none|short|long) on the anthropic platform in `ai.yaml` (default `short` already enables it); OpenAI and Gemini cache automatically. // Deprecated and ignored since 1.7. Prompt caching is configured on the Symfony AI platform, not here: set `cache_retention` (none|short|long) on the anthropic platform in `ai.yaml`. OpenAI and Gemini cache automatically. // Default: true
+ *     },
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1566,6 +2115,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     twig_component?: TwigComponentConfig,
  *     live_component?: LiveComponentConfig,
  *     ux_icons?: UxIconsConfig,
+ *     ai?: AiConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1586,6 +2136,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         live_component?: LiveComponentConfig,
  *         ux_icons?: UxIconsConfig,
  *         zenstruck_foundry?: ZenstruckFoundryConfig,
+ *         ai?: AiConfig,
+ *         symfony_security_auditor?: SymfonySecurityAuditorConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1603,6 +2155,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         twig_component?: TwigComponentConfig,
  *         live_component?: LiveComponentConfig,
  *         ux_icons?: UxIconsConfig,
+ *         ai?: AiConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1623,6 +2176,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         ux_icons?: UxIconsConfig,
  *         zenstruck_foundry?: ZenstruckFoundryConfig,
  *         dama_doctrine_test?: DamaDoctrineTestConfig,
+ *         ai?: AiConfig,
+ *         symfony_security_auditor?: SymfonySecurityAuditorConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

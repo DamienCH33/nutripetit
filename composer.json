@@ -13,6 +13,7 @@
         "phpdocumentor/reflection-docblock": "^6.0",
         "phpstan/phpdoc-parser": "^2.3",
         "predis/predis": "^3.5",
+        "symfony/ai-open-ai-platform": "^0.10.0",
         "symfony/asset": "7.4.*",
         "symfony/asset-mapper": "7.4.*",
         "symfony/cache": "7.4.*",
@@ -23,6 +24,7 @@
         "symfony/flex": "^2",
         "symfony/form": "7.4.*",
         "symfony/framework-bundle": "7.4.*",
+        "symfony/html-sanitizer": "7.4.*",
         "symfony/http-client": "7.4.*",
         "symfony/intl": "7.4.*",
         "symfony/lock": "7.4.*",
@@ -132,6 +134,7 @@
         "symfony/phpunit-bridge": "^8.0",
         "symfony/stopwatch": "7.4.*",
         "symfony/web-profiler-bundle": "7.4.*",
+        "vinceamstoutz/symfony-security-auditor": "^1.12",
         "zenstruck/foundry": "^2.10"
     }
 }
