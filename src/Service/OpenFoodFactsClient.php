@@ -34,7 +34,8 @@ final readonly class OpenFoodFactsClient implements OpenFoodFactsClientInterface
         #[Autowire(service: 'nutripetit.off_api')]
         private CacheItemPoolInterface $cache,
         private LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     /**
      * Récupère un produit par son code-barres EAN.
