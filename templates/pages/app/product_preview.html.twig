@@ -22,7 +22,7 @@
 					<p class="np-formula-notice__title">Lait infantile — Notation spécifique</p>
 					<p class="np-formula-notice__message">
 						Tous les laits infantiles vendus en Europe sont strictement réglementés
-																																																																																																																														doit faire l'objet d'un avis pédiatrique.
+																																																																																																																																																																								doit faire l'objet d'un avis pédiatrique.
 					</p>
 				</div>
 			</aside>
@@ -181,7 +181,7 @@
 						Ce produit est recommandé dès
 						{{ minAgeMonths }}
 						mois selon le fabricant.
-																																																																																																																																																																													Votre enfant a
+																																																																																																																																																																																																																							Votre enfant a
 						{{ babyAgeMonths }}
 						mois.
 					</p>
@@ -335,7 +335,8 @@
 			</div>
 
 			{% for source in uniqueSources %}
-				<a href="{{ source.url }}" target="_blank" rel="noopener noreferrer" class="np-source-card">
+				{% set _href = source.url|default('')|safe_url %}
+				<a href="{{ _href ?: '#' }}" {{ _href ? ' target="_blank" rel="noopener noreferrer"' : '' }} class="np-source-card">
 					<div class="np-source-card__icon-wrapper">
 						{{ ux_icon('lucide:file-text', {class: 'np-source-card__icon'}) }}
 					</div>
