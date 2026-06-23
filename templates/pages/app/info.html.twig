@@ -71,10 +71,13 @@
 								mois
 							{% endif %}
 						</span>
-						<a href="{{ rule.sourceUrl }}" target="_blank" rel="noopener noreferrer" class="np-info-rule__source">
-							{{ ux_icon('lucide:external-link', {class: 'np-info-rule__icon'}) }}
-							{{ rule.sourceName }}
-						</a>
+						{% set _href = rule.sourceUrl|default('')|safe_url %}
+						{% if _href %}
+							<a href="{{ _href }}" target="_blank" rel="noopener noreferrer" class="np-info-rule__source">
+								{{ ux_icon('lucide:external-link', {class: 'np-info-rule__icon'}) }}
+								{{ rule.sourceName }}
+							</a>
+						{% endif %}
 					</div>
 				</article>
 			{% endfor %}
@@ -152,7 +155,8 @@
 
 		<div class="np-info-sources">
 			{% for source in sources %}
-				<a href="{{ source.url }}" target="_blank" rel="noopener noreferrer" class="np-info-source">
+				{% set _href = source.url|default('')|safe_url %}
+				<a href="{{ _href ?: '#' }}" {{ _href ? ' target="_blank" rel="noopener noreferrer"' : '' }} class="np-info-source">
 					<div class="np-info-source__name">{{ source.name }}</div>
 					<div class="np-info-source__desc">{{ source.description }}</div>
 					{{ ux_icon('lucide:arrow-up-right', {class: 'np-info-source__arrow'}) }}
