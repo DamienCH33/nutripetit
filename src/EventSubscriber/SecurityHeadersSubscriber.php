@@ -25,16 +25,16 @@ final class SecurityHeadersSubscriber implements EventSubscriberInterface
         }
 
         $headers = $event->getResponse()->headers;
-
         $headers->set('X-Frame-Options', 'DENY');
         $headers->set('X-Content-Type-Options', 'nosniff');
         $headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $headers->set('Permissions-Policy', 'geolocation=(), microphone=()');
-        // camera nécessaire au scan ZXing -> non bloquée.
         $headers->set(
             'Content-Security-Policy',
-            "default-src 'self'; img-src 'self' https://images.openfoodfacts.org https://static.openfoodfacts.org data:; "
+            "default-src 'self'; "
+                . "img-src 'self' https://images.openfoodfacts.org https://static.openfoodfacts.org data:; "
                 . "script-src 'self' 'unsafe-inline' data:; "
+                . "style-src 'self' 'unsafe-inline'; "
                 . "connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
         );
     }
