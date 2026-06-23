@@ -8,7 +8,6 @@ use App\Entity\ScanSession;
 use App\Repository\ScanSessionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Uid\Uuid;
 
 final class ScanSessionManager
 {
@@ -25,11 +24,11 @@ final class ScanSessionManager
     {
         $cookieValue = $request->cookies->get(self::SESSION_COOKIE_NAME);
 
-        if (\is_string($cookieValue) && Uuid::isValid($cookieValue)) {
-            return $this->scanSessionRepository->findById(Uuid::fromString($cookieValue));
+        if (!\is_string($cookieValue) || 1 !== preg_match('/^[a-f0-9]{64}$/', $cookieValue)) {
+            return null;
         }
 
-        return null;
+        return $this->scanSessionRepository->findByCookieToken($cookieValue);
     }
 
     public function resolveScanSession(Request $request): ScanSession

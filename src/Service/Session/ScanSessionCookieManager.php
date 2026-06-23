@@ -13,23 +13,23 @@ final class ScanSessionCookieManager
 {
     /**
      * Pose le cookie de session sur la réponse si le cookie reçu
-     * ne correspond pas déjà à la session résolue (absent ou périmé).
+     * ne correspond pas déjà au jeton de la session résolue (absent ou périmé).
      */
     public function ensureScanSessionCookie(
         Request $request,
         Response $response,
         ScanSession $scanSession,
     ): Response {
-        $sessionId = (string) $scanSession->getId();
+        $token = $scanSession->getCookieToken();
 
-        if ($sessionId === $request->cookies->get(ScanSessionManager::SESSION_COOKIE_NAME)) {
+        if ($token === $request->cookies->get(ScanSessionManager::SESSION_COOKIE_NAME)) {
             return $response;
         }
 
         $response->headers->setCookie(
             Cookie::create(
                 name: ScanSessionManager::SESSION_COOKIE_NAME,
-                value: $sessionId,
+                value: $token,
                 expire: time() + (ScanSessionManager::SESSION_COOKIE_TTL_DAYS * 86400),
                 path: '/',
                 secure: true,

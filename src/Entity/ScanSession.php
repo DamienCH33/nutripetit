@@ -19,6 +19,9 @@ class ScanSession
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     private Uuid $id;
 
+    #[ORM\Column(length: 64, unique: true)]
+    private string $cookieToken;
+
     #[ORM\Column(nullable: true)]
     private ?int $babyAgeMonths = null;
 
@@ -34,6 +37,7 @@ class ScanSession
     public function __construct(?string $userAgent = null)
     {
         $this->id = Uuid::v7();
+        $this->cookieToken = bin2hex(random_bytes(32));
         $this->userAgent = $userAgent;
         $this->createdAt = new DateTimeImmutable();
         $this->lastActiveAt = new DateTimeImmutable();
@@ -42,6 +46,11 @@ class ScanSession
     public function getId(): Uuid
     {
         return $this->id;
+    }
+
+    public function getCookieToken(): string
+    {
+        return $this->cookieToken;
     }
 
     public function getBabyAgeMonths(): ?int
