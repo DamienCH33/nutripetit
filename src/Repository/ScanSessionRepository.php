@@ -25,6 +25,11 @@ class ScanSessionRepository extends ServiceEntityRepository
         return $this->find($id);
     }
 
+    public function findByCookieToken(string $cookieToken): ?ScanSession
+    {
+        return $this->findOneBy(['cookieToken' => $cookieToken]);
+    }
+
     /** @return list<ScanSession> */
     public function findInactiveSince(int $days): array
     {
