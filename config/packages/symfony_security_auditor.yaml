@@ -1,2 +1,7 @@
-symfony_security_auditor:
-    model: 'gpt-5-mini'
+when@dev:
+    symfony_security_auditor:
+        model: "gpt-5-mini"
+
+when@test:
+    symfony_security_auditor:
+        model: "gpt-5-mini"
