@@ -1,4 +1,11 @@
-ai:
-    platform:
-        openai:
-            api_key: '%env(OPENAI_API_KEY)%'
+when@dev:
+    ai:
+        platform:
+            openai:
+                api_key: "%env(OPENAI_API_KEY)%"
+
+when@test:
+    ai:
+        platform:
+            openai:
+                api_key: "%env(OPENAI_API_KEY)%"
