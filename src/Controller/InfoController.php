@@ -66,7 +66,7 @@ final class InfoController extends AbstractController
             'algoVersion' => '1.0.0',
             'scoreScale' => $scoreScale,
             'infantFormulaRules' => $infantFormulaRules,
-            'infantFormulaAlgoVersion' => 'infant_formula_1.0.0',
+            'infantFormulaAlgoVersion' => \App\Service\Scoring\Evaluator\InfantFormulaScoreCalculator::ALGO_VERSION,
             'sources' => $sources,
         ]);
     }

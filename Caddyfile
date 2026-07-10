@@ -4,5 +4,13 @@
 
 :8080 {
 	root * /app/public
+
+	# Compression (mobile 3G/4G : gain réel sur CSS/JS/HTML)
+	encode zstd gzip
+
+	# Les assets asset-mapper sont fingerprintés : cache long + immutable sans risque.
+	@hashed_assets path /assets/*
+	header @hashed_assets Cache-Control "public, max-age=31536000, immutable"
+
 	php_server
 }

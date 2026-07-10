@@ -165,12 +165,12 @@ Chaque score calculé conserve sa `algoVersion` (ex: `'1.0.0'`). Une modificatio
 
 ## ⚡ Cache Redis : 2 pools dédiés
 
-| Pool                 | TTL      | Usage                                                  |
-| -------------------- | -------- | ------------------------------------------------------ |
-| `nutripetit.off_api` | 7 jours  | Réponses OpenFoodFacts (les produits changent peu)     |
-| `nutripetit.scores`  | 30 jours | Scores calculés (déterministes pour une `algoVersion`) |
+| Pool                       | TTL     | Usage                                                        |
+| -------------------------- | ------- | ------------------------------------------------------------ |
+| `nutripetit.off_api`       | 7 jours | Réponses OpenFoodFacts (les produits changent peu)           |
+| `nutripetit.rate_limiter`  | 1 heure | Compteurs du rate limiter de scan (anti-abus)                |
 
-**Pourquoi 2 pools ?** Les scores sont **plus stables** que les produits. Un seul pool nous obligerait au TTL le plus court (7 jours), gaspillant des calculs identiques.
+**Pourquoi 2 pools ?** Des usages et des durées de vie différents : les réponses OFF sont du cache de données (7 jours), les compteurs anti-abus doivent survivre aux redéploiements et être **partagés entre instances** — un stockage filesystem les remettrait à zéro à chaque deploy et ne fonctionnerait pas en multi-conteneurs.
 
 ---
 

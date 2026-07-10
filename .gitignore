@@ -24,6 +24,5 @@
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
 security-audit.md
-business.md.vscode/
 .vscode/
 business.md

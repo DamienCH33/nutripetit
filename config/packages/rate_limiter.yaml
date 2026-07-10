@@ -4,3 +4,14 @@ framework:
             policy: "sliding_window"
             limit: 15
             interval: "1 minute"
+
+# En prod : compteurs dans Redis. Par défaut (cache.app filesystem), ils
+# étaient remis à zéro à chaque déploiement et non partagés entre instances.
+when@prod:
+    framework:
+        rate_limiter:
+            scan:
+                policy: "sliding_window"
+                limit: 15
+                interval: "1 minute"
+                cache_pool: "nutripetit.rate_limiter"

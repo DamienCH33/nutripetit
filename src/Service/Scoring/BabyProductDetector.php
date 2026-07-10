@@ -189,7 +189,8 @@ final class BabyProductDetector implements BabyProductDetectorInterface
         'dès la naissance',
         'lait de croissance',
         'lait croissance',
-        'croissance',
+        'céréales croissance',
+        'cereales croissance',
         'bledidej',
         'blédidej',
         'lait infantile',
@@ -212,11 +213,10 @@ final class BabyProductDetector implements BabyProductDetectorInterface
         'lait h.a',
         'hypoallergénique',
         'hypoallergenique',
-        'sans lactose',
-        'lactose free',
+        'lait sans lactose',
         'lait confort',
-        'transit',
-        'bifidus',
+        'lait transit',
+        'lait bifidus',
         'lait relax',
         'lait satiété',
         'lait satiete',
@@ -225,12 +225,11 @@ final class BabyProductDetector implements BabyProductDetectorInterface
         'lait prématuré',
         'lait premature',
         'aplv',
-        'hydrolysé',
-        'hydrolyse',
-        'hydrolysat',
-        'acides aminés',
-        'acides amines',
-        'amino acid',
+        'lait hydrolysé',
+        'lait hydrolyse',
+        'hydrolysat de protéines de lait',
+        'formule aux acides aminés',
+        'amino acid formula',
 
         // Origines spéciales
         'lait de chèvre infantile',
@@ -244,8 +243,10 @@ final class BabyProductDetector implements BabyProductDetectorInterface
         'growing-up milk',
         'growing up milk',
         'toddler milk',
-        'formula',
         'infant formula',
+        'follow-on formula',
+        'follow on formula',
+        'toddler formula',
 
         // Marques de laits infantiles connues
         'gallia',
@@ -274,16 +275,10 @@ final class BabyProductDetector implements BabyProductDetectorInterface
         'capricare',
         'sammy capricare',
 
-        // Mots seuls détecteurs forts (laits)
-        ' ar ',
-        ' ar',
-        'ar ',
-        ' ac ',
-        ' ac',
-        'ac ',
-        ' ha ',
-        ' ha',
-        'ha ',
+        // NOTE : les acronymes AR / AC / HA sont détectés UNIQUEMENT via
+        // NAME_TOKENS (Signal 4, mots isolés). Ne jamais les remettre ici en
+        // sous-chaînes : ' ar' matchait "artisanal", 'ha ' matchait "matcha",
+        // ' ac' matchait "acacia" -> des produits adultes passaient la garde.
     ];
 
     /**

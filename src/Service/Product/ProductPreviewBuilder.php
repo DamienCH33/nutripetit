@@ -6,6 +6,8 @@ namespace App\Service\Product;
 
 use App\Entity\Product;
 use App\Entity\ScoreResult;
+use App\Enum\ScoreLevel;
+use App\Enum\ScoringAlgorithm;
 
 final class ProductPreviewBuilder
 {
@@ -65,6 +67,8 @@ final class ProductPreviewBuilder
             'babyAgeMonths' => $babyAgeMonths,
             'finalScore' => $scoreResult->getFinalScore(),
             'level' => $scoreResult->getLevel(),
+            'levelLabel' => ScoreLevel::from($scoreResult->getLevel())
+                ->label($isInfantFormula ? ScoringAlgorithm::InfantFormula : ScoringAlgorithm::Food),
             'algoVersion' => $scoreResult->getAlgoVersion(),
             'isInfantFormula' => $isInfantFormula,
             'scoresByAge' => $scoresByAge,

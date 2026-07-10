@@ -22,15 +22,15 @@ final class Ean13ValidatorTest extends TestCase
      */
     public static function eans(): iterable
     {
-        yield 'EAN valide (Nutella)'   => ['3017620422003', true];
-        yield 'EAN valide (exemple)'   => ['4006381333931', true];
-        yield 'mauvaise clé'           => ['4006381333930', false];
+        yield 'EAN valide (Nutella)' => ['3017620422003', true];
+        yield 'EAN valide (exemple)' => ['4006381333931', true];
+        yield 'mauvaise clé' => ['4006381333930', false];
         yield 'mauvaise clé (Nutella)' => ['3017620422004', false];
-        yield '12 chiffres'            => ['400638133393', false];
-        yield '14 chiffres'           => ['40063813339311', false];
-        yield 'contient une lettre'    => ['400638133393A', false];
-        yield 'vide'                   => ['', false];
-        yield 'avec espaces'           => ['3017620422 03', false];
+        yield '12 chiffres' => ['400638133393', false];
+        yield '14 chiffres' => ['40063813339311', false];
+        yield 'contient une lettre' => ['400638133393A', false];
+        yield 'vide' => ['', false];
+        yield 'avec espaces' => ['3017620422 03', false];
     }
 
     #[DataProvider('eans')]

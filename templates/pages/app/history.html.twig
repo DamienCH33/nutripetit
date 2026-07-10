@@ -11,7 +11,7 @@
 				Mon historique
 			</h1>
 			<p class="np-history__lead">
-				Vos derniers produits scannés. Les données sont conservées 3 ans maximum.
+				Vos derniers produits scannés. Les données sont conservées 13 mois maximum.
 			</p>
 		</header>
 
@@ -52,6 +52,19 @@
 			</div>
 		{% endif %}
 	</div>
+	{% if total > 0 %}
+		<form method="post"
+		      action="{{ path('app_pwa_history_clear') }}"
+		      class="np-history__clear"
+		      data-turbo-confirm="Effacer définitivement tout votre historique de scans ? Cette action est irréversible.">
+			<input type="hidden" name="_csrf_token" value="{{ csrf_token('submit') }}">
+			<button type="submit" class="np-btn np-btn--ghost np-history__clear-btn">
+				{{ ux_icon('lucide:trash-2', {class: 'np-history__clear-icon'}) }}
+				Effacer tout mon historique
+			</button>
+		</form>
+	{% endif %}
+
 	{% if lastPage > 1 %}
 		<nav class="np-pagination" aria-label="Pagination de l'historique">
 			{% if page > 1 %}
