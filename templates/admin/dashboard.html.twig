@@ -1,0 +1,188 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Tableau de bord NutriPetit{% endblock %}
+
+{% block main %}
+	{% set levelLabels = {
+		'ideal': 'Idéal',
+		'good': 'Bon',
+		'occasional': 'Occasionnel',
+		'limit': 'À limiter',
+		'discouraged': 'Déconseillé'
+	} %}
+
+	{# ─── Chiffres clés ─────────────────────────────────────────── #}
+	<div class="row">
+		<div class="col-md-4 mb-3">
+			<div class="card shadow-sm">
+				<div class="card-body text-center">
+					<h2 class="mb-0">{{ totalScans }}</h2>
+					<small class="text-muted">Scans au total</small>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 mb-3">
+			<div class="card shadow-sm">
+				<div class="card-body text-center">
+					<h2 class="mb-0">{{ totalSessions }}</h2>
+					<small class="text-muted">Visiteurs uniques</small>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 mb-3">
+			<div class="card shadow-sm">
+				<div class="card-body text-center">
+					<h2 class="mb-0">{{ totalProducts }}</h2>
+					<small class="text-muted">Produits en base</small>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		{# ─── Top produits scannés ──────────────────────────────── #}
+		<div class="col-md-6 mb-4">
+			<div class="card shadow-sm h-100">
+				<div class="card-header">Produits les plus scannés</div>
+				<div class="card-body p-0">
+					{% if mostScanned is empty %}
+						<p class="text-muted p-3 mb-0">Aucun scan pour l'instant.</p>
+					{% else %}
+						<table class="table table-sm mb-0">
+							<thead>
+								<tr><th>Produit</th><th class="text-end">Scans</th></tr>
+							</thead>
+							<tbody>
+								{% for p in mostScanned %}
+									<tr>
+										<td>
+											<strong>{{ p.name }}</strong><br>
+											<small class="text-muted">{{ p.ean }}</small>
+										</td>
+										<td class="text-end align-middle">{{ p.scans }}</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+
+		{# ─── Répartition des scores ────────────────────────────── #}
+		<div class="col-md-6 mb-4">
+			<div class="card shadow-sm h-100">
+				<div class="card-header">Répartition des scores</div>
+				<div class="card-body">
+					{% set totalLevel = 0 %}
+					{% for c in scansByLevel %}{% set totalLevel = totalLevel + c %}{% endfor %}
+					{% if totalLevel == 0 %}
+						<p class="text-muted mb-0">Aucun scan pour l'instant.</p>
+					{% else %}
+						{% for level, label in levelLabels %}
+							{% set count = scansByLevel[level] ?? 0 %}
+							{% set pct = totalLevel > 0 ? (count / totalLevel * 100)|round : 0 %}
+							<div class="mb-2">
+								<div class="d-flex justify-content-between">
+									<span>{{ label }}</span>
+									<span class="text-muted">{{ count }} ({{ pct }}%)</span>
+								</div>
+								<div class="progress" style="height: 8px;">
+									<div class="progress-bar" role="progressbar" style="width: {{ pct }}%"></div>
+								</div>
+							</div>
+						{% endfor %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		{# ─── Tranches d'âge ────────────────────────────────────── #}
+		<div class="col-md-6 mb-4">
+			<div class="card shadow-sm h-100">
+				<div class="card-header">Âge du bébé (scans renseignés)</div>
+				<div class="card-body">
+					{% set totalAge = 0 %}
+					{% for c in ageBuckets %}{% set totalAge = totalAge + c %}{% endfor %}
+					{% if totalAge == 0 %}
+						<p class="text-muted mb-0">Aucune tranche d'âge renseignée.</p>
+					{% else %}
+						{% for bucket, count in ageBuckets %}
+							{% set pct = totalAge > 0 ? (count / totalAge * 100)|round : 0 %}
+							<div class="mb-2">
+								<div class="d-flex justify-content-between">
+									<span>{{ bucket }}</span>
+									<span class="text-muted">{{ count }} ({{ pct }}%)</span>
+								</div>
+								<div class="progress" style="height: 8px;">
+									<div class="progress-bar bg-info" role="progressbar" style="width: {{ pct }}%"></div>
+								</div>
+							</div>
+						{% endfor %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+
+		{# ─── Plateforme iOS / Android ──────────────────────────── #}
+		<div class="col-md-6 mb-4">
+			<div class="card shadow-sm h-100">
+				<div class="card-header">Plateforme des visiteurs</div>
+				<div class="card-body">
+					{% set totalPlat = platform.ios + platform.android + platform.other %}
+					{% if totalPlat == 0 %}
+						<p class="text-muted mb-0">Aucun visiteur pour l'instant.</p>
+					{% else %}
+						{% set rows = {'iOS (iPhone/iPad)': platform.ios, 'Android': platform.android, 'Autre / Desktop': platform.other} %}
+						{% for label, count in rows %}
+							{% set pct = totalPlat > 0 ? (count / totalPlat * 100)|round : 0 %}
+							<div class="mb-2">
+								<div class="d-flex justify-content-between">
+									<span>{{ label }}</span>
+									<span class="text-muted">{{ count }} ({{ pct }}%)</span>
+								</div>
+								<div class="progress" style="height: 8px;">
+									<div class="progress-bar bg-success" role="progressbar" style="width: {{ pct }}%"></div>
+								</div>
+							</div>
+						{% endfor %}
+						<p class="text-muted small mt-3 mb-0">
+							Utile pour arbitrer : si Android domine, le Play Store devient prioritaire ;
+							si iOS domine, la PWA Safari suffit.
+						</p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{# ─── Scans / jour (30 j) ───────────────────────────────────── #}
+	<div class="row">
+		<div class="col-12 mb-4">
+			<div class="card shadow-sm">
+				<div class="card-header">Scans par jour (30 derniers jours)</div>
+				<div class="card-body">
+					{% if scansPerDay is empty %}
+						<p class="text-muted mb-0">Aucun scan sur la période.</p>
+					{% else %}
+						{% set maxScans = 1 %}
+						{% for d in scansPerDay %}{% if d.scans > maxScans %}{% set maxScans = d.scans %}{% endif %}{% endfor %}
+						<div class="d-flex align-items-end" style="height: 160px; gap: 3px;">
+							{% for d in scansPerDay %}
+								<div class="flex-fill d-flex flex-column justify-content-end align-items-center" title="{{ d.day }} : {{ d.scans }} scan(s)">
+									<div style="width: 100%; background: #6c8ef5; border-radius: 2px 2px 0 0; height: {{ (d.scans / maxScans * 140)|round }}px;"></div>
+								</div>
+							{% endfor %}
+						</div>
+						<div class="d-flex justify-content-between mt-2">
+							<small class="text-muted">{{ scansPerDay|first.day }}</small>
+							<small class="text-muted">{{ scansPerDay|last.day }}</small>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
