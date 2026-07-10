@@ -591,4 +591,12 @@
     .np-landing-header__link {
         display: none;
     }
+    .np-landing-footer__admin-dot {
+        color: inherit;
+        text-decoration: none;
+        cursor: default;
+    }
+    .np-landing-footer__admin-dot:hover {
+        color: inherit;
+    }
 }
