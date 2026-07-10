@@ -22,9 +22,6 @@ class ScanSession
     #[ORM\Column(length: 64, unique: true)]
     private string $cookieToken;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $babyAgeMonths = null;
-
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $userAgent = null;
 
@@ -51,18 +48,6 @@ class ScanSession
     public function getCookieToken(): string
     {
         return $this->cookieToken;
-    }
-
-    public function getBabyAgeMonths(): ?int
-    {
-        return $this->babyAgeMonths;
-    }
-
-    public function setBabyAgeMonths(?int $babyAgeMonths): self
-    {
-        $this->babyAgeMonths = $babyAgeMonths;
-
-        return $this;
     }
 
     public function getUserAgent(): ?string

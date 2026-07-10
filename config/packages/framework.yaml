@@ -2,6 +2,13 @@
 framework:
     secret: '%env(APP_SECRET)%'
 
+    # Derrière le proxy Railway, sans trusted_proxies, getClientIp() renvoie
+    # l'IP du proxy : le rate limiter devenait un compteur GLOBAL partagé par
+    # tous les utilisateurs. REMOTE_ADDR = « fais confiance au pair direct »
+    # (le proxy Railway) pour lire X-Forwarded-For. En local : 127.0.0.1.
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-proto', 'x-forwarded-port']
+
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 

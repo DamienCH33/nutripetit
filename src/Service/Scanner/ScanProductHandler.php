@@ -17,6 +17,7 @@ use App\Service\Product\ProductImporter;
 use App\Service\Scoring\Evaluator\InfantFormulaDetector;
 use App\Service\Scoring\Evaluator\InfantFormulaScoreCalculator;
 use App\Service\Scoring\ScoreCalculator;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,6 +38,14 @@ final class ScanProductHandler
     }
 
     /**
+     * Au-delà de ce délai, les données locales sont considérées périmées :
+     * les industriels reformulent, et un score bébé sur une recette obsolète
+     * est un vrai problème. On re-fetch OFF, avec repli silencieux sur la
+     * version locale si OFF est indisponible.
+     */
+    private const REFRESH_AFTER = '-90 days';
+
+    /**
      * @throws InvalidArgumentException
      * @throws ProductNotFoundException
      * @throws OpenFoodFactsUnavailableException
@@ -50,13 +59,32 @@ final class ScanProductHandler
         $product = $this->productRepository->findByEan($ean);
 
         if (null !== $product) {
-            return $product;
+            return $this->refreshIfStale($product);
         }
 
         $dto = $this->offClient->fetchByEan($ean);
 
         return $this->productImporter
             ->createProductFromDto($dto);
+    }
+
+    /**
+     * Met à jour un produit dont l'import date de plus de 90 jours.
+     * Ne bloque jamais le scan : en cas d'échec OFF, la version locale sert.
+     */
+    private function refreshIfStale(Product $product): Product
+    {
+        if ($product->getFetchedAt() > new DateTimeImmutable(self::REFRESH_AFTER)) {
+            return $product;
+        }
+
+        try {
+            $dto = $this->offClient->fetchByEan($product->getEan());
+        } catch (ProductNotFoundException|OpenFoodFactsUnavailableException) {
+            return $product;
+        }
+
+        return $this->productImporter->updateProductFromDto($product, $dto);
     }
 
     /**

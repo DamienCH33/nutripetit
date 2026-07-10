@@ -6,10 +6,12 @@ framework:
                 provider: '%env(REDIS_URL)%'
                 default_lifetime: 604800
 
-            nutripetit.scores:
+            # Compteurs du rate limiter : partagés entre instances,
+            # survivent aux déploiements (les fenêtres durent 1 min, TTL court).
+            nutripetit.rate_limiter:
                 adapter: cache.adapter.redis
                 provider: '%env(REDIS_URL)%'
-                default_lifetime: 2592000
+                default_lifetime: 3600
 
 when@test:
     framework:
@@ -25,7 +27,7 @@ when@prod:
                     provider: '%env(REDIS_URL)%'
                     default_lifetime: 604800
 
-                nutripetit.scores:
+                nutripetit.rate_limiter:
                     adapter: cache.adapter.redis
                     provider: '%env(REDIS_URL)%'
-                    default_lifetime: 2592000
+                    default_lifetime: 3600

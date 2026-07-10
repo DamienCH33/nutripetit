@@ -5,7 +5,12 @@ import { BarcodeFormat, DecodeHintType } from "@zxing/library";
 /**
  * Barcode Scanner Controller
  *
- * Active la caméra, détecte un code-barres EAN-13 et redirige vers /app/scan/{ean}.
+ * Active la caméra, détecte un code-barres EAN-13 ou UPC-A (converti en EAN-13
+ * par préfixe "0") et redirige vers /app/scan/{ean}.
+ *
+ * NOTE : EAN-8 et UPC-E sont volontairement exclus des formats décodés.
+ * Le backend (Ean13Validator) n'accepte que 13 chiffres ; les décoder ici
+ * bloquerait l'utilisateur sur un code accepté visuellement mais rejeté ensuite.
  */
 export default class extends Controller {
     static targets = ["video", "status", "error", "startBtn", "stopBtn"];
@@ -17,9 +22,7 @@ export default class extends Controller {
         const hints = new Map();
         hints.set(DecodeHintType.POSSIBLE_FORMATS, [
             BarcodeFormat.EAN_13,
-            BarcodeFormat.EAN_8,
             BarcodeFormat.UPC_A,
-            BarcodeFormat.UPC_E,
         ]);
         hints.set(DecodeHintType.TRY_HARDER, true);
         hints.set(DecodeHintType.ASSUME_GS1, false);
@@ -64,19 +67,6 @@ export default class extends Controller {
 
             const stream =
                 await navigator.mediaDevices.getUserMedia(constraints);
-            const track = stream.getVideoTracks()[0];
-
-            // Tenter d'activer la torche/flash si dispo
-            const capabilities = track.getCapabilities
-                ? track.getCapabilities()
-                : {};
-            if (capabilities.torch) {
-                try {
-                    await track.applyConstraints({
-                        advanced: [{ torch: false }],
-                    });
-                } catch (e) {}
-            }
 
             this.videoTarget.srcObject = stream;
             await this.videoTarget.play();
@@ -152,6 +142,11 @@ export default class extends Controller {
         }
     }
     handleResult(ean) {
+        // UPC-A = EAN-13 dont le premier chiffre est 0 (norme GS1).
+        if (/^\d{12}$/.test(ean)) {
+            ean = "0" + ean;
+        }
+
         if (!/^\d{13}$/.test(ean)) {
             this.updateStatus(`Continuez à scanner...`);
             return;

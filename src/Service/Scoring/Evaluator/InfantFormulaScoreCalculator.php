@@ -16,15 +16,20 @@ use App\Enum\ScoringAlgorithm;
  * Spécificité : tous les laits commercialisés en UE sont garantis sûrs
  * par le Règlement UE 2016/127. On note uniquement la qualité optionnelle.
  *
- * - Base : 60/100 (= conforme minimum)
- * - Plage finale : 50-100 (jamais dangereux)
- * - Bonus max : +40, Malus max : -10
+ * - Base : 60/100 (= conforme minimum, aucun bonus)
+ * - Plage finale : 50-100 (jamais « déconseillé »)
+ * - Bonus max : +40 (un lait doit les mériter pour atteindre « Excellent »)
+ * - Malus max : -18
+ *
+ * v2.0.0 : base ramenée de 100 à 60. En base 100, les bonus étaient
+ * mathématiquement sans effet (score déjà plafonné) : un lait sans malus
+ * affichait 100 « Excellent » quelle que soit sa qualité réelle.
  */
 final class InfantFormulaScoreCalculator
 {
-    public const ALGO_VERSION = 'infant_formula_1.0.0';
-    private const SCORE_BASE = 100;
-    private const SCORE_MIN = 70;
+    public const ALGO_VERSION = 'infant_formula_2.0.0';
+    private const SCORE_BASE = 60;
+    private const SCORE_MIN = 50;
     private const SCORE_MAX = 100;
 
     public function calculate(Product $product, ?int $babyAgeMonths = null): ScoreCalculationResultDto
@@ -41,7 +46,7 @@ final class InfantFormulaScoreCalculator
 
         // BONUS
         // DHA
-        if (str_contains($ingredients, 'dha') || str_contains($ingredients, 'docosahexa')) {
+        if (1 === preg_match('/\bdha\b/', $ingredients) || str_contains($ingredients, 'docosahexa')) {
             $appliedRules[] = new AppliedRuleDto(
                 ruleCode: 'formula_dha_present',
                 ruleLabel: 'DHA (Oméga 3) présent',
@@ -54,7 +59,8 @@ final class InfantFormulaScoreCalculator
         }
 
         // ARA
-        if (str_contains($ingredients, 'ara') || str_contains($ingredients, 'arachidonic') || str_contains($ingredients, 'arachidonique')) {
+        // \bara\b : « ara » en mot isolé uniquement (« caramel » et « préparation » contiennent la sous-chaîne).
+        if (1 === preg_match('/\bara\b/', $ingredients) || str_contains($ingredients, 'arachidonic') || str_contains($ingredients, 'arachidonique')) {
             $appliedRules[] = new AppliedRuleDto(
                 ruleCode: 'formula_ara_present',
                 ruleLabel: 'ARA (Oméga 6) présent',
@@ -93,7 +99,8 @@ final class InfantFormulaScoreCalculator
         }
 
         // Prébiotiques
-        if (str_contains($ingredients, 'gos') || str_contains($ingredients, 'fos') || str_contains($ingredients, 'oligosaccharide') || str_contains($ingredients, 'galacto') || str_contains($ingredients, 'fructo')) {
+        // « fructose » et « galactose » (des sucres) ne sont pas des prébiotiques : on exige la forme oligosaccharide.
+        if (1 === preg_match('/\b(gos|fos)\b/', $ingredients) || str_contains($ingredients, 'oligosaccharide') || str_contains($ingredients, 'galacto-oligo') || str_contains($ingredients, 'fructo-oligo')) {
             $appliedRules[] = new AppliedRuleDto(
                 ruleCode: 'formula_prebiotics',
                 ruleLabel: 'Prébiotiques (GOS/FOS)',
@@ -174,7 +181,9 @@ final class InfantFormulaScoreCalculator
         }
 
         // Protéines de soja
-        if (str_contains($ingredients, 'soja') || str_contains($ingredients, 'soy')) {
+        // Le malus ANSES vise les préparations À BASE de protéines de soja (isoflavones),
+        // pas la lécithine de soja (émulsifiant) ni l'huile de soja, très courantes.
+        if (1 === preg_match('/prot[ée]ines? de soja|isolat de soja|farine de soja|base de soja|soy protein|soya protein/u', $ingredients)) {
             $appliedRules[] = new AppliedRuleDto(
                 ruleCode: 'formula_soy_protein',
                 ruleLabel: 'Protéines de soja',

@@ -73,6 +73,21 @@ class ScoreResultRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * Efface tous les résultats d'une session (droit à l'effacement RGPD).
+     *
+     * @return int Nombre de lignes supprimées
+     */
+    public function deleteAllForSession(ScanSession $session): int
+    {
+        return (int) $this->createQueryBuilder('s')
+            ->delete()
+            ->andWhere('s.scanSession = :session')
+            ->setParameter('session', $session)
+            ->getQuery()
+            ->execute();
+    }
+
     public function findForSessionAndProduct(
         ScanSession $session,
         Product $product,

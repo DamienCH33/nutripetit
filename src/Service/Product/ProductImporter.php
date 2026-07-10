@@ -18,6 +18,31 @@ final class ProductImporter
     public function createProductFromDto(ProductDto $dto): Product
     {
         $product = new Product($dto->ean, $this->plainText($dto->name));
+        $this->applyDto($product, $dto);
+
+        $this->em->persist($product);
+        $this->em->flush();
+
+        return $product;
+    }
+
+    /**
+     * Rafraîchit un produit existant avec des données OFF plus récentes
+     * (reformulations industrielles) et horodate le re-fetch.
+     */
+    public function updateProductFromDto(Product $product, ProductDto $dto): Product
+    {
+        $product->setName($this->plainText($dto->name));
+        $this->applyDto($product, $dto);
+        $product->refreshFetchedAt();
+
+        $this->em->flush();
+
+        return $product;
+    }
+
+    private function applyDto(Product $product, ProductDto $dto): void
+    {
         $product->setBrand($this->plainTextOrNull($dto->brand));
         $product->setImageUrl($dto->imageUrl);
         $product->setIngredientsRaw($this->plainTextOrNull($dto->ingredientsRaw));
@@ -25,11 +50,6 @@ final class ProductImporter
         $product->setAllergens($dto->allergens);
         $product->setAdditives($dto->additives);
         $product->setOffRawData($dto->rawData);
-
-        $this->em->persist($product);
-        $this->em->flush();
-
-        return $product;
     }
 
     /**

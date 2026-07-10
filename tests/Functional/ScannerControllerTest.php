@@ -63,6 +63,25 @@ final class ScannerControllerTest extends WebTestCase
         self::assertStringContainsString('0-3 ans', (string) $client->getResponse()->getContent());
     }
 
+    public function testReturns200WithUnratableNoticeWhenNonBabyAndDataInsufficient(): void
+    {
+        $client = static::createClient();
+        // Ni ingrédients ni nutriments : le détecteur ne peut pas trancher.
+        $this->persistProduct(self::VALID_EAN, 'Produit inconnu sans données');
+
+        $detector = $this->createMock(BabyProductDetectorInterface::class);
+        $detector->method('isBabyProduct')->willReturn(false);
+        static::getContainer()->set(BabyProductDetectorInterface::class, $detector);
+
+        $client->request('GET', '/app/scan/' . self::VALID_EAN, [], [], ['REMOTE_ADDR' => '203.0.113.8']);
+
+        self::assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        $content = (string) $client->getResponse()->getContent();
+        self::assertStringContainsString('impossible à évaluer', $content);
+        // Régression : avant le fix, ce cas était scoré avec les règles bébé.
+        self::assertStringNotContainsString('np-score-circle', $content);
+    }
+
     public function testKnownBabyProductReturns200(): void
     {
         $client = static::createClient();
@@ -132,6 +151,7 @@ final class ScannerControllerTest extends WebTestCase
             'babyAgeMonths' => null,
             'finalScore' => 100,
             'level' => 'ideal',
+            'levelLabel' => 'Idéal pour bébé',
             'algoVersion' => '1.0.0',
             'isInfantFormula' => false,
             'scoresByAge' => [],

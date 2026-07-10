@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hors ligne - NutriPetit</title>
+    <meta name="theme-color" content="#FDF7F1">
+    <style>
+        /* Page autonome : aucune dépendance réseau (polices système, pas d'assets). */
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #FDF7F1;
+            color: #1F1F1F;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            text-align: center;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+        .np-offline { max-width: 420px; }
+        .np-offline__emoji { font-size: 3rem; }
+        h1 { font-size: 1.4rem; margin: 16px 0 8px; }
+        p { color: #525252; line-height: 1.5; margin: 0 0 24px; }
+        button {
+            background: #FF9F3D;
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        button:hover { background: #E8861F; }
+    </style>
+</head>
+<body>
+    <div class="np-offline">
+        <div class="np-offline__emoji" aria-hidden="true">📡</div>
+        <h1>Vous êtes hors ligne</h1>
+        <p>
+            NutriPetit a besoin d'une connexion pour interroger la base
+            Open&nbsp;Food&nbsp;Facts et calculer le score d'un produit.
+            Reconnectez-vous puis réessayez.
+        </p>
+        <button type="button" onclick="window.location.reload()">Réessayer</button>
+    </div>
+</body>
+</html>

@@ -166,3 +166,43 @@
 
 .np-history__item-score-value { font-size: var(--np-font-size-lg); }
 .np-history__item-score-total { font-size: var(--np-font-size-xs); opacity: 0.7; }
+
+/* Effacement de l'historique (RGPD) */
+.np-history__clear {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.np-history__clear-btn {
+    color: var(--np-score-discouraged, #C62828);
+}
+
+.np-history__clear-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Pagination de l'historique */
+.np-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.np-pagination__link {
+    color: var(--np-green-dark, #2E7D32);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.np-pagination__link:hover {
+    text-decoration: underline;
+}
+
+.np-pagination__info {
+    color: var(--np-gray-600, #6b6b6b);
+    font-size: 0.875rem;
+}
