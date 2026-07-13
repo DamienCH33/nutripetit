@@ -82,10 +82,34 @@ final class ScannerControllerTest extends WebTestCase
         self::assertStringNotContainsString('np-score-circle', $content);
     }
 
+    /**
+     * Régression algo 1.1.0 : un produit détecté « bébé » mais sans ingrédients ni
+     * nutriments ne déclenchait aucun malus et ressortait à 100 « Idéal » — une
+     * absence de données présentée comme une absence de défauts.
+     */
+    public function testBabyProductWithoutDataIsNotScored(): void
+    {
+        $client = static::createClient();
+        $this->persistProduct(self::VALID_EAN, 'Sans nom');
+
+        $detector = $this->createMock(BabyProductDetectorInterface::class);
+        $detector->method('isBabyProduct')->willReturn(true);
+        static::getContainer()->set(BabyProductDetectorInterface::class, $detector);
+
+        $client->request('GET', '/app/scan/' . self::VALID_EAN, [], [], ['REMOTE_ADDR' => '203.0.113.9']);
+
+        self::assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        $content = (string) $client->getResponse()->getContent();
+        self::assertStringContainsString('impossible à évaluer', $content);
+        self::assertStringNotContainsString('np-score-circle', $content);
+    }
+
     public function testKnownBabyProductReturns200(): void
     {
         $client = static::createClient();
-        $this->persistProduct(self::VALID_EAN_2, 'Petit pot carottes');
+        // Nutriments requis : sans données exploitables, la garde renvoie
+        // désormais « impossible à évaluer » au lieu d'un score (algo 1.1.0).
+        $this->persistProduct(self::VALID_EAN_2, 'Petit pot carottes', ['energy-kcal_100g' => 60, 'proteins_100g' => 1.2]);
 
         $detector = $this->createMock(BabyProductDetectorInterface::class);
         $detector->method('isBabyProduct')->willReturn(true);

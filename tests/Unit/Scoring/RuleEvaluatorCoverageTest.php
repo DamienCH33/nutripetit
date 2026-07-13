@@ -45,6 +45,6 @@ final class RuleEvaluatorCoverageTest extends KernelTestCase
 
     private function makeRule(string $code): ScoringRule
     {
-        return new ScoringRule($code, $code, '', '1.0.0', 0, 'test', 'https://example.test');
+        return new ScoringRule($code, $code, '', '1.1.0', 0, 'test', 'https://example.test');
     }
 }

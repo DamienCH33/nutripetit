@@ -11,7 +11,10 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Fige l'échelle de score : empêche un nouveau désalignement
- * entre le moteur et la page Infos (85/70/50/30).
+ * entre le moteur et la page Infos.
+ *
+ * Seuils algo 1.1.0 : 97 / 85 / 65 / 40.
+ * « Idéal » (>= 97) est réservé aux produits sans aucun malus déclenché.
  */
 final class ScoreLevelTest extends TestCase
 {
@@ -21,14 +24,14 @@ final class ScoreLevelTest extends TestCase
     public static function foodScores(): iterable
     {
         yield 'haut Ideal' => [100, ScoreLevel::Ideal];
-        yield 'borne Ideal' => [85, ScoreLevel::Ideal];
-        yield 'borne Good' => [84, ScoreLevel::Good];
-        yield 'Good' => [70, ScoreLevel::Good];
-        yield 'borne Occasional' => [69, ScoreLevel::Occasional];
-        yield 'Occasional' => [50, ScoreLevel::Occasional];
-        yield 'borne Limit' => [49, ScoreLevel::Limit];
-        yield 'Limit' => [30, ScoreLevel::Limit];
-        yield 'borne Discouraged' => [29, ScoreLevel::Discouraged];
+        yield 'borne Ideal' => [97, ScoreLevel::Ideal];
+        yield 'borne Good' => [96, ScoreLevel::Good];
+        yield 'Good' => [85, ScoreLevel::Good];
+        yield 'borne Occasional' => [84, ScoreLevel::Occasional];
+        yield 'Occasional' => [65, ScoreLevel::Occasional];
+        yield 'borne Limit' => [64, ScoreLevel::Limit];
+        yield 'Limit' => [40, ScoreLevel::Limit];
+        yield 'borne Discouraged' => [39, ScoreLevel::Discouraged];
         yield 'zero' => [0, ScoreLevel::Discouraged];
     }
 

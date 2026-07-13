@@ -16,11 +16,16 @@ enum ScoreLevel: string
     public static function fromScore(int $score, ScoringAlgorithm $algorithm): self
     {
         return match ($algorithm) {
+            // Seuils recalibrés en algo 1.1.0.
+            // Le score aliments part de 100 et ne fait que descendre (malus seuls).
+            // « Idéal » (>= 97) est donc réservé aux produits sans aucun défaut détecté.
+            // Avant, le seuil était à 85 et les bonus compensaient les malus :
+            // 100 % des produits scannés ressortaient « Idéal », l'échelle ne servait à rien.
             ScoringAlgorithm::Food => match (true) {
-                $score >= 85 => self::Ideal,
-                $score >= 70 => self::Good,
-                $score >= 50 => self::Occasional,
-                $score >= 30 => self::Limit,
+                $score >= 97 => self::Ideal,
+                $score >= 85 => self::Good,
+                $score >= 65 => self::Occasional,
+                $score >= 40 => self::Limit,
                 default => self::Discouraged,
             },
             // Laits infantiles : base conforme, jamais "déconseillé"
@@ -56,10 +61,10 @@ enum ScoreLevel: string
     public function min(): int
     {
         return match ($this) {
-            self::Ideal => 85,
-            self::Good => 70,
-            self::Occasional => 50,
-            self::Limit => 30,
+            self::Ideal => 97,
+            self::Good => 85,
+            self::Occasional => 65,
+            self::Limit => 40,
             self::Discouraged => 0,
         };
     }
@@ -68,10 +73,10 @@ enum ScoreLevel: string
     {
         return match ($this) {
             self::Ideal => 100,
-            self::Good => 84,
-            self::Occasional => 69,
-            self::Limit => 49,
-            self::Discouraged => 29,
+            self::Good => 96,
+            self::Occasional => 84,
+            self::Limit => 64,
+            self::Discouraged => 39,
         };
     }
 
