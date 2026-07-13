@@ -15,10 +15,22 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 /**
  * Calcule le score nutritionnel NutriPetit d'un produit.
+ *
+ * Le score part de 100 et ne fait que DESCENDRE : seuls les malus comptent.
+ * Les règles « qualité » (bio, adapté nourrissons, riche en fruits/légumes...)
+ * valent 0 point et s'affichent comme badges informatifs sur la fiche.
+ *
+ * v1.1.0 — recalibrage. En 1.0.0, ces règles valaient +5 à +10 et se
+ * déclenchaient sur quasiment tout produit bébé du commerce, tandis que les
+ * malus (édulcorants, sucres ajoutés...) ne se déclenchaient presque jamais
+ * sur ces mêmes produits. Cumulés, les bonus annulaient les malus et
+ * plafonnaient le score à 100 : en production, 100 % des scans ressortaient
+ * « Idéal », rendant l'échelle à 5 niveaux inutilisable.
+ * Les seuils de ScoreLevel ont été relevés en conséquence (Idéal >= 97).
  */
 final class ScoreCalculator
 {
-    public const ALGO_VERSION = '1.0.0';
+    public const ALGO_VERSION = '1.1.0';
 
     private const SCORE_BASE = 100;
 

@@ -6,7 +6,7 @@ namespace App\Scoring;
 
 final class ScoringRulesProvider
 {
-    public const ALGO_VERSION = '1.0.0';
+    public const ALGO_VERSION = '1.1.0';
 
     /**
      * @return list<array<string, mixed>>
@@ -127,13 +127,23 @@ final class ScoringRulesProvider
             ],
 
             //
-            // BONUS - Garanties qualité
+            // BADGES QUALITÉ (pointsImpact = 0 depuis l'algo 1.1.0)
+            //
+            // Ces règles ne modifient PLUS le score : elles s'affichent comme
+            // badges positifs sur la fiche produit, sans compenser un défaut.
+            //
+            // Pourquoi : en 1.0.0 elles valaient +5 à +10 et se déclenchaient sur
+            // presque tout produit bébé du commerce (bio, catégorie baby-food,
+            // fruits/légumes). Cumulées (+23 max), elles annulaient les malus et
+            // plafonnaient le score à 100 : 100 % des scans ressortaient « Idéal ».
+            // Un label bio ne rachète pas un excès de protéines — le score mesure
+            // les défauts nutritionnels, les qualités sont signalées à part.
             //
             [
                 'code' => 'high_fruit_vegetable',
                 'label' => 'Riche en fruits et légumes',
                 'description' => 'Composé d\'au moins 50% de fruits et légumes selon l\'analyse Open Food Facts. Favorise l\'apport en vitamines, minéraux et fibres.',
-                'pointsImpact' => 5,
+                'pointsImpact' => 0,
                 'ageMinMonths' => 6,
                 'ageMaxMonths' => 36,
                 'sourceName' => 'PNNS 4 / ANSES',
@@ -144,7 +154,7 @@ final class ScoringRulesProvider
                 'code' => 'baby_food_certified',
                 'label' => 'Adapté aux nourrissons',
                 'description' => 'Produit conforme à la Directive 2006/125/CE sur les aliments pour bébés. Composition réglementée et adaptée aux nourrissons.',
-                'pointsImpact' => 10,
+                'pointsImpact' => 0,
                 'ageMinMonths' => 0,
                 'ageMaxMonths' => 36,
                 'sourceName' => 'Directive EU 2006/125/CE',
@@ -154,7 +164,7 @@ final class ScoringRulesProvider
                 'code' => 'organic_certified',
                 'label' => 'Certification Bio AB',
                 'description' => 'Produit certifié issu de l\'agriculture biologique (Label AB, Règlement EU 2018/848). Garantit l\'absence de pesticides de synthèse et d\'OGM.',
-                'pointsImpact' => 8,
+                'pointsImpact' => 0,
                 'ageMinMonths' => 0,
                 'ageMaxMonths' => 36,
                 'sourceName' => 'Règlement EU 2018/848 - Agence Bio',
@@ -164,7 +174,7 @@ final class ScoringRulesProvider
                 'code' => 'iron_rich',
                 'label' => 'Riche en fer biodisponible',
                 'description' => 'Apport en fer suffisant pour couvrir les besoins du nourrisson. Le fer est crucial pour le développement cognitif entre 6 et 36 mois.',
-                'pointsImpact' => 5,
+                'pointsImpact' => 0,
                 'ageMinMonths' => 6,
                 'ageMaxMonths' => 36,
                 'sourceName' => 'ANSES Référentiels nutritionnels (2019)',
@@ -174,7 +184,7 @@ final class ScoringRulesProvider
                 'code' => 'omega3_rich',
                 'label' => 'Riche en oméga-3 (DHA/EPA)',
                 'description' => 'Apport en acides gras polyinsaturés à longue chaîne (DHA, EPA). Essentiels au développement cérébral et visuel du jeune enfant.',
-                'pointsImpact' => 5,
+                'pointsImpact' => 0,
                 'ageMinMonths' => 6,
                 'ageMaxMonths' => 36,
                 'sourceName' => 'ANSES AGPI-LC (2019)',

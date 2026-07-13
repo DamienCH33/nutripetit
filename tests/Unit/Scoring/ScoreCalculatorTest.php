@@ -25,7 +25,7 @@ final class ScoreCalculatorTest extends TestCase
         self::assertSame(100, $result->finalScore);
         self::assertSame('ideal', $result->level);
         self::assertSame([], $result->appliedRules);
-        self::assertSame('1.0.0', $result->algoVersion);
+        self::assertSame('1.1.0', $result->algoVersion);
     }
 
     public function testImpactsAreSummedFromBase100(): void
@@ -35,7 +35,7 @@ final class ScoreCalculatorTest extends TestCase
         $result = $this->calculator($rules)->calculate($this->product());
 
         self::assertSame(65, $result->finalScore); // 100 - 20 - 15
-        self::assertSame('occasional', $result->level); // >= 50
+        self::assertSame('occasional', $result->level); // 65 = borne basse Occasional (algo 1.1.0)
         self::assertCount(2, $result->appliedRules);
     }
 
@@ -107,7 +107,7 @@ final class ScoreCalculatorTest extends TestCase
 
     private function rule(string $code, int $points, ?int $ageMin = null, ?int $ageMax = null): ScoringRule
     {
-        $rule = new ScoringRule($code, $code, '', '1.0.0', $points, 'source', 'https://example.test');
+        $rule = new ScoringRule($code, $code, '', '1.1.0', $points, 'source', 'https://example.test');
         if (null !== $ageMin) {
             $rule->setAgeMinMonths($ageMin);
         }

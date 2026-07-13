@@ -76,19 +76,21 @@ final class ScannerController extends AbstractController
 
         $scanSession = $this->scanSessionManager->resolveScanSession($request);
 
-        if (!$this->babyProductDetector->isBabyProduct($product)) {
-            if ($this->completenessChecker->hasSufficientData($product)) {
-                return $this->render('pages/app/scan_error.html.twig', [
-                    'errorTitle' => 'Produit non destiné aux 0-3 ans',
-                    'errorMessage' => 'NutriPetit analyse uniquement les produits alimentaires destinés aux nourrissons et jeunes enfants (0-3 ans). Pour les autres produits, nous vous invitons à utiliser une application généraliste.',
-                ], new Response('', Response::HTTP_OK));
-            }
-
-            // Ni détecté bébé, ni assez de données pour trancher : on n'affiche
-            // pas de score plutôt que de noter un produit inconnu avec des règles bébé.
+        // Sans ingrédients ni nutriments exploitables, aucun malus ne peut se
+        // déclencher : le produit ressortirait à 100 « Idéal » par défaut d'information.
+        // On refuse de scorer plutôt que de faire passer une absence de données
+        // pour une absence de défauts.
+        if (!$this->completenessChecker->hasSufficientData($product)) {
             return $this->render('pages/app/scan_error.html.twig', [
                 'errorTitle' => 'Produit impossible à évaluer',
-                'errorMessage' => 'Les données Open Food Facts de ce produit sont trop incomplètes pour déterminer s\'il est destiné aux 0-3 ans et calculer un score fiable. Vous pouvez compléter sa fiche sur openfoodfacts.org pour aider toute la communauté.',
+                'errorMessage' => 'Les données Open Food Facts de ce produit sont trop incomplètes pour calculer un score fiable. Vous pouvez compléter sa fiche sur openfoodfacts.org pour aider toute la communauté.',
+            ], new Response('', Response::HTTP_OK));
+        }
+
+        if (!$this->babyProductDetector->isBabyProduct($product)) {
+            return $this->render('pages/app/scan_error.html.twig', [
+                'errorTitle' => 'Produit non destiné aux 0-3 ans',
+                'errorMessage' => 'NutriPetit analyse uniquement les produits alimentaires destinés aux nourrissons et jeunes enfants (0-3 ans). Pour les autres produits, nous vous invitons à utiliser une application généraliste.',
             ], new Response('', Response::HTTP_OK));
         }
 
