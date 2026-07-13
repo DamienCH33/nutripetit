@@ -47,12 +47,19 @@ final class ProductPreviewBuilder
         $appliedRules = [];
         foreach ($scoreResult->getAppliedRules() as $rule) {
             $status = $rule['status'] ?? 'triggered';
+            // La catégorie suit le SIGNE des points, pas le simple fait d'être déclenchée.
+            // Depuis l'algo 1.1.0, les badges qualité (bio, adapté nourrissons...) et les
+            // alertes allergènes valent 0 point : ce ne sont ni des malus ni des bonus,
+            // mais des informations. Sans ce cas, ils atterrissaient dans « Points à
+            // surveiller » aux côtés des vrais défauts nutritionnels.
             if ('satisfied' === $status) {
                 $rule['category'] = 'satisfied';
             } elseif ($rule['points'] > 0) {
                 $rule['category'] = 'bonus';
-            } else {
+            } elseif ($rule['points'] < 0) {
                 $rule['category'] = 'malus';
+            } else {
+                $rule['category'] = 'info';
             }
             $appliedRules[] = $rule;
         }
