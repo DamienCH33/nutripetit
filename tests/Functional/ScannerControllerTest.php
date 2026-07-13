@@ -176,7 +176,7 @@ final class ScannerControllerTest extends WebTestCase
             'finalScore' => 100,
             'level' => 'ideal',
             'levelLabel' => 'Idéal pour bébé',
-            'algoVersion' => '1.0.0',
+            'algoVersion' => '1.1.0',
             'isInfantFormula' => false,
             'scoresByAge' => [],
             'criticalAlert' => null,

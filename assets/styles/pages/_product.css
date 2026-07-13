@@ -1534,3 +1534,13 @@
 .np-age-info--warning .np-age-info__icon {
     color: var(--np-score-discouraged);
 }
+
+/* Version d'algorithme (traçabilité, bas de l'onglet Sources) */
+.np-product__algo-version {
+	margin-top: 16px;
+	padding-top: 12px;
+	border-top: 1px solid var(--np-gray-200, #e0e0e0);
+	color: var(--np-gray-600, #757575);
+	font-size: 0.8125rem;
+	text-align: center;
+}

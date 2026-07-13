@@ -7,6 +7,8 @@ namespace App\Controller;
 use App\Enum\ScoreLevel;
 use App\Enum\ScoringAlgorithm;
 use App\Repository\ScoringRuleRepository;
+use App\Service\Scoring\Evaluator\InfantFormulaScoreCalculator;
+use App\Service\Scoring\ScoreCalculator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -21,7 +23,9 @@ final class InfoController extends AbstractController
     #[Route('/app/infos', name: 'app_pwa_info', methods: ['GET'])]
     public function index(): Response
     {
-        $rules = $this->ruleRepository->findActiveByVersion('1.0.0');
+        // Constante, jamais un littéral : la page Infos doit décrire l'algorithme
+        // réellement en service, pas une version figée dans le code de la vue.
+        $rules = $this->ruleRepository->findActiveByVersion(ScoreCalculator::ALGO_VERSION);
 
         $scoreScale = array_map(
             static fn (ScoreLevel $l): array => [
@@ -63,10 +67,10 @@ final class InfoController extends AbstractController
 
         return $this->render('pages/app/info.html.twig', [
             'rules' => $rules,
-            'algoVersion' => '1.0.0',
+            'algoVersion' => ScoreCalculator::ALGO_VERSION,
             'scoreScale' => $scoreScale,
             'infantFormulaRules' => $infantFormulaRules,
-            'infantFormulaAlgoVersion' => \App\Service\Scoring\Evaluator\InfantFormulaScoreCalculator::ALGO_VERSION,
+            'infantFormulaAlgoVersion' => InfantFormulaScoreCalculator::ALGO_VERSION,
             'sources' => $sources,
         ]);
     }

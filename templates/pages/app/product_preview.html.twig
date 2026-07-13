@@ -121,6 +121,18 @@
 					{% endfor %}
 				</div>
 			{% endif %}
+			{% set infoRules = appliedRules|filter(r => r.category == 'info') %}
+			{% if infoRules|length > 0 %}
+				<div class="np-rules-section">
+					<h3 class="np-rules-section__title">
+						{{ ux_icon('lucide:info', {class: 'np-rules-section__icon'}) }}
+						Informations
+					</h3>
+					{% for rule in infoRules %}
+						{% include '_partials/_product/_rule_card.html.twig' with { rule: rule } %}
+					{% endfor %}
+				</div>
+			{% endif %}
 			{% if additives|length > 0 %}
 				<div class="np-additives-section">
 					<h3 class="np-rules-section__title">
@@ -349,6 +361,13 @@
 					{{ ux_icon('lucide:external-link', {class: 'np-source-card__arrow'}) }}
 				</a>
 			{% endfor %}
+
+			{# Traçabilité : un score reste attaché à la version d'algorithme qui l'a produit.
+			   Un ancien scan peut donc afficher une version antérieure à celle en service. #}
+			<p class="np-product__algo-version">
+				Score calculé avec l'algorithme
+				<strong>{{ algoVersion }}</strong>
+			</p>
 		</section>
 
 	</div>
