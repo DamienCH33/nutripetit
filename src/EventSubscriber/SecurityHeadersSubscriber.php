@@ -33,9 +33,11 @@ final class SecurityHeadersSubscriber implements EventSubscriberInterface
             'Content-Security-Policy',
             "default-src 'self'; "
                 . "img-src 'self' https://images.openfoodfacts.org https://static.openfoodfacts.org data:; "
-                . "script-src 'self' 'unsafe-inline'; "
+                . "script-src 'self' 'unsafe-inline' data:; "
                 . "style-src 'self' 'unsafe-inline'; "
-                . "connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+                . "connect-src 'self' https://world.openfoodfacts.org; "
+                . "object-src 'none'; "
+                . "frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
         );
     }
 }
