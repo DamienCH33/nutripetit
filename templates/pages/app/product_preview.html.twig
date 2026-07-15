@@ -85,31 +85,12 @@
 					<span>Ce produit n'est pas encore complètement référencé sur Open Food Facts. Le score est indicatif. Vous pouvez contribuer à l'enrichir sur openfoodfacts.org.</span>
 				</div>
 			{% endif %}
-			{% set bonusRules = appliedRules|filter(r => r.category == 'bonus') %}
-			{% if bonusRules|length > 0 %}
-				<div class="np-rules-section">
-					<h3 class="np-rules-section__title np-rules-section__title--bonus">
-						{{ ux_icon('lucide:plus-circle', {class: 'np-rules-section__icon'}) }}
-						Points positifs
-					</h3>
-					{% for rule in bonusRules %}
-						{% include '_partials/_product/_rule_card.html.twig' with { rule: rule } %}
-					{% endfor %}
-				</div>
-			{% endif %}
-			{% set satisfiedRules = appliedRules|filter(r => r.category == 'satisfied') %}
-			{% if satisfiedRules|length > 0 %}
-				<div class="np-rules-section">
-					<h3 class="np-rules-section__title np-rules-section__title--satisfied">
-						{{ ux_icon('lucide:check-circle', {class: 'np-rules-section__icon'}) }}
-						Contrôles passés
-					</h3>
-					{% for rule in satisfiedRules %}
-						{% include '_partials/_product/_rule_card.html.twig' with { rule: rule } %}
-					{% endfor %}
-				</div>
-			{% endif %}
 			{% set malusRules = appliedRules|filter(r => r.category == 'malus') %}
+			{% set infoRules = appliedRules|filter(r => r.category == 'info') %}
+			{% set bonusRules = appliedRules|filter(r => r.category == 'bonus') %}
+			{% set satisfiedRules = appliedRules|filter(r => r.category == 'satisfied') %}
+
+			{# 1. Points à surveiller — en premier : c'est ce qui justifie le score. #}
 			{% if malusRules|length > 0 %}
 				<div class="np-rules-section">
 					<h3 class="np-rules-section__title np-rules-section__title--malus">
@@ -121,7 +102,21 @@
 					{% endfor %}
 				</div>
 			{% endif %}
-			{% set infoRules = appliedRules|filter(r => r.category == 'info') %}
+
+			{# 2. Points positifs (rare depuis l'algo 1.1.0 : la plupart sont devenus des infos). #}
+			{% if bonusRules|length > 0 %}
+				<div class="np-rules-section">
+					<h3 class="np-rules-section__title np-rules-section__title--bonus">
+						{{ ux_icon('lucide:plus-circle', {class: 'np-rules-section__icon'}) }}
+						Points positifs
+					</h3>
+					{% for rule in bonusRules %}
+						{% include '_partials/_product/_rule_card.html.twig' with { rule: rule } %}
+					{% endfor %}
+				</div>
+			{% endif %}
+
+			{# 3. Informations — badges qualité, allergènes déclarés (impact nul). #}
 			{% if infoRules|length > 0 %}
 				<div class="np-rules-section">
 					<h3 class="np-rules-section__title">
@@ -133,6 +128,8 @@
 					{% endfor %}
 				</div>
 			{% endif %}
+
+			{# 4. Additifs présents. #}
 			{% if additives|length > 0 %}
 				<div class="np-additives-section">
 					<h3 class="np-rules-section__title">
@@ -146,6 +143,25 @@
 						</article>
 					{% endfor %}
 				</div>
+			{% endif %}
+
+			{# 5. Contrôles passés — replié par défaut, SAUF si c'est la seule
+			     section à afficher (produit sans malus/info/additif) : sinon
+			     l'onglet ne montrerait qu'un accordéon fermé, paraissant vide. #}
+			{% if satisfiedRules|length > 0 %}
+				{% set onlySatisfied = malusRules|length == 0 and bonusRules|length == 0 and infoRules|length == 0 and additives|length == 0 %}
+				<details class="np-rules-accordion"{% if onlySatisfied %} open{% endif %}>
+					<summary class="np-rules-accordion__summary">
+						{{ ux_icon('lucide:check-circle', {class: 'np-rules-section__icon np-rules-section__icon--satisfied'}) }}
+						<span>Contrôles passés ({{ satisfiedRules|length }})</span>
+						<i class="np-rules-accordion__chevron" aria-hidden="true"></i>
+					</summary>
+					<div class="np-rules-accordion__body">
+						{% for rule in satisfiedRules %}
+							{% include '_partials/_product/_rule_card.html.twig' with { rule: rule } %}
+						{% endfor %}
+					</div>
+				</details>
 			{% endif %}
 		</section>
 
