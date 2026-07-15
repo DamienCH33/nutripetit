@@ -119,45 +119,107 @@ final class NutrientViewBuilder
      */
     private function buildBabyFoodNutrients(array $n): array
     {
-        $thresholds = [
-            ['key' => 'sugars_100g', 'name' => 'Sucres', 'unit' => 'g', 'threshold' => 4.0, 'max' => 40.0],
-            ['key' => 'salt_100g', 'name' => 'Sel', 'unit' => 'g', 'threshold' => 0.3, 'max' => 1.0],
-            ['key' => 'proteins_100g', 'name' => 'Protéines', 'unit' => 'g', 'threshold' => 15.0, 'max' => 25.0],
-            ['key' => 'energy-kcal_100g', 'name' => 'Calories', 'unit' => 'kcal', 'threshold' => 400.0, 'max' => 800.0],
-        ];
-
         $result = [];
-        foreach ($thresholds as $t) {
-            $rawValue = $n[$t['key']] ?? null;
-            if (!is_numeric($rawValue)) {
-                continue;
-            }
-            $value = (float) $rawValue;
-            $ratio = $value / $t['threshold'];
-            $level = match (true) {
-                $ratio <= 0.5 => 'ideal',
-                $ratio <= 1.0 => 'good',
-                $ratio <= 1.5 => 'occasional',
-                $ratio <= 2.5 => 'limit',
-                default => 'discouraged',
-            };
 
+        // --- Sel : seuil ANSES 0,3 g/100 g (aligné sur la règle de scoring) ---
+        if (is_numeric($n['salt_100g'] ?? null)) {
+            $value = (float) $n['salt_100g'];
+            $result[] = $this->buildGauge(
+                'Sel',
+                'g',
+                $value,
+                threshold: 0.3,
+                maxScale: 1.0,
+                belowMsg: 'Sous le seuil ANSES pour le nourrisson.',
+                aboveMsg: 'Au-dessus du seuil ANSES pour le nourrisson.',
+                reference: 'Seuil ANSES nourrisson : 0,3 g/100 g',
+            );
+        }
+
+        // --- Sucres : le WHO NPPM (2022) raisonne en % de l'énergie, pas en g/100 g.
+        // On affiche donc la valeur brute SANS seuil chiffré trompeur : le jugement
+        // se fait via la règle de scoring (% d'énergie). Ici, information seule. ---
+        if (is_numeric($n['sugars_100g'] ?? null)) {
+            $value = (float) $n['sugars_100g'];
             $result[] = [
-                'name' => $t['name'],
+                'name' => 'Sucres',
                 'category' => 'Nutrition',
                 'available' => true,
                 'value' => $value,
-                'unit' => $t['unit'],
-                'threshold_baby' => $t['threshold'],
-                'max_scale' => $t['max'],
-                'level' => $level,
-                'message' => $value <= $t['threshold']
-                    ? 'Conforme aux recommandations ANSES nourrisson.'
-                    : 'Au-dessus des recommandations ANSES nourrisson.',
-                'reference' => \sprintf('ANSES nourrisson : %s%s/100g max', $t['threshold'], $t['unit']),
+                'unit' => 'g',
+                'threshold_baby' => null,
+                'max_scale' => 40.0,
+                'level' => 'info',
+                'message' => 'La teneur en sucres est évaluée en pourcentage de l\'énergie (voir l\'onglet Détails), conformément au modèle OMS Europe pour les 6-36 mois.',
+                'reference' => 'Référence : OMS Europe, Nutrient and Promotion Profile Model (2022)',
+            ];
+        }
+
+        // --- Protéines : seuil ANSES exprimé en % de l'énergie (AET), PAS en g/100 g.
+        // On calcule le % comme la règle de scoring, pour rester cohérent. ---
+        $proteins = $n['proteins_100g'] ?? null;
+        $energy = $n['energy-kcal_100g'] ?? null;
+        if (is_numeric($proteins) && is_numeric($energy) && (float) $energy > 0) {
+            $pctEnergy = ((float) $proteins * 4) / (float) $energy * 100;
+            $result[] = $this->buildGauge(
+                'Protéines (% énergie)',
+                '%',
+                round($pctEnergy, 1),
+                threshold: 15.0,
+                maxScale: 30.0,
+                belowMsg: 'Sous le seuil ANSES de 15 % de l\'apport énergétique.',
+                aboveMsg: 'Au-dessus du seuil ANSES de 15 % de l\'apport énergétique.',
+                reference: 'Seuil ANSES 0-3 ans : 15 % de l\'apport énergétique total',
+            );
+        }
+
+        // --- Calories : le WHO NPPM fixe un MINIMUM (60 kcal/100 g pour purées),
+        // pas un maximum. On affiche la valeur en information, sans faux plafond. ---
+        if (is_numeric($n['energy-kcal_100g'] ?? null)) {
+            $value = (float) $n['energy-kcal_100g'];
+            $result[] = [
+                'name' => 'Calories',
+                'category' => 'Nutrition',
+                'available' => true,
+                'value' => $value,
+                'unit' => 'kcal',
+                'threshold_baby' => null,
+                'max_scale' => 500.0,
+                'level' => 'info',
+                'message' => 'Le modèle OMS Europe recommande un minimum de 60 kcal/100 g pour les purées de fruits/légumes et produits laitiers (densité énergétique suffisante).',
+                'reference' => 'Référence : OMS Europe NPPM (2022), seuil minimal 60 kcal/100 g',
             ];
         }
 
         return $result;
+    }
+
+    /**
+     * Construit une jauge à seuil unique (sous le seuil = ok, au-dessus = alerte).
+     *
+     * @return array<string, mixed>
+     */
+    private function buildGauge(
+        string $name,
+        string $unit,
+        float $value,
+        float $threshold,
+        float $maxScale,
+        string $belowMsg,
+        string $aboveMsg,
+        string $reference,
+    ): array {
+        return [
+            'name' => $name,
+            'category' => 'Nutrition',
+            'available' => true,
+            'value' => $value,
+            'unit' => $unit,
+            'threshold_baby' => $threshold,
+            'max_scale' => $maxScale,
+            'level' => $value <= $threshold ? 'good' : 'limit',
+            'message' => $value <= $threshold ? $belowMsg : $aboveMsg,
+            'reference' => $reference,
+        ];
     }
 }
