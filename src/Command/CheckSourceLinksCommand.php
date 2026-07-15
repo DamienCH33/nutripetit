@@ -51,12 +51,7 @@ final class CheckSourceLinksCommand extends Command
         $broken = [];
         foreach ($urls as $url) {
             try {
-                $response = $this->httpClient->request('GET', $url, [
-                    'timeout' => 10,
-                    'max_redirects' => 5,
-                    'headers' => ['User-Agent' => 'NutriPetit-LinkChecker/1.0'],
-                ]);
-                $status = $response->getStatusCode();
+                $status = $this->fetchStatusCode($url);
 
                 if ($status >= 400) {
                     $broken[] = [$url, (string) $status];
@@ -80,5 +75,29 @@ final class CheckSourceLinksCommand extends Command
         $io->success('Tous les liens sources répondent correctement.');
 
         return Command::SUCCESS;
+    }
+
+    private function fetchStatusCode(string $url): int
+    {
+        $options = [
+            'timeout' => 10,
+            'max_redirects' => 5,
+            'headers' => [
+                'User-Agent' => 'NutriPetit-LinkChecker/1.0',
+            ],
+        ];
+
+        $response = $this->httpClient->request('HEAD', $url, $options);
+        $status = $response->getStatusCode();
+
+        // Certains serveurs ne supportent pas HEAD.
+        if (405 === $status || 501 === $status) {
+            // On tente d'abord une requête HEAD afin de vérifier
+            // l'existence de la ressource sans télécharger son contenu.
+            $response = $this->httpClient->request('HEAD', $url, $options);
+            $status = $response->getStatusCode();
+        }
+
+        return $status;
     }
 }
