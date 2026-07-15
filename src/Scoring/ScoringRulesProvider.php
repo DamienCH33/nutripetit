@@ -79,7 +79,7 @@ final class ScoringRulesProvider
                 'ageMinMonths' => 0,
                 'ageMaxMonths' => 36,
                 'sourceName' => 'Règlement EU 1333/2008 + ANSES',
-                'sourceUrl' => 'https://www.anses.fr/fr/content/additifs-alimentaires',
+                'sourceUrl' => 'https://www.anses.fr/fr/content/additif-alimentaire-e171-lanses-reitere-ses-recommandations-pour-la-securite-des',
             ],
             [
                 'code' => 'palm_oil',
@@ -118,12 +118,12 @@ final class ScoringRulesProvider
             [
                 'code' => 'contaminated_fish',
                 'label' => 'Poissons à risque contaminants',
-                'description' => 'Poissons à risque PCB ou mercure : anguille, barbeau, brème, carpe, silure, thon, espadon, requin. À éviter chez les jeunes enfants.',
+                'description' => 'Poissons à limiter chez les moins de 3 ans selon l\'ANSES : poissons d\'eau douce fortement bio-accumulateurs de PCB (anguille, barbeau, brème, carpe, silure) et prédateurs riches en méthylmercure (thon, bonite, raie, dorade, lotte, brochet…) ; à éviter : requin, lamproie, espadon, marlin, siki.',
                 'pointsImpact' => -25,
                 'ageMinMonths' => 0,
                 'ageMaxMonths' => 36,
                 'sourceName' => 'ANSES recommandations poissons (2019)',
-                'sourceUrl' => 'https://www.anses.fr/fr/content/consommation-de-poissons-pcb-et-methylmercure',
+                'sourceUrl' => 'https://www.anses.fr/fr/content/poissons-et-produits-de-la-peche-synthese-des-recommandations-de-lagence',
             ],
 
             //
@@ -178,7 +178,7 @@ final class ScoringRulesProvider
                 'ageMinMonths' => 6,
                 'ageMaxMonths' => 36,
                 'sourceName' => 'ANSES Référentiels nutritionnels (2019)',
-                'sourceUrl' => 'https://www.anses.fr/fr/content/les-r%C3%A9f%C3%A9rences-nutritionnelles-en-vitamines-et-min%C3%A9raux',
+                'sourceUrl' => 'https://www.anses.fr/fr/content/les-references-nutritionnelles-en-vitamines-et-mineraux',
             ],
             [
                 'code' => 'omega3_rich',
@@ -188,7 +188,7 @@ final class ScoringRulesProvider
                 'ageMinMonths' => 6,
                 'ageMaxMonths' => 36,
                 'sourceName' => 'ANSES AGPI-LC (2019)',
-                'sourceUrl' => 'https://www.anses.fr/fr/content/les-acides-gras-de-la-famille-om%C3%A9ga-3-et-syst%C3%A8me-cardiovasculaire',
+                'sourceUrl' => 'https://www.anses.fr/fr/content/les-acides-gras-omega-3',
             ],
 
             //
