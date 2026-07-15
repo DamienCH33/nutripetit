@@ -53,6 +53,17 @@ final class BabyProductDetectorTest extends TestCase
         self::assertTrue($this->detector->isBabyProduct($product));
     }
 
+    public function testDetectsByMalformedFrenchCategoryTag(): void
+    {
+        // Cas réel OFF : le produit Nestlé P'tit Souper a des tags au préfixe
+        // "en:" mais au contenu français accentué et en majuscules. La
+        // correspondance exacte échoue ; la normalisation par mots-clés rattrape.
+        $product = new Product('7613035052796', 'Crème de petits pois, petites pâtes')
+            ->setOffRawData(['categories_tags' => ['en:Aliments pour bébé', 'en:Dès 12 mois', 'en:Plats du soir pour bébé']]);
+
+        self::assertTrue($this->detector->isBabyProduct($product));
+    }
+
     public function testDoesNotDetectGenericBrand(): void
     {
         // Nectar Nestlé : pas de tag bébé, marque généraliste -> refusé (pas de faux positif).

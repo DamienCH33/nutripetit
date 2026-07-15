@@ -13,6 +13,21 @@ use App\Entity\Product;
  */
 final class BabyProductDetector implements BabyProductDetectorInterface
 {
+    /**
+     * Marqueurs (normalisés : minuscules, sans accents) cherchés DANS les tags
+     * catégories mal encodés. Volontairement stricts et sans ambiguïté :
+     * "pour bebe", "bebes", "nourrisson" ne se retrouvent pas dans un tag de
+     * produit adulte. Ne PAS ajouter "lait" ou "bio" seuls -> faux positifs.
+     */
+    private const CATEGORY_KEYWORDS = [
+        'pour bebe',
+        'baby-food',
+        'baby food',
+        'nourrisson',
+        'infant-formula',
+        'infant formula',
+    ];
+
     private const CATEGORY_TAGS = [
         // Aliments solides bébé (EN)
         'en:baby-foods',
@@ -318,12 +333,29 @@ final class BabyProductDetector implements BabyProductDetectorInterface
     {
         $raw = $product->getOffRawData();
 
-        // Signal 1 : catégories OFF (EN + FR).
+        // Signal 1 : catégories OFF (EN + FR), correspondance exacte.
         $categories = $raw['categories_tags'] ?? [];
         if (\is_array($categories)) {
             foreach (self::CATEGORY_TAGS as $tag) {
                 if (\in_array($tag, $categories, true)) {
                     return true;
+                }
+            }
+
+            // Signal 1bis : certains produits OFF ont des tags mal formés —
+            // préfixe "en:" mais texte français accentué et en majuscules,
+            // ex. "en:Aliments pour bébé", "en:Plats du soir pour bébé".
+            // On normalise chaque tag (minuscules, sans accents) et on cherche
+            // des marqueurs bébé, pour rattraper ces cas.
+            foreach ($categories as $tag) {
+                if (!\is_string($tag)) {
+                    continue;
+                }
+                $normalized = $this->normalize($tag);
+                foreach (self::CATEGORY_KEYWORDS as $marker) {
+                    if (str_contains($normalized, $marker)) {
+                        return true;
+                    }
                 }
             }
         }
