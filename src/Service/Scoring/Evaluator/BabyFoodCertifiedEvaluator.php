@@ -71,7 +71,7 @@ final class BabyFoodCertifiedEvaluator implements RuleEvaluator
                     if (str_contains($category, $babyCategory)) {
                         return $this->createAppliedRule(
                             $rule,
-                            "Catégorie OpenFoodFacts : {$category}",
+                            'Présenté comme un aliment pour bébé (catégorie renseignée dans Open Food Facts).',
                         );
                     }
                 }

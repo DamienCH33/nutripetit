@@ -1537,66 +1537,66 @@
 
 /* Version d'algorithme (traçabilité, bas de l'onglet Sources) */
 .np-product__algo-version {
-	margin-top: 16px;
-	padding-top: 12px;
-	border-top: 1px solid var(--np-gray-200, #e0e0e0);
-	color: var(--np-gray-600, #757575);
-	font-size: 0.8125rem;
-	text-align: center;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--np-gray-200, #e0e0e0);
+    color: var(--np-gray-600, #757575);
+    font-size: 0.8125rem;
+    text-align: center;
 }
 
 /* ── Accordéon « Contrôles passés » (repliable, natif <details>) ────────── */
 .np-rules-accordion {
-	margin-top: var(--np-spacing-4);
-	border: 1px solid var(--np-gray-200);
-	border-radius: var(--np-radius-md);
-	overflow: hidden;
+    margin-top: var(--np-spacing-4);
+    border: 1px solid var(--np-gray-200);
+    border-radius: var(--np-radius-md);
+    overflow: hidden;
 }
 
 .np-rules-accordion__summary {
-	display: flex;
-	align-items: center;
-	gap: var(--np-spacing-2);
-	padding: var(--np-spacing-3) var(--np-spacing-4);
-	font-weight: var(--np-font-weight-semibold);
-	font-size: var(--np-font-size-sm);
-	color: var(--np-gray-800);
-	cursor: pointer;
-	list-style: none;
-	user-select: none;
+    display: flex;
+    align-items: center;
+    gap: var(--np-spacing-2);
+    padding: var(--np-spacing-3) var(--np-spacing-4);
+    font-weight: var(--np-font-weight-semibold);
+    font-size: var(--np-font-size-sm);
+    color: var(--np-gray-800);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
 }
 
 /* Retire la flèche native du <summary> (on met la nôtre) */
 .np-rules-accordion__summary::-webkit-details-marker {
-	display: none;
+    display: none;
 }
 
 .np-rules-accordion__summary span {
-	flex: 1;
+    flex: 1;
 }
 
 .np-rules-section__icon--satisfied {
-	color: var(--np-green-dark, #2E7D32);
+    color: var(--np-green-dark, #2e7d32);
 }
 
 .np-rules-accordion__chevron {
-	width: 10px;
-	height: 10px;
-	border-right: 2px solid var(--np-gray-600);
-	border-bottom: 2px solid var(--np-gray-600);
-	transform: rotate(45deg);
-	transition: transform 0.2s ease;
-	flex-shrink: 0;
-	margin-right: var(--np-spacing-1);
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid var(--np-gray-600);
+    border-bottom: 2px solid var(--np-gray-600);
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+    margin-right: var(--np-spacing-1);
 }
 
 .np-rules-accordion[open] .np-rules-accordion__chevron {
-	transform: rotate(-135deg);
+    transform: rotate(-135deg);
 }
 
 .np-rules-accordion__body {
-	display: flex;
-	flex-direction: column;
-	gap: var(--np-spacing-3);
-	padding: 0 var(--np-spacing-4) var(--np-spacing-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--np-spacing-3);
+    padding: 0 var(--np-spacing-4) var(--np-spacing-4);
 }

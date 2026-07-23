@@ -30,7 +30,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
  */
 final class ScoreCalculator
 {
-    public const ALGO_VERSION = '1.1.0';
+    public const ALGO_VERSION = '1.2.0';
 
     private const SCORE_BASE = 100;
 

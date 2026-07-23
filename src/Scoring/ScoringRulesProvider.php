@@ -6,7 +6,7 @@ namespace App\Scoring;
 
 final class ScoringRulesProvider
 {
-    public const ALGO_VERSION = '1.1.0';
+    public const ALGO_VERSION = '1.2.0';
 
     /**
      * @return list<array<string, mixed>>
@@ -31,7 +31,7 @@ final class ScoringRulesProvider
                 'code' => 'sweeteners',
                 'label' => 'Édulcorants',
                 'description' => 'Présence d\'édulcorants (aspartame, sucralose, stévia, acésulfame K, saccharine). L\'ANSES recommande de proscrire ces ingrédients chez les jeunes enfants.',
-                'pointsImpact' => -40,
+                'pointsImpact' => -30,
                 'ageMinMonths' => 0,
                 'ageMaxMonths' => 36,
                 'sourceName' => 'ANSES Avis 0-3 ans (2019) + EFSA',
@@ -41,7 +41,7 @@ final class ScoringRulesProvider
                 'code' => 'added_salt',
                 'label' => 'Sel ajouté excessif',
                 'description' => 'Teneur en sel supérieure à 0.3g/100g chez le nourrisson de moins de 1 an. Le sel ajouté est déconseillé avant 12 mois.',
-                'pointsImpact' => -25,
+                'pointsImpact' => -15,
                 'thresholdValue' => 0.3,
                 'thresholdUnit' => 'g/100g',
                 'ageMinMonths' => 0,
@@ -65,7 +65,7 @@ final class ScoringRulesProvider
                 'code' => 'artificial_flavors',
                 'label' => 'Arômes artificiels',
                 'description' => 'Présence d\'arômes artificiels ou de synthèse, déconseillés par le PNNS 4 pour les jeunes enfants.',
-                'pointsImpact' => -10,
+                'pointsImpact' => -5,
                 'ageMinMonths' => 0,
                 'ageMaxMonths' => 36,
                 'sourceName' => 'PNNS 4 / Santé publique France (2021)',
@@ -75,7 +75,7 @@ final class ScoringRulesProvider
                 'code' => 'controversial_additives',
                 'label' => 'Additifs controversés',
                 'description' => 'Présence d\'additifs controversés : colorants azoïques (E102, E104, E110, E122, E124, E129), dioxyde de titane nanoparticulaire (E171). Évalués comme préoccupants par l\'EFSA et l\'ANSES.',
-                'pointsImpact' => -15,
+                'pointsImpact' => -30,
                 'ageMinMonths' => 0,
                 'ageMaxMonths' => 36,
                 'sourceName' => 'Règlement EU 1333/2008 + ANSES',
@@ -95,7 +95,7 @@ final class ScoringRulesProvider
                 'code' => 'soy_products',
                 'label' => 'Produits à base de soja',
                 'description' => 'Présence de soja transformé (tofu, yaourts au soja, boissons végétales). L\'ANSES indique que ces aliments ne sont pas adaptés aux enfants de moins de 3 ans.',
-                'pointsImpact' => -15,
+                'pointsImpact' => -30,
                 'ageMinMonths' => 0,
                 'ageMaxMonths' => 36,
                 'sourceName' => 'ANSES Avis 0-3 ans (2019)',
@@ -109,7 +109,7 @@ final class ScoringRulesProvider
                 'code' => 'choking_hazard',
                 'label' => 'Risque d\'étouffement',
                 'description' => 'Aliments présentant un risque d\'étouffement : cacahuètes entières, fruits à coque entiers, raisins entiers, fruits à coque, raisins entiers. À ne pas proposer entiers avant 3 ans.',
-                'pointsImpact' => -30,
+                'pointsImpact' => -35,
                 'ageMinMonths' => 0,
                 'ageMaxMonths' => 36,
                 'sourceName' => 'ANSES Avis 0-3 ans (2019)',
@@ -119,7 +119,7 @@ final class ScoringRulesProvider
                 'code' => 'contaminated_fish',
                 'label' => 'Poissons à risque contaminants',
                 'description' => 'Poissons à limiter chez les moins de 3 ans selon l\'ANSES : poissons d\'eau douce fortement bio-accumulateurs de PCB (anguille, barbeau, brème, carpe, silure) et prédateurs riches en méthylmercure (thon, bonite, raie, dorade, lotte, brochet…) ; à éviter : requin, lamproie, espadon, marlin, siki.',
-                'pointsImpact' => -25,
+                'pointsImpact' => -35,
                 'ageMinMonths' => 0,
                 'ageMaxMonths' => 36,
                 'sourceName' => 'ANSES recommandations poissons (2019)',

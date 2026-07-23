@@ -47,7 +47,7 @@ enum ScoreLevel: string
                 self::Good => 'Bon choix',
                 self::Occasional => 'Occasionnel',
                 self::Limit => 'À limiter',
-                self::Discouraged => 'Déconseillé',
+                self::Discouraged => 'À éviter',
             },
             ScoringAlgorithm::InfantFormula => match ($this) {
                 self::Ideal => 'Excellent pour bébé',
@@ -87,7 +87,7 @@ enum ScoreLevel: string
             self::Good => 'Adapté à votre enfant',
             self::Occasional => 'Acceptable de temps en temps',
             self::Limit => 'À consommer rarement',
-            self::Discouraged => 'Non recommandé pour bébé',
+            self::Discouraged => 'Plusieurs critères nutritionnels dépassés',
         };
     }
 }
