@@ -40,6 +40,22 @@ final readonly class AppliedRuleDto
             'source_name' => $this->sourceName,
             'source_url' => $this->sourceUrl,
             'status' => $this->status->value,
+            'category' => $this->category(),
         ];
+    }
+
+    public function category(): string
+    {
+        if (RuleStatus::Satisfied === $this->status) {
+            return 'satisfied';
+        }
+        if ($this->pointsImpact > 0) {
+            return 'bonus';
+        }
+        if ($this->pointsImpact < 0) {
+            return 'malus';
+        }
+
+        return 'info';
     }
 }
