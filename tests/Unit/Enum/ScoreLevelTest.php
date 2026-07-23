@@ -53,7 +53,7 @@ final class ScoreLevelTest extends TestCase
     public function testFoodLabels(): void
     {
         self::assertSame('Idéal pour bébé', ScoreLevel::Ideal->label(ScoringAlgorithm::Food));
-        self::assertSame('Déconseillé', ScoreLevel::Discouraged->label(ScoringAlgorithm::Food));
+        self::assertSame('À éviter', ScoreLevel::Discouraged->label(ScoringAlgorithm::Food));
     }
 
     public function testInfantFormulaLabels(): void

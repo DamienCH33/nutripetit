@@ -25,7 +25,7 @@ final class ScoreCalculatorTest extends TestCase
         self::assertSame(100, $result->finalScore);
         self::assertSame('ideal', $result->level);
         self::assertSame([], $result->appliedRules);
-        self::assertSame('1.1.0', $result->algoVersion);
+        self::assertSame('1.2.0', $result->algoVersion);
     }
 
     public function testImpactsAreSummedFromBase100(): void
