@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Dto\AppliedRuleDto;
 use App\Service\Exception\OpenFoodFactsUnavailableException;
 use App\Service\Exception\ProductNotFoundException;
 use App\Service\Product\DataCompletenessChecker;
+use App\Service\Product\ProductPreviewBuilder;
 use App\Service\Scanner\ScanProductHandler;
 use App\Service\Scoring\BabyProductDetectorInterface;
-use App\Service\Scoring\ScoreCalculator;
+use App\Service\Session\ScanSessionCookieManager;
+use App\Service\Session\ScanSessionManager;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,7 +31,9 @@ final class ScannerController extends AbstractController
         private readonly ScanProductHandler $scanProductHandler,
         private readonly RateLimiterFactory $scanLimiter,
         private readonly DataCompletenessChecker $completenessChecker,
-        private readonly ScoreCalculator $scoreCalculator,
+        private readonly ScanSessionManager $scanSessionManager,
+        private readonly ScanSessionCookieManager $scanSessionCookieManager,
+        private readonly ProductPreviewBuilder $productPreviewBuilder,
     ) {
     }
 
@@ -65,24 +68,13 @@ final class ScannerController extends AbstractController
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $score = $this->scoreCalculator->calculate($product);
+        $scanSession = $this->scanSessionManager->resolveScanSession($request);
+        $scanData = $this->scanProductHandler->processScan($product, $request, $scanSession);
+        $viewData = $this->productPreviewBuilder->build($product, $scanData);
 
-        return $this->json([
-            'product' => [
-                'ean' => $product->getEan(),
-                'name' => $product->getName(),
-                'brand' => $product->getBrand(),
-                'imageUrl' => $product->getImageUrl(),
-            ],
-            'score' => [
-                'finalScore' => $score->finalScore,
-                'level' => $score->level,
-                'appliedRules' => array_map(
-                    static fn (AppliedRuleDto $rule): array => $rule->toArray(),
-                    $score->appliedRules,
-                ),
-                'algoVersion' => $score->algoVersion,
-            ],
-        ]);
+        $response = $this->json($viewData);
+        $this->scanSessionCookieManager->ensureScanSessionCookie($request, $response, $scanSession);
+
+        return $response;
     }
 }
