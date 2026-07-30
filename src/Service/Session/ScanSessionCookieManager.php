@@ -26,15 +26,17 @@ final class ScanSessionCookieManager
             return $response;
         }
 
+        $isSecure = $request->isSecure();
+
         $response->headers->setCookie(
             Cookie::create(
                 name: ScanSessionManager::SESSION_COOKIE_NAME,
                 value: $token,
                 expire: time() + (ScanSessionManager::SESSION_COOKIE_TTL_DAYS * 86400),
                 path: '/',
-                secure: true,
+                secure: $isSecure,
                 httpOnly: true,
-                sameSite: 'lax',
+                sameSite: $isSecure ? 'none' : 'lax',
             ),
         );
 
