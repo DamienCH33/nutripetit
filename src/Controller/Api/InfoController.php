@@ -17,7 +17,7 @@ final class InfoController extends AbstractController
         $data = $provider->getInfoData();
 
         $data['rules'] = array_map(
-            static fn($rule): array => [
+            static fn ($rule): array => [
                 'code' => $rule->getCode(),
                 'label' => $rule->getLabel(),
                 'description' => $rule->getDescription(),
