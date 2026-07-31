@@ -24,7 +24,7 @@ final class HistoryController extends AbstractController
     ) {
     }
 
-    #[Route('/app/historique', name: 'app_pwa_history', methods: ['GET'])]
+    //     #[Route('/app/historique', name: 'app_pwa_history', methods: ['GET'])]
     public function index(Request $request): Response
     {
         $page = max(1, $request->query->getInt('page', 1));
@@ -54,7 +54,7 @@ final class HistoryController extends AbstractController
      * ET la session anonyme elle-même, puis invalide le cookie. Le prochain
      * scan repartira d'une session vierge.
      */
-    #[Route('/app/historique/effacer', name: 'app_pwa_history_clear', methods: ['POST'])]
+    //     #[Route('/app/historique/effacer', name: 'app_pwa_history_clear', methods: ['POST'])]
     public function clear(Request $request): Response
     {
         if (!$this->isCsrfTokenValid('submit', $request->getPayload()->getString('_csrf_token'))) {

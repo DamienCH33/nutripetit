@@ -36,19 +36,19 @@ final class ScannerController extends AbstractController
     ) {
     }
 
-    #[Route('/app/scanner', name: 'app_pwa_scanner', methods: ['GET'])]
+    //     #[Route('/app/scanner', name: 'app_pwa_scanner', methods: ['GET'])]
     public function scanner(): Response
     {
         return $this->render('pages/app/scanner.html.twig');
     }
 
-    #[Route('/app/saisie-manuelle', name: 'app_pwa_manual_entry', methods: ['GET'])]
+    //     #[Route('/app/saisie-manuelle', name: 'app_pwa_manual_entry', methods: ['GET'])]
     public function manualEntry(): Response
     {
         return $this->render('pages/app/manual_entry.html.twig');
     }
 
-    #[Route('/app/scan/{ean}', name: 'app_pwa_scan', methods: ['GET'], requirements: ['ean' => '\d{13}'])]
+    //     #[Route('/app/scan/{ean}', name: 'app_pwa_scan', methods: ['GET'], requirements: ['ean' => '\d{13}'])]
     public function scan(string $ean, Request $request): Response
     {
         $limiter = $this->scanLimiter->create($request->getClientIp() ?? 'anonymous');

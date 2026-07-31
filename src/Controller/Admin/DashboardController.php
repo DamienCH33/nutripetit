@@ -34,7 +34,7 @@ final class DashboardController extends AbstractDashboardController
             ->displayUserName(true)
             ->displayUserAvatar(false)
             ->addMenuItems([
-                MenuItem::linkToRoute('Retour à l\'app', 'fa fa-arrow-left', 'app_pwa_home'),
+                MenuItem::linkToUrl('Retour à l\'app', 'fa fa-arrow-left', '/app'),
                 MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out'),
             ]);
     }
