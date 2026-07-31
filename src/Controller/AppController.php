@@ -24,7 +24,7 @@ final class AppController extends AbstractController
     ) {
     }
 
-    //     #[Route('/app', name: 'app_pwa_home', methods: ['GET'])]
+    // #[Route('/app', name: 'app_pwa_home', methods: ['GET'])]
     public function home(Request $request): Response
     {
         $recentScans = [];

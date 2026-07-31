@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 final class BabyProfileController extends AbstractController
 {
-    //     #[Route('/app/profil-bebe', name: 'app_pwa_baby_profile', methods: ['GET'])]
+    // #[Route('/app/profil-bebe', name: 'app_pwa_baby_profile', methods: ['GET'])]
     public function index(): Response
     {
         // Tranches d'âge correspondant aux barèmes du moteur de scoring
