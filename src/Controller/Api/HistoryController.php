@@ -9,6 +9,7 @@ use App\Service\Session\ScanSessionManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class HistoryController extends AbstractController
@@ -57,5 +58,22 @@ final class HistoryController extends AbstractController
             'page' => $page,
             'lastPage' => (int) max(1, ceil($total / self::PER_PAGE)),
         ]);
+    }
+
+    #[Route('/api/history/clear', name: 'api_history_clear', methods: ['POST'])]
+    public function clearHistory(Request $request): JsonResponse
+    {
+        $token = $request->headers->get('submit');
+        if (!$this->isCsrfTokenValid('submit', $token)) {
+            return $this->json(['error' => 'Jeton CSRF invalide.'], Response::HTTP_FORBIDDEN);
+        }
+
+        $session = $this->scanSessionManager->getSessionFromRequest($request);
+
+        $deleted = null !== $session
+            ? $this->scoreResultRepository->deleteAllForSession($session)
+            : 0;
+
+        return $this->json(['deleted' => $deleted]);
     }
 }
