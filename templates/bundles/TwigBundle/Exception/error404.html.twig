@@ -8,11 +8,11 @@
     <h1 class="np-scan-error__title">Page introuvable</h1>
     <p class="np-scan-error__message">Cette page a filé du caddie. Le lien est peut-être erroné ou la page n'existe plus.</p>
     <div class="np-scan-error__actions">
-        <a href="{{ path('app_pwa_scanner') }}" class="np-scan-error__btn np-scan-error__btn--primary">
+        <a href="/app/scanner" class="np-scan-error__btn np-scan-error__btn--primary">
             {{ ux_icon('lucide:scan-line', {class: 'np-scan-error__btn-icon'}) }}
             Scanner un produit
         </a>
-        <a href="{{ path('app_pwa_home') }}" class="np-scan-error__btn np-scan-error__btn--ghost">
+        <a href="/app" class="np-scan-error__btn np-scan-error__btn--ghost">
             Retour à l'accueil
         </a>
     </div>

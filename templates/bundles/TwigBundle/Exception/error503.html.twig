@@ -8,11 +8,11 @@
     <h1 class="np-scan-error__title">Service temporairement indisponible</h1>
     <p class="np-scan-error__message">Le service est momentanément inaccessible. Réessaie dans quelques instants.</p>
     <div class="np-scan-error__actions">
-        <a href="{{ path('app_pwa_scanner') }}" class="np-scan-error__btn np-scan-error__btn--primary">
+        <a href="/app/scanner" class="np-scan-error__btn np-scan-error__btn--primary">
             {{ ux_icon('lucide:rotate-cw', {class: 'np-scan-error__btn-icon'}) }}
             Réessayer
         </a>
-        <a href="{{ path('app_pwa_home') }}" class="np-scan-error__btn np-scan-error__btn--ghost">
+        <a href="/app" class="np-scan-error__btn np-scan-error__btn--ghost">
             Retour à l'accueil
         </a>
     </div>

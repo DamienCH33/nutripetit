@@ -16,7 +16,7 @@ final class InfoController extends AbstractController
     ) {
     }
 
-    #[Route('/app/infos', name: 'app_pwa_info', methods: ['GET'])]
+    //     #[Route('/app/infos', name: 'app_pwa_info', methods: ['GET'])]
     public function index(): Response
     {
         return $this->render('pages/app/info.html.twig', $this->infoDataProvider->getInfoData());
