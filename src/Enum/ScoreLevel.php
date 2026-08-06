@@ -19,8 +19,6 @@ enum ScoreLevel: string
             // Seuils recalibrés en algo 1.1.0.
             // Le score aliments part de 100 et ne fait que descendre (malus seuls).
             // « Idéal » (>= 97) est donc réservé aux produits sans aucun défaut détecté.
-            // Avant, le seuil était à 85 et les bonus compensaient les malus :
-            // 100 % des produits scannés ressortaient « Idéal », l'échelle ne servait à rien.
             ScoringAlgorithm::Food => match (true) {
                 $score >= 97 => self::Ideal,
                 $score >= 85 => self::Good,
@@ -28,12 +26,14 @@ enum ScoreLevel: string
                 $score >= 40 => self::Limit,
                 default => self::Discouraged,
             },
-            // Laits infantiles : base conforme, jamais "déconseillé"
+            // Laits infantiles (algo v3.0.0) : base 60, plancher 60, plage réelle 60-82.
+            // Tout lait UE est conforme et sûr : on ne descend jamais à "déconseillé".
+            // Seuils recalés sur la plage atteignable pour que l'échelle discrimine.
             ScoringAlgorithm::InfantFormula => match (true) {
-                $score >= 95 => self::Ideal,
-                $score >= 85 => self::Good,
-                $score >= 70 => self::Occasional,
-                default => self::Limit,
+                $score >= 78 => self::Ideal,        // tous/presque tous les atouts
+                $score >= 70 => self::Good,         // plusieurs atouts
+                $score >= 64 => self::Occasional,   // un ou deux atouts
+                default => self::Limit,        // 60-63 : conforme, sans atout premium
             },
         };
     }
@@ -49,10 +49,16 @@ enum ScoreLevel: string
                 self::Limit => 'À limiter',
                 self::Discouraged => 'À éviter',
             },
+            // Registre "qualité de formulation" : un lait est l'alimentation ESSENTIELLE
+            // du bébé, jamais un aliment "à limiter" ou "occasionnel". Le score nuance
+            // seulement la richesse des atouts optionnels (DHA obligatoire ne compte pas).
+            // 5 cas explicites (plus de default => 'Conforme', qui écrasait limit/occasional).
             ScoringAlgorithm::InfantFormula => match ($this) {
-                self::Ideal => 'Excellent pour bébé',
-                self::Good => 'Bon choix',
-                default => 'Conforme',
+                self::Ideal => 'Excellent lait pour bébé',
+                self::Good => 'Très bon lait pour bébé',
+                self::Occasional => 'Bon lait pour bébé',
+                self::Limit => 'Lait conforme et sûr pour bébé',
+                self::Discouraged => 'Lait conforme et sûr pour bébé',
             },
         };
     }
