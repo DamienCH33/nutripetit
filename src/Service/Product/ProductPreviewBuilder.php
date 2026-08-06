@@ -38,6 +38,12 @@ final class ProductPreviewBuilder
         $scoreResult = $scanData['scoreResult'];
 
         $nutrients = $this->nutrientViewBuilder->buildNutrients($product, $isInfantFormula);
+
+        // Encart de référence nutritionnelle pour les laits (affiché à la place du tableau).
+        $infantFormulaReference = $isInfantFormula
+            ? $this->nutrientViewBuilder->buildInfantFormulaReference($product)
+            : null;
+
         $uniqueSources = $this->ruleSourceAggregator->aggregate($scoreResult->getAppliedRules());
         $criticalAlert = $this->criticalAlertDetector->detect($scoreResult->getAppliedRules());
         $minAgeMonths = $this->minimumAgeExtractor->extractMinAgeMonths($product);
@@ -88,6 +94,7 @@ final class ProductPreviewBuilder
             'additives' => $this->additiveExtractor->extractAdditives($product),
             'carbonFootprint' => $this->carbonFootprintExtractor->extractCarbonFootprint($product),
             'dataIncomplete' => !$this->completenessChecker->hasSufficientData($product),
+            'infantFormulaReference' => $infantFormulaReference,
         ];
     }
 }

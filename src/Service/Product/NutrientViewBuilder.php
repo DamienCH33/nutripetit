@@ -13,10 +13,11 @@ final class NutrientViewBuilder
      * Source : table Ciqual 2025 (ANSES) — aliments 19013 / 19014 / 19012, fiabilité « A ».
      *
      * Raison d'être : Open Food Facts stocke pour les laits les valeurs de la POUDRE
-     * (~×8 vs reconstitué) dans les champs "prepared", alors que les seuils réglementaires
-     * sont en /100 ml reconstitué. Comparer les deux donne des affichages faux ("14
-     * nutriments au-dessus du seuil légal"). On affiche donc ces valeurs de référence
-     * reconstituées à la place, avec un disclaimer. Le lait 3ème âge = lait de croissance.
+     * (~×8 vs reconstitué), non comparables aux repères réglementaires (exprimés en
+     * reconstitué). On NE construit donc PAS de tableau nutritionnel par produit pour les
+     * laits : d'une part la donnée OFF est fausse, d'autre part une moyenne de catégorie
+     * ne serait pas discriminante (identique pour toutes les marques d'un même âge). À la
+     * place, le front affiche un encart pédagogique alimenté par buildInfantFormulaReference().
      *
      * @var array<string, array<string, float>>
      */
@@ -24,49 +25,26 @@ final class NutrientViewBuilder
         'first_age' => [   // Lait 1er âge, prêt à consommer (Ciqual 19013)
             'energy' => 71.0,
             'proteins' => 1.2,
-            'fat' => 3.8,
-            'carbohydrates' => 8.0,
-            'sugars' => 6.7,
-            'sodium' => 24.0,
-            'calcium' => 60.0,
-            'iron' => 0.64,
         ],
         'second_age' => [  // Lait 2e âge, prêt à consommer (Ciqual 19014)
             'energy' => 65.0,
             'proteins' => 1.2,
-            'fat' => 2.9,
-            'carbohydrates' => 8.2,
-            'sugars' => 5.6,
-            'sodium' => 22.0,
-            'calcium' => 71.0,
-            'iron' => 0.92,
         ],
         'growing_up' => [  // Lait de croissance / 3ème âge, liquide (Ciqual 19012)
             'energy' => 61.0,
             'proteins' => 1.3,
-            'fat' => 2.7,
-            'carbohydrates' => 7.8,
-            'sugars' => 6.0,
-            'sodium' => 24.0,
-            'calcium' => 76.0,
-            'iron' => 1.27,
         ],
     ];
 
     /**
-     * Libellés + unités + catégorie pour l'affichage, dans l'ordre.
+     * Libellé humain de chaque type, pour l'encart front ("un lait de 1er âge…").
      *
-     * @var list<array{key: string, name: string, unit: string, category: string}>
+     * @var array<string, string>
      */
-    private const CIQUAL_DISPLAY = [
-        ['key' => 'energy',        'name' => 'Énergie',    'unit' => 'kcal', 'category' => 'Macronutriments'],
-        ['key' => 'proteins',      'name' => 'Protéines',  'unit' => 'g',    'category' => 'Macronutriments'],
-        ['key' => 'fat',           'name' => 'Lipides',    'unit' => 'g',    'category' => 'Macronutriments'],
-        ['key' => 'carbohydrates', 'name' => 'Glucides',   'unit' => 'g',    'category' => 'Macronutriments'],
-        ['key' => 'sugars',        'name' => 'dont sucres', 'unit' => 'g',    'category' => 'Macronutriments'],
-        ['key' => 'sodium',        'name' => 'Sodium',     'unit' => 'mg',   'category' => 'Minéraux'],
-        ['key' => 'calcium',       'name' => 'Calcium',    'unit' => 'mg',   'category' => 'Minéraux'],
-        ['key' => 'iron',          'name' => 'Fer',        'unit' => 'mg',   'category' => 'Minéraux'],
+    private const MILK_TYPE_LABELS = [
+        'first_age' => 'de 1er âge',
+        'second_age' => 'de 2e âge',
+        'growing_up' => 'de croissance',
     ];
 
     /**
@@ -94,17 +72,46 @@ final class NutrientViewBuilder
     ];
 
     /**
+     * Tableau nutritionnel affiché.
+     *
+     * Pour un LAIT : renvoie [] — pas de tableau. Les valeurs OFF concernent la poudre
+     * (non comparables aux repères en reconstitué) et une moyenne de catégorie ne serait
+     * pas discriminante. Le front affiche un encart via buildInfantFormulaReference().
+     *
+     * Pour un ALIMENT bébé : tableau classique avec seuils ANSES/OMS (valeurs OFF fiables).
+     *
      * @return list<array<string, mixed>>
      */
     public function buildNutrients(Product $product, bool $isInfantFormula = false): array
     {
         if ($isInfantFormula) {
-            // On n'utilise PAS les nutriments OFF pour les laits (valeurs poudre non fiables),
-            // mais une table de référence Ciqual reconstituée selon l'âge du lait.
-            return $this->buildInfantFormulaReferenceNutrients($this->detectMilkType($product));
+            return [];
         }
 
         return $this->buildBabyFoodNutrients($product->getNutriments());
+    }
+
+    /**
+     * Données de l'encart nutritionnel d'un lait (affiché à la place du tableau).
+     *
+     * Renvoie le type de lait détecté + les valeurs Ciqual reconstituées correspondantes,
+     * pour que le front écrive une phrase adaptée à l'âge ("un lait de 2e âge reconstitué
+     * apporte environ 65 kcal et 1,2 g de protéines / 100 ml"). Valeurs indicatives, moyennes
+     * de catégorie (référence Ciqual 2025), pas une mesure du produit précis.
+     *
+     * @return array{type: string, label: string, energy: float, proteins: float}
+     */
+    public function buildInfantFormulaReference(Product $product): array
+    {
+        $type = $this->detectMilkType($product);
+        $ref = self::CIQUAL_INFANT_REFERENCE[$type] ?? self::CIQUAL_INFANT_REFERENCE['first_age'];
+
+        return [
+            'type' => $type,
+            'label' => self::MILK_TYPE_LABELS[$type] ?? 'infantile',
+            'energy' => $ref['energy'],
+            'proteins' => $ref['proteins'],
+        ];
     }
 
     /**
@@ -112,18 +119,16 @@ final class NutrientViewBuilder
      *
      * On ne détecte QUE l'âge, pas la spécialité (AR, AC, HA, sans lactose, prématuré…) :
      * ces laits respectent le même règlement UE 2016/127 et ont un profil nutritionnel
-     * global proche du lait de base de leur âge. Leur spécificité est signalée ailleurs
-     * (nom du produit, règles de score), pas dans les valeurs de référence affichées.
+     * global proche du lait de base de leur âge.
      *
      * Tags OFF vérifiés contre la taxonomie réelle (taxonomies/food/categories.txt).
      * Découvertes du croisement : le tag croissance est en:growth-milks (pas
-     * en:growing-up-milk) ; les follow-on "from 2/3 years" sont des laits de croissance.
+     * en:growing-up-milk) ; les follow-on "from 2/3 years" sont des laits de croissance ;
+     * certains produits ont des tags contradictoires (ex. Guigoz 1er âge tagué À LA FOIS
+     * en:infant-formulas ET en:growth-milks) — d'où la priorité au nom.
      *
-     * Ordre = du plus spécifique au plus générique :
-     *  1. croissance / 3ème âge (dont follow-on 2/3 ans) — EN PREMIER ;
-     *  2. 2e âge / suite ;
-     *  3. 1er âge = défaut (couvre 1er âge, "Relais 1er âge", AR/HA/prématuré sans âge,
-     *     et tout lait sans mention d'âge détectable — cas le plus courant).
+     * Ordre : 1) mention d'âge explicite dans le nom (source la plus fiable) ;
+     *         2) tags OFF en secours si le nom est muet ; 3) défaut 1er âge.
      *
      * Piège géré : "Relais" (Gallia Calisma Relais 1er âge) ne signifie PAS 2e âge —
      * c'est le CHIFFRE ou la mention d'âge qui tranche, jamais "relais" seul.
@@ -138,9 +143,6 @@ final class NutrientViewBuilder
         $name = mb_strtolower($product->getName());
 
         // ========== PRIORITÉ 1 : mention d'âge EXPLICITE dans le nom ==========
-        // Le nom du fabricant est plus fiable que les tags OFF, qui se contredisent
-        // parfois (ex. Guigoz 1er âge tagué À LA FOIS en:infant-formulas ET
-        // en:growth-milks). Une mention d'âge dans le nom tranche donc en premier.
 
         // Croissance / 3ème âge
         if (
@@ -175,8 +177,6 @@ final class NutrientViewBuilder
         }
 
         // ========== PRIORITÉ 2 : tags OFF (secours, si le nom ne dit rien) ==========
-        // On teste dans l'ordre croissance -> 2e -> (défaut 1er). Les tags peuvent
-        // être contradictoires : ce secours ne s'applique que si le nom est muet.
         if ($this->hasAnyTag($categories, self::GROWING_UP_TAGS)) {
             return 'growing_up';
         }
@@ -191,47 +191,15 @@ final class NutrientViewBuilder
     /**
      * Détecte le chiffre d'âge (1/2/3) comme token isolé dans le nom, en IGNORANT
      * les chiffres parasites : poids ("830g"), volumes ("500ml"), plages d'âge
-     * ("6-12 mois"), codes ("5HMO"). On exige que le chiffre soit entouré d'espaces
-     * (ou en début/fin) et NON collé à une lettre/chiffre ou suivi d'une unité.
+     * ("6-12 mois"), codes ("5HMO"). Le chiffre doit être précédé d'un début/espace
+     * et non suivi d'un autre chiffre, d'un tiret ou d'une unité.
      */
     private function hasAgeToken(string $name, string $digit): bool
     {
-        // Le chiffre isolé, suivi éventuellement de "age"/"âge", mais PAS d'une unité
-        // (g, ml, kg, mois) ni d'un autre chiffre (830, 6-12).
-        // \b{digit}\b entouré d'espaces, et non suivi de g/ml/mois/-.
         return 1 === preg_match(
             '/(^|\s)' . $digit . '(?![\d\-])(?!\s*(?:g|kg|ml|l|mois|mo|m\b))(\s|$|er|e|ème|eme|\s*âge|\s*age)/u',
             $name
         );
-    }
-
-    /**
-     * Cherche une mention d'âge pour le chiffre donné ("1", "2", "3") dans le nom,
-     * sous ses formes courantes : "2e âge", "2ème age", "age 2", ou le chiffre isolé
-     * en fin de nom (ex. "Gallia 2", "Modilac AR 2"). Le \b évite de matcher "12".
-     */
-    private function matchesAge(string $name, string $digit): bool
-    {
-        $patterns = [
-            $digit . 'e age',
-            $digit . 'e âge',
-            $digit . 'eme age',
-            $digit . 'eme âge',
-            $digit . 'ème age',
-            $digit . 'ème âge',
-            $digit . 'er age',
-            $digit . 'er âge',   // "1er âge"
-            'age ' . $digit,
-            'âge ' . $digit,
-        ];
-        foreach ($patterns as $p) {
-            if (str_contains($name, $p)) {
-                return true;
-            }
-        }
-
-        // Chiffre isolé en fin de nom (mot entier), ex. "gallia 2", "guigoz 3".
-        return 1 === preg_match('/\b' . $digit . '\b\s*$/', trim($name));
     }
 
     /**
@@ -247,40 +215,6 @@ final class NutrientViewBuilder
         }
 
         return false;
-    }
-
-    /**
-     * Construit l'affichage nutritionnel d'un lait à partir des valeurs de référence
-     * Ciqual reconstituées (et non des valeurs OFF poudre, non fiables).
-     *
-     * Tous les nutriments sont en niveau 'info' + flag is_reference : ce sont des
-     * valeurs moyennes de catégorie, pas un jugement sur le produit précis. Le score
-     * du lait, lui, se fait sur les ingrédients (InfantFormulaScoreCalculator).
-     *
-     * @return list<array<string, mixed>>
-     */
-    private function buildInfantFormulaReferenceNutrients(string $milkType): array
-    {
-        $ref = self::CIQUAL_INFANT_REFERENCE[$milkType] ?? self::CIQUAL_INFANT_REFERENCE['first_age'];
-
-        $result = [];
-        foreach (self::CIQUAL_DISPLAY as $d) {
-            $result[] = [
-                'name' => $d['name'],
-                'category' => $d['category'],
-                'available' => true,
-                'value' => $ref[$d['key']],
-                'unit' => $d['unit'],
-                'threshold_baby' => null,
-                'max_scale' => null,
-                'level' => 'info',
-                'is_reference' => true,
-                'message' => 'Valeur moyenne de référence pour un lait reconstitué.',
-                'reference' => 'Source : table Ciqual 2025 (ANSES). Les valeurs de l\'emballage concernent la poudre non reconstituée.',
-            ];
-        }
-
-        return $result;
     }
 
     /**
