@@ -34,8 +34,7 @@ final class ScannerController extends AbstractController
         private readonly ScanSessionManager $scanSessionManager,
         private readonly ScanSessionCookieManager $scanSessionCookieManager,
         private readonly ProductPreviewBuilder $productPreviewBuilder,
-    ) {
-    }
+    ) {}
 
     #[Route('/api/scan/{ean}', name: 'api_scan', methods: ['GET'], requirements: ['ean' => '\d{13}'])]
     public function scan(string $ean, Request $request): JsonResponse
@@ -51,7 +50,7 @@ final class ScannerController extends AbstractController
         } catch (ProductNotFoundException) {
             return $this->json(['error' => 'Produit non trouvé.'], Response::HTTP_NOT_FOUND);
         } catch (OpenFoodFactsUnavailableException) {
-            return $this->json(['error' => 'OpenFoodFacts est indisponible.'], Response::HTTP_SERVICE_UNAVAILABLE);
+            return $this->json(['error' => 'Le service de récupération des informations produit est momentanément indisponible.'], Response::HTTP_SERVICE_UNAVAILABLE);
         }
 
         if (!$this->completenessChecker->hasSufficientData($product)) {
@@ -63,8 +62,8 @@ final class ScannerController extends AbstractController
 
         if (!$this->babyProductDetector->isBabyProduct($product)) {
             return $this->json([
-                'errorTitle' => 'Produit non destiné aux 0-3 ans',
-                'errorMessage' => 'NutriPetit analyse uniquement les produits alimentaires destinés aux nourrissons et jeunes enfants (0-3 ans). Pour les autres produits, nous vous invitons à utiliser une application généraliste.',
+                'errorTitle' => 'Produit hors du périmètre de NutriPetit',
+                'errorMessage' => "NutriPetit évalue les aliments et laits conçus pour les nourrissons et jeunes enfants (0-3 ans). Ce produit ne fait pas partie des catégories prises en charge.",
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 

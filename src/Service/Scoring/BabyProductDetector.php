@@ -9,7 +9,8 @@ use App\Entity\Product;
 /**
  * Détecte si un produit est destiné aux nourrissons/enfants 0-3 ans.
  *
- * Combine 3 signaux : categories_tags OFF (EN + FR) + marques 100% bébé + mots-clés du nom.
+ * Combine 5 signaux : catégories bébé OFF, marques 100% bébé, mots-clés du nom,
+ * tokens isolés (acronymes médicaux), et catégories d'aliments de base bébé-compatibles.
  */
 final class BabyProductDetector implements BabyProductDetectorInterface
 {
@@ -329,6 +330,20 @@ final class BabyProductDetector implements BabyProductDetectorInterface
         'babybio',
     ];
 
+    /**
+     * Catégories d'aliments transformés simples que les bébés consomment
+     * couramment (compotes, purées de fruits/légumes). Rattrape les vrais
+     * produits bébé qu'OFF catégorise sans tag "baby" (ex. marque Popote
+     * rangée en "en:compotes"). Badge « indicatif », pas « vérifié ».
+     * NE PAS y mettre en:fruits / en:vegetables (trop larges, tout le primeur).
+     */
+    private const BABY_COMPATIBLE_CATEGORIES = [
+        'en:compotes',
+        'en:applesauces',
+        'en:fruit-sauces',
+        'en:purees',
+    ];
+
     public function isBabyProduct(Product $product): bool
     {
         $raw = $product->getOffRawData();
@@ -385,10 +400,20 @@ final class BabyProductDetector implements BabyProductDetectorInterface
 
         // Signal 4 : recherche par tokens (mots isolés) pour AR, AC, HA, etc.
         $tokens = preg_split('/[\s\-_\.,]+/', $name) ?: [];
-        $tokens = array_filter($tokens, static fn ($t) => '' !== $t);
+        $tokens = array_filter($tokens, static fn($t) => '' !== $t);
         foreach (self::NAME_TOKENS as $token) {
             if (\in_array($token, $tokens, true)) {
                 return true;
+            }
+        }
+
+        // Signal 5 : aliment de base transformé bébé-compatible (compotes, purées).
+        // Rattrape les produits bébé mal catégorisés dans OFF (sans tag "baby").
+        if (\is_array($categories)) {
+            foreach (self::BABY_COMPATIBLE_CATEGORIES as $tag) {
+                if (\in_array($tag, $categories, true)) {
+                    return true;
+                }
             }
         }
 
