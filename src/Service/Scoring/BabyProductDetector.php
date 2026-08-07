@@ -158,6 +158,13 @@ final class BabyProductDetector implements BabyProductDetectorInterface
         'goodgout',
         'good goût',
         'la marmite-bebe',
+        'yooji',
+        'pommette',
+        'babynat',
+        'vitabio',
+        'nutriben',
+        'bledidej',
+        'naturnes',
     ];
 
     private const NAME_KEYWORDS = [
@@ -391,6 +398,20 @@ final class BabyProductDetector implements BabyProductDetectorInterface
 
         $name = mb_strtolower($product->getName());
 
+        // Signal 2bis : marque CONTENANT "baby"/"bebe" (gammes bébé de distributeurs :
+        // Carrefour Baby, Auchan Baby, U Bébé… qu'OFF ne catégorise pas en baby-food).
+        if (\is_array($brands)) {
+            foreach ($brands as $brand) {
+                if (!\is_string($brand)) {
+                    continue;
+                }
+                $normalized = $this->normalize($brand);
+                if (str_contains($normalized, 'baby') || str_contains($normalized, 'bebe')) {
+                    return true;
+                }
+            }
+        }
+
         // Signal 3 : recherche substring dans le nom.
         foreach (self::NAME_KEYWORDS as $keyword) {
             if (str_contains($name, $keyword)) {
@@ -400,10 +421,22 @@ final class BabyProductDetector implements BabyProductDetectorInterface
 
         // Signal 4 : recherche par tokens (mots isolés) pour AR, AC, HA, etc.
         $tokens = preg_split('/[\s\-_\.,]+/', $name) ?: [];
-        $tokens = array_filter($tokens, static fn($t) => '' !== $t);
+        $tokens = array_filter($tokens, static fn ($t) => '' !== $t);
         foreach (self::NAME_TOKENS as $token) {
             if (\in_array($token, $tokens, true)) {
                 return true;
+            }
+        }
+
+        // Signal 4bis : acronymes médicaux AR / AC / HA — uniquement si le nom
+        // contient aussi un mot de contexte lait (sinon "ha", "ar", "ac" isolés
+        // matchent des produits adultes : thé "Ha Long", vin "AC"…).
+        $hasMilkContext = str_contains($name, 'lait') || str_contains($name, 'milk');
+        if ($hasMilkContext) {
+            foreach (['ar', 'ac', 'ha'] as $medicalToken) {
+                if (\in_array($medicalToken, $tokens, true)) {
+                    return true;
+                }
             }
         }
 

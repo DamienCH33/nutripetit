@@ -34,7 +34,8 @@ final class ScannerController extends AbstractController
         private readonly ScanSessionManager $scanSessionManager,
         private readonly ScanSessionCookieManager $scanSessionCookieManager,
         private readonly ProductPreviewBuilder $productPreviewBuilder,
-    ) {}
+    ) {
+    }
 
     #[Route('/api/scan/{ean}', name: 'api_scan', methods: ['GET'], requirements: ['ean' => '\d{13}'])]
     public function scan(string $ean, Request $request): JsonResponse
@@ -63,7 +64,7 @@ final class ScannerController extends AbstractController
         if (!$this->babyProductDetector->isBabyProduct($product)) {
             return $this->json([
                 'errorTitle' => 'Produit hors du périmètre de NutriPetit',
-                'errorMessage' => "NutriPetit évalue les aliments et laits conçus pour les nourrissons et jeunes enfants (0-3 ans). Ce produit ne fait pas partie des catégories prises en charge.",
+                'errorMessage' => 'NutriPetit évalue les aliments et laits conçus pour les nourrissons et jeunes enfants (0-3 ans). Ce produit ne fait pas partie des catégories prises en charge.',
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
