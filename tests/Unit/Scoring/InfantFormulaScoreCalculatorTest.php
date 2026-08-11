@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Scoring;
 
 use App\Entity\Product;
+use App\Service\Product\OrganicLabelDetector;
 use App\Service\Scoring\Evaluator\InfantFormulaScoreCalculator;
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +21,7 @@ final class InfantFormulaScoreCalculatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->calculator = new InfantFormulaScoreCalculator();
+        $this->calculator = new InfantFormulaScoreCalculator(new OrganicLabelDetector());
     }
 
     public function testEmptyFormulaStaysAtBase(): void

@@ -9,6 +9,7 @@ use App\Dto\ScoreCalculationResultDto;
 use App\Entity\Product;
 use App\Enum\ScoreLevel;
 use App\Enum\ScoringAlgorithm;
+use App\Service\Product\OrganicLabelDetector;
 
 /**
  * Calcule le score d'un lait infantile.
@@ -36,9 +37,15 @@ use App\Enum\ScoringAlgorithm;
 final class InfantFormulaScoreCalculator
 {
     public const ALGO_VERSION = 'infant_formula_3.0.0';
+
     private const SCORE_BASE = 60;
     private const SCORE_MIN = 60;
     private const SCORE_MAX = 100;
+
+    public function __construct(
+        private readonly OrganicLabelDetector $organicLabelDetector,
+    ) {
+    }
 
     public function calculate(Product $product, ?int $babyAgeMonths = null): ScoreCalculationResultDto
     {
@@ -68,7 +75,7 @@ final class InfantFormulaScoreCalculator
         }
 
         // Bio (+6) — Règlement UE 2018/848 : réduit l'exposition aux pesticides.
-        if (\in_array('en:organic', $labels, true) || \in_array('fr:ab-agriculture-biologique', $labels, true)) {
+        if ($this->organicLabelDetector->hasOrganicLabel($labels)) {
             $appliedRules[] = new AppliedRuleDto(
                 ruleCode: 'formula_organic',
                 ruleLabel: 'Certification Bio',
