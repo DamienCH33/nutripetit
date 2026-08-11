@@ -11,7 +11,10 @@ use App\Enum\RuleStatus;
 use App\Service\Scoring\RuleEvaluator;
 
 /**
- * Détecte les arômes artificiels. Source PNNS 4 / Santé publique France.
+ * Arômes en alimentation infantile — deux niveaux :
+ * 1. Artificiels/synthèse → alerte critique (code artificial_flavors).
+ * 2. Non qualifiés ("arômes", "arôme naturel de X") → malus réduit
+ *    (code unqualified_flavors, pas d'alerte). Éducation au goût (ANSES/NPPM).
  */
 final class ArtificialFlavorsEvaluator implements RuleEvaluator
 {
@@ -50,31 +53,41 @@ final class ArtificialFlavorsEvaluator implements RuleEvaluator
         preg_match_all($pattern, $ingredients, $matches);
         $found = array_unique($matches[1]);
 
-        if ([] === $found) {
+        if ([] !== $found) {
             return new AppliedRuleDto(
                 ruleCode: $rule->getCode(),
-                ruleLabel: 'Sans arôme artificiel',
-                pointsImpact: 0,
-                reason: 'Aucun arôme artificiel détecté dans la liste d\'ingrédients.',
+                ruleLabel: $rule->getLabel(),
+                pointsImpact: $rule->getPointsImpact(),
+                reason: \sprintf(
+                    'Arôme(s) artificiel(s) détecté(s) : %s. Interdits/très encadrés en alimentation infantile.',
+                    implode(', ', \array_slice($found, 0, 3)),
+                ),
                 sourceName: $rule->getSourceName(),
                 sourceUrl: $rule->getSourceUrl(),
-                status: RuleStatus::Satisfied,
+                status: RuleStatus::Triggered,
             );
         }
 
-        $reason = \sprintf(
-            'Arôme(s) artificiel(s) détecté(s) : %s. Déconseillés chez le jeune enfant (PNNS 4).',
-            implode(', ', \array_slice($found, 0, 3)),
-        );
+        if (1 === preg_match('/\bar[oô]mes?\b/iu', $ingredients)) {
+            return new AppliedRuleDto(
+                ruleCode: 'unqualified_flavors',
+                ruleLabel: 'Arômes ajoutés',
+                pointsImpact: intdiv($rule->getPointsImpact(), 2),
+                reason: 'Présence d\'arômes ajoutés (non précisés). L\'ajout d\'arômes est déconseillé dans l\'alimentation des tout-petits (éducation au goût).',
+                sourceName: $rule->getSourceName(),
+                sourceUrl: $rule->getSourceUrl(),
+                status: RuleStatus::Triggered,
+            );
+        }
 
         return new AppliedRuleDto(
             ruleCode: $rule->getCode(),
-            ruleLabel: $rule->getLabel(),
-            pointsImpact: $rule->getPointsImpact(),
-            reason: $reason,
+            ruleLabel: 'Sans arôme artificiel',
+            pointsImpact: 0,
+            reason: 'Aucun arôme artificiel détecté dans la liste d\'ingrédients.',
             sourceName: $rule->getSourceName(),
             sourceUrl: $rule->getSourceUrl(),
-            status: RuleStatus::Triggered,
+            status: RuleStatus::Satisfied,
         );
     }
 }

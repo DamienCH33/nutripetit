@@ -24,7 +24,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 final readonly class OpenFoodFactsClient implements OpenFoodFactsClientInterface
 {
     private const API_URL = 'https://world.openfoodfacts.org/api/v2/product/%s.json';
-    private const USER_AGENT = 'NutriPetit/1.0 (https://github.com/DamienCH33/nutripetit; contact@monavispro.fr)';
+    private const USER_AGENT = 'NutriPetit/1.1 (https://nutripetit.up.railway.app; https://github.com/DamienCH33/nutripetit)';
     private const API_TIMEOUT = 10;
     private const CACHE_KEY_PREFIX = 'off_product_';
     private const CACHE_TTL = 60 * 60 * 24 * 7;

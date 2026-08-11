@@ -41,24 +41,24 @@ final class ScoreLevelTest extends TestCase
         self::assertSame($expected, ScoreLevel::fromScore($score, ScoringAlgorithm::Food));
     }
 
-    public function testInfantFormulaNeverDiscouraged(): void
-    {
-        self::assertSame(ScoreLevel::Limit, ScoreLevel::fromScore(0, ScoringAlgorithm::InfantFormula));
-        self::assertSame(ScoreLevel::Limit, ScoreLevel::fromScore(50, ScoringAlgorithm::InfantFormula));
-        self::assertSame(ScoreLevel::Occasional, ScoreLevel::fromScore(70, ScoringAlgorithm::InfantFormula));
-        self::assertSame(ScoreLevel::Good, ScoreLevel::fromScore(85, ScoringAlgorithm::InfantFormula));
-        self::assertSame(ScoreLevel::Ideal, ScoreLevel::fromScore(95, ScoringAlgorithm::InfantFormula));
-    }
-
     public function testFoodLabels(): void
     {
         self::assertSame('Idéal pour bébé', ScoreLevel::Ideal->label(ScoringAlgorithm::Food));
         self::assertSame('À éviter', ScoreLevel::Discouraged->label(ScoringAlgorithm::Food));
     }
 
+    public function testInfantFormulaNeverDiscouraged(): void
+    {
+        self::assertSame(ScoreLevel::Limit, ScoreLevel::fromScore(0, ScoringAlgorithm::InfantFormula));
+        self::assertSame(ScoreLevel::Limit, ScoreLevel::fromScore(60, ScoringAlgorithm::InfantFormula));
+        self::assertSame(ScoreLevel::Occasional, ScoreLevel::fromScore(65, ScoringAlgorithm::InfantFormula));
+        self::assertSame(ScoreLevel::Good, ScoreLevel::fromScore(72, ScoringAlgorithm::InfantFormula));
+        self::assertSame(ScoreLevel::Ideal, ScoreLevel::fromScore(80, ScoringAlgorithm::InfantFormula));
+    }
+
     public function testInfantFormulaLabels(): void
     {
-        self::assertSame('Excellent pour bébé', ScoreLevel::Ideal->label(ScoringAlgorithm::InfantFormula));
-        self::assertSame('Conforme', ScoreLevel::Limit->label(ScoringAlgorithm::InfantFormula));
+        self::assertSame('Excellent lait pour bébé', ScoreLevel::Ideal->label(ScoringAlgorithm::InfantFormula));
+        self::assertSame('Lait conforme et sûr pour bébé', ScoreLevel::Limit->label(ScoringAlgorithm::InfantFormula));
     }
 }

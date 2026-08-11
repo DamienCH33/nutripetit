@@ -7,6 +7,19 @@ namespace App\Service\Product;
 final class CriticalAlertDetector
 {
     /**
+     * Codes déclenchant une alerte critique (danger aigu ou non-conformité
+     * réglementaire). 'contaminated_fish_limit' et 'unqualified_flavors' NE
+     * sont PAS ici (malus, pas alerte).
+     */
+    private const CRITICAL_RULE_CODES = [
+        'choking_hazard',
+        'contaminated_fish',
+        'honey_botulism',
+        'sweeteners',
+        'artificial_flavors',
+    ];
+
+    /**
      * @param list<array<string, mixed>> $appliedRules
      *
      * @return array<string, string>|null
@@ -19,7 +32,7 @@ final class CriticalAlertDetector
             }
 
             $code = $rule['rule_code'] ?? '';
-            if (\in_array($code, ['choking_hazard', 'contaminated_fish'], true)) {
+            if (\in_array($code, self::CRITICAL_RULE_CODES, true)) {
                 return [
                     'title' => $rule['rule_label'] ?? 'Alerte critique',
                     'message' => $rule['reason'] ?? '',

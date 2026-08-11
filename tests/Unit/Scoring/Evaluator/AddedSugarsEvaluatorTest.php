@@ -62,6 +62,24 @@ final class AddedSugarsEvaluatorTest extends TestCase
         self::assertNull($this->evaluator->evaluate($product, $this->rule('added_sugars'), null));
     }
 
+    public function testSatisfiedWhenNoAddedSugarMention(): void
+    {
+        $product = new Product('3000000000204', 'Compote')
+            ->setIngredientsRaw('Pommes, eau');
+        $applied = $this->evaluator->evaluate($product, $this->rule('added_sugars'), null);
+        self::assertInstanceOf(AppliedRuleDto::class, $applied);
+        self::assertSame(RuleStatus::Satisfied, $applied->status);
+    }
+
+    public function testSatisfiedWhenNoAddedSugarLabel(): void
+    {
+        $product = new Product('3000000000205', 'Compote')
+            ->setIngredientsRaw('Bananes, jus de citron');
+        $applied = $this->evaluator->evaluate($product, $this->rule('added_sugars'), null);
+        self::assertInstanceOf(AppliedRuleDto::class, $applied);
+        self::assertSame(0, $applied->pointsImpact);
+    }
+
     private function rule(string $code, int $points = -25): ScoringRule
     {
         return new ScoringRule($code, 'Sucres ajoutés', '', '1.0.0', $points, 'OMS', 'https://example.test');
