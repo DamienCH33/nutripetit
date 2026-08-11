@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Service\Product\OrganicLabelDetector;
 use App\Service\Scoring\Evaluator\OrganicCertifiedEvaluator;
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +17,7 @@ final class OrganicCertifiedEvaluatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->evaluator = new OrganicCertifiedEvaluator();
+        $this->evaluator = new OrganicCertifiedEvaluator(new OrganicLabelDetector());
     }
 
     public function testSupportsOnlyItsRule(): void
@@ -35,10 +36,28 @@ final class OrganicCertifiedEvaluatorTest extends TestCase
         self::assertInstanceOf(AppliedRuleDto::class, $applied);
     }
 
-    public function testTriggersOnNameFallback(): void
+    public function testDoesNotTriggerOnNameAloneWithoutLabel(): void
     {
+        // Rigueur audit : une mention marketing « bio » dans le nom, sans label
+        // certifiant OFF, ne doit jamais accorder le bonus.
         $product = new Product('3000000000261', 'Compote pomme bio')
             ->setOffRawData([]);
+
+        self::assertNull($this->evaluator->evaluate($product, $this->rule('organic_certified'), null));
+    }
+
+    public function testTriggersOnEuOrganicLabel(): void
+    {
+        $product = new Product('3000000000264', 'Purée')
+            ->setOffRawData(['labels_tags' => ['en:eu-organic']]);
+
+        self::assertNotNull($this->evaluator->evaluate($product, $this->rule('organic_certified'), null));
+    }
+
+    public function testTriggersOnFrenchAbLabel(): void
+    {
+        $product = new Product('3000000000265', 'Petit pot')
+            ->setOffRawData(['labels_tags' => ['fr:ab-agriculture-biologique']]);
 
         self::assertNotNull($this->evaluator->evaluate($product, $this->rule('organic_certified'), null));
     }

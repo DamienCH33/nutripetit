@@ -8,6 +8,11 @@ use App\Entity\Product;
 
 final class EnvironmentAnalyzer
 {
+    public function __construct(
+        private readonly OrganicLabelDetector $organicLabelDetector,
+    ) {
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -102,7 +107,7 @@ final class EnvironmentAnalyzer
 
         return [
             'origin' => $origin,
-            'bio_certified' => \in_array('en:organic', $labels, true) || \in_array('fr:ab-agriculture-biologique', $labels, true),
+            'bio_certified' => $this->organicLabelDetector->hasOrganicLabel($labels),
             'palm_oil_free' => !str_contains($ingredients, 'palme') && !str_contains($ingredients, 'palm oil'),
             'packaging' => $packaging,
         ];
