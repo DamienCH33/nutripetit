@@ -3,7 +3,9 @@
 }
 
 :{$PORT:8080} {
-	encode gzip
+	root * /app/public
+
+	encode zstd gzip
 
 	header {
 		X-Content-Type-Options nosniff
@@ -13,19 +15,9 @@
 		-Server
 	}
 
-	handle /api/* {
-		reverse_proxy http://nutripetit.railway.internal:8080
-	}
+	# Assets asset-mapper fingerprintés : cache long + immutable.
+	@hashed_assets path /assets/*
+	header @hashed_assets Cache-Control "public, max-age=31536000, immutable"
 
-	redir /app /app/ permanent
-
-	handle_path /app/* {
-		root * /srv
-		try_files {path} /index.html
-		file_server
-	}
-
-	handle {
-		reverse_proxy http://nutripetit.railway.internal:8080
-	}
+	php_server
 }
