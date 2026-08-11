@@ -11,9 +11,9 @@ use App\Enum\RuleStatus;
 use App\Service\Scoring\RuleEvaluator;
 
 /**
- * Détecte la présence d'édulcorants (aspartame, sucralose, stévia, etc.).
- *
- * Source : ANSES Avis 0-3 ans (2019)
+ * Édulcorants (aspartame, sucralose, stévia, polyols…). INTERDITS dans les
+ * aliments 0-3 ans (règlement CE 1333/2008) → code 'sweeteners' dans
+ * CriticalAlertDetector (alerte). Source : CE 1333/2008 + ANSES 2019.
  */
 final class SweetenersEvaluator implements RuleEvaluator
 {
@@ -65,7 +65,6 @@ final class SweetenersEvaluator implements RuleEvaluator
         $ingredients = $product->getIngredientsRaw();
         $additives = $product->getAdditives();
 
-        // Pas de données du tout : on ne peut pas juger.
         if ((null === $ingredients || '' === trim($ingredients)) && [] === $additives) {
             return null;
         }
@@ -87,6 +86,14 @@ final class SweetenersEvaluator implements RuleEvaluator
 
         if (null !== $ingredients && '' !== trim($ingredients)) {
             $ingredientsLower = mb_strtolower($ingredients);
+
+            // Neutraliser "sans édulcorant(s)" avant recherche (même bug que le sucre).
+            $ingredientsLower = preg_replace(
+                '/sans\s+édulcorants?|sans\s+edulcorants?/u',
+                '',
+                $ingredientsLower,
+            ) ?? $ingredientsLower;
+
             foreach (self::SWEETENER_KEYWORDS as $keyword) {
                 if (str_contains($ingredientsLower, $keyword)) {
                     $found[] = $keyword;
@@ -107,7 +114,7 @@ final class SweetenersEvaluator implements RuleEvaluator
         }
 
         $reason = \sprintf(
-            'Édulcorant(s) détecté(s) : %s. L\'ANSES recommande de proscrire ces ingrédients chez les jeunes enfants.',
+            'Édulcorant(s) détecté(s) : %s. Interdits dans les aliments pour jeunes enfants (règlement CE 1333/2008).',
             implode(', ', array_unique(\array_slice($found, 0, 3))),
         );
 

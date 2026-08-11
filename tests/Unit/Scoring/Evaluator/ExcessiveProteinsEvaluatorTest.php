@@ -83,4 +83,36 @@ final class ExcessiveProteinsEvaluatorTest extends TestCase
     {
         return new ScoringRule($code, 'Excès de protéines', '', '1.0.0', $points, 'ANSES', 'https://example.test');
     }
+
+    public function testSatisfiedOnNormalVpoShare(): void
+    {
+        $product = new Product('3000000000240', 'Plat dinde')
+            ->setOffRawData([
+                'ingredients' => [
+                    ['id' => 'en:turkey-meat', 'text' => 'Dinde', 'percent' => 8],
+                ],
+            ]);
+
+        $applied = $this->evaluator->evaluate($product, $this->rule('excessive_proteins', -15), null);
+
+        self::assertInstanceOf(AppliedRuleDto::class, $applied);
+        self::assertSame(0, $applied->pointsImpact);
+        self::assertSame(RuleStatus::Satisfied, $applied->status);
+    }
+
+    public function testTriggersOnExcessiveVpoShare(): void
+    {
+        $product = new Product('3000000000241', 'Plat très carné')
+            ->setOffRawData([
+                'ingredients' => [
+                    ['id' => 'en:beef-meat', 'text' => 'Bœuf', 'percent' => 25],
+                ],
+            ]);
+
+        $applied = $this->evaluator->evaluate($product, $this->rule('excessive_proteins', -15), null);
+
+        self::assertInstanceOf(AppliedRuleDto::class, $applied);
+        self::assertSame(-15, $applied->pointsImpact);
+        self::assertSame(RuleStatus::Triggered, $applied->status);
+    }
 }

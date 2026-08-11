@@ -2,15 +2,30 @@
 	auto_https off
 }
 
-:8080 {
-	root * /app/public
+:{$PORT:8080} {
+	encode gzip
 
-	# Compression (mobile 3G/4G : gain réel sur CSS/JS/HTML)
-	encode zstd gzip
+	header {
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy strict-origin-when-cross-origin
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
 
-	# Les assets asset-mapper sont fingerprintés : cache long + immutable sans risque.
-	@hashed_assets path /assets/*
-	header @hashed_assets Cache-Control "public, max-age=31536000, immutable"
+	handle /api/* {
+		reverse_proxy http://nutripetit.railway.internal:8080
+	}
 
-	php_server
+	redir /app /app/ permanent
+
+	handle_path /app/* {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+
+	handle {
+		reverse_proxy http://nutripetit.railway.internal:8080
+	}
 }

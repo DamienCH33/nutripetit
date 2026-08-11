@@ -33,7 +33,7 @@ final class ScannerControllerTest extends WebTestCase
         $client = static::createClient();
         $this->mockOffClient(new ProductNotFoundException(self::VALID_EAN));
 
-        $client->request('GET', '/app/scan/' . self::VALID_EAN, [], [], ['REMOTE_ADDR' => '203.0.113.2']);
+        $client->request('GET', '/api/scan/' . self::VALID_EAN, [], [], ['REMOTE_ADDR' => '203.0.113.2']);
 
         self::assertSame(Response::HTTP_NOT_FOUND, $client->getResponse()->getStatusCode());
     }
@@ -43,7 +43,7 @@ final class ScannerControllerTest extends WebTestCase
         $client = static::createClient();
         $this->mockOffClient(new OpenFoodFactsUnavailableException('timeout'));
 
-        $client->request('GET', '/app/scan/' . self::VALID_EAN, [], [], ['REMOTE_ADDR' => '203.0.113.3']);
+        $client->request('GET', '/api/scan/' . self::VALID_EAN, [], [], ['REMOTE_ADDR' => '203.0.113.3']);
 
         self::assertSame(Response::HTTP_SERVICE_UNAVAILABLE, $client->getResponse()->getStatusCode());
     }
@@ -57,9 +57,9 @@ final class ScannerControllerTest extends WebTestCase
         $detector->method('isBabyProduct')->willReturn(false);
         static::getContainer()->set(BabyProductDetectorInterface::class, $detector);
 
-        $client->request('GET', '/app/scan/' . self::VALID_EAN, [], [], ['REMOTE_ADDR' => '203.0.113.4']);
+        $client->request('GET', '/api/scan/' . self::VALID_EAN, [], [], ['REMOTE_ADDR' => '203.0.113.4']);
 
-        self::assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        self::assertSame(Response::HTTP_UNPROCESSABLE_ENTITY, $client->getResponse()->getStatusCode());
         self::assertStringContainsString('0-3 ans', (string) $client->getResponse()->getContent());
     }
 
@@ -73,13 +73,13 @@ final class ScannerControllerTest extends WebTestCase
         $detector->method('isBabyProduct')->willReturn(false);
         static::getContainer()->set(BabyProductDetectorInterface::class, $detector);
 
-        $client->request('GET', '/app/scan/' . self::VALID_EAN, [], [], ['REMOTE_ADDR' => '203.0.113.8']);
+        $client->request('GET', '/api/scan/' . self::VALID_EAN, [], [], ['REMOTE_ADDR' => '203.0.113.8']);
 
-        self::assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        self::assertSame(Response::HTTP_UNPROCESSABLE_ENTITY, $client->getResponse()->getStatusCode());
         $content = (string) $client->getResponse()->getContent();
-        self::assertStringContainsString('impossible à évaluer', $content);
-        // Régression : avant le fix, ce cas était scoré avec les règles bébé.
-        self::assertStringNotContainsString('np-score-circle', $content);
+        self::assertStringContainsString('impossible', $content);
+        // Régression : un produit non évaluable ne doit jamais ressortir scoré.
+        self::assertStringNotContainsString('scoreValue', $content);
     }
 
     /**
@@ -96,12 +96,12 @@ final class ScannerControllerTest extends WebTestCase
         $detector->method('isBabyProduct')->willReturn(true);
         static::getContainer()->set(BabyProductDetectorInterface::class, $detector);
 
-        $client->request('GET', '/app/scan/' . self::VALID_EAN, [], [], ['REMOTE_ADDR' => '203.0.113.9']);
+        $client->request('GET', '/api/scan/' . self::VALID_EAN, [], [], ['REMOTE_ADDR' => '203.0.113.9']);
 
-        self::assertSame(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        self::assertSame(Response::HTTP_UNPROCESSABLE_ENTITY, $client->getResponse()->getStatusCode());
         $content = (string) $client->getResponse()->getContent();
-        self::assertStringContainsString('impossible à évaluer', $content);
-        self::assertStringNotContainsString('np-score-circle', $content);
+        self::assertStringContainsString('impossible', $content);
+        self::assertStringNotContainsString('scoreValue', $content);
     }
 
     public function testKnownBabyProductReturns200(): void
@@ -119,10 +119,11 @@ final class ScannerControllerTest extends WebTestCase
         $builder->method('build')->willReturn($this->minimalViewData('Petit pot carottes', self::VALID_EAN_2));
         static::getContainer()->set(ProductPreviewBuilder::class, $builder);
 
-        $client->request('GET', '/app/scan/' . self::VALID_EAN_2, [], [], ['REMOTE_ADDR' => '203.0.113.5']);
+        $client->request('GET', '/api/scan/' . self::VALID_EAN_2, [], [], ['REMOTE_ADDR' => '203.0.113.5']);
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('h1', 'Petit pot carottes');
+        self::assertJson((string) $client->getResponse()->getContent());
+        self::assertStringContainsString('Petit pot carottes', (string) $client->getResponse()->getContent());
     }
 
     public function testScanRateLimiterBlocksBeyondItsLimit(): void
@@ -191,12 +192,12 @@ final class ScannerControllerTest extends WebTestCase
         ];
     }
 
-    public function testReturns404OnInvalidChecksum(): void
+    public function testReturns400OnInvalidChecksum(): void
     {
         $client = static::createClient();
-        // 13 chiffres mais checksum invalide -> rejeté par Ean13Validator.
-        $client->request('GET', '/app/scan/3017620422000', [], [], ['REMOTE_ADDR' => '203.0.113.7']);
+        // 13 chiffres mais checksum invalide -> rejeté par Ean13Validator (entrée mal formée).
+        $client->request('GET', '/api/scan/3017620422000', [], [], ['REMOTE_ADDR' => '203.0.113.7']);
 
-        self::assertSame(Response::HTTP_NOT_FOUND, $client->getResponse()->getStatusCode());
+        self::assertSame(Response::HTTP_BAD_REQUEST, $client->getResponse()->getStatusCode());
     }
 }

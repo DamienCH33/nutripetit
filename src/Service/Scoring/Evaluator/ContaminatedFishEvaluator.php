@@ -11,22 +11,27 @@ use App\Enum\RuleStatus;
 use App\Service\Scoring\RuleEvaluator;
 
 /**
- * Détecte les poissons à risque (contaminants/mercure).
- * Source : ANSES Avis 0-3 ans (2019).
+ * Poissons à risque mercure — DEUX niveaux ANSES (2019) :
+ * 1. À ÉVITER < 3 ans (alerte critique, code contaminated_fish).
+ * 2. À LIMITER 60 g/sem < 30 mois (malus réduit, code contaminated_fish_limit).
  */
 final class ContaminatedFishEvaluator implements RuleEvaluator
 {
-    private const RISKY_FISH = [
+    private const FISH_TO_AVOID = [
         'espadon',
         'marlin',
         'siki',
         'requin',
         'lamproie',
+    ];
+
+    private const FISH_TO_LIMIT = [
         'lotte',
         'baudroie',
         'loup',
         'bar',
         'bonite',
+        'anguille',
         'empereur',
         'grenadier',
         'flétan',
@@ -37,7 +42,6 @@ final class ContaminatedFishEvaluator implements RuleEvaluator
         'raie',
         'sabre',
         'thon',
-        'anguille',
         'barbeau',
         'brème',
         'breme',
@@ -60,39 +64,63 @@ final class ContaminatedFishEvaluator implements RuleEvaluator
             return null;
         }
 
-        $pattern = '/\b(' . implode('|', array_map(
-            static fn (string $w): string => preg_quote($w, '/'),
-            self::RISKY_FISH,
-        )) . ')\b/iu';
-
-        preg_match_all($pattern, $ingredients, $matches);
-        $found = array_unique($matches[1]);
-
-        if ([] === $found) {
+        $avoided = $this->match($ingredients, self::FISH_TO_AVOID);
+        if ([] !== $avoided) {
             return new AppliedRuleDto(
                 ruleCode: $rule->getCode(),
-                ruleLabel: 'Sans poisson à risque',
-                pointsImpact: 0,
-                reason: 'Aucun poisson à risque (contaminants/mercure) détecté dans la liste d\'ingrédients.',
+                ruleLabel: 'Poisson à éviter avant 3 ans',
+                pointsImpact: $rule->getPointsImpact(),
+                reason: \sprintf(
+                    'Contient : %s. L\'ANSES recommande d\'ÉVITER ces espèces avant 3 ans (méthylmercure).',
+                    implode(', ', $avoided),
+                ),
                 sourceName: $rule->getSourceName(),
                 sourceUrl: $rule->getSourceUrl(),
-                status: RuleStatus::Satisfied,
+                status: RuleStatus::Triggered,
             );
         }
 
-        $reason = \sprintf(
-            'Poisson(s) à risque (contaminants/mercure) détecté(s) : %s. À éviter chez le jeune enfant (ANSES).',
-            implode(', ', array_unique(\array_slice($found, 0, 3))),
-        );
+        $limited = $this->match($ingredients, self::FISH_TO_LIMIT);
+        if ([] !== $limited) {
+            return new AppliedRuleDto(
+                ruleCode: 'contaminated_fish_limit',
+                ruleLabel: 'Poisson à limiter (60 g/semaine avant 30 mois)',
+                pointsImpact: intdiv($rule->getPointsImpact(), 2),
+                reason: \sprintf(
+                    'Contient : %s. L\'ANSES recommande de limiter ces espèces à 60 g/semaine avant 30 mois.',
+                    implode(', ', $limited),
+                ),
+                sourceName: $rule->getSourceName(),
+                sourceUrl: $rule->getSourceUrl(),
+                status: RuleStatus::Triggered,
+            );
+        }
 
         return new AppliedRuleDto(
             ruleCode: $rule->getCode(),
-            ruleLabel: $rule->getLabel(),
-            pointsImpact: $rule->getPointsImpact(),
-            reason: $reason,
+            ruleLabel: 'Sans poisson à risque',
+            pointsImpact: 0,
+            reason: 'Aucun poisson à risque (contaminants/mercure) détecté dans la liste d\'ingrédients.',
             sourceName: $rule->getSourceName(),
             sourceUrl: $rule->getSourceUrl(),
-            status: RuleStatus::Triggered,
+            status: RuleStatus::Satisfied,
         );
+    }
+
+    /**
+     * @param list<string> $list
+     *
+     * @return list<string>
+     */
+    private function match(string $ingredients, array $list): array
+    {
+        $pattern = '/\b(' . implode('|', array_map(
+            static fn (string $w): string => preg_quote($w, '/'),
+            $list,
+        )) . ')\b/iu';
+
+        preg_match_all($pattern, $ingredients, $matches);
+
+        return array_values(array_unique($matches[1]));
     }
 }

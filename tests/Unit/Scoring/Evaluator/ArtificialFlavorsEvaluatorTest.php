@@ -26,7 +26,7 @@ final class ArtificialFlavorsEvaluatorTest extends TestCase
         self::assertFalse($this->evaluator->supports($this->rule('added_salt')));
     }
 
-    public function testTriggersOnArtificialFlavorKeyword(): void
+    public function testTriggersOnArtificialFlavorAsCritical(): void
     {
         $product = new Product('3000000000100', 'Dessert')
             ->setIngredientsRaw('Sucre, eau, arôme synthétique');
@@ -39,10 +39,23 @@ final class ArtificialFlavorsEvaluatorTest extends TestCase
         self::assertSame(RuleStatus::Triggered, $applied->status);
     }
 
-    public function testSatisfiedOnNaturalFlavor(): void
+    public function testTriggersUnqualifiedFlavorAsLighterMalus(): void
     {
         $product = new Product('3000000000101', 'Compote')
             ->setIngredientsRaw('Pommes, arôme naturel de vanille');
+
+        $applied = $this->evaluator->evaluate($product, $this->rule('artificial_flavors', -15), null);
+
+        self::assertInstanceOf(AppliedRuleDto::class, $applied);
+        self::assertSame('unqualified_flavors', $applied->ruleCode);
+        self::assertSame(-7, $applied->pointsImpact); // intdiv(-15, 2)
+        self::assertSame(RuleStatus::Triggered, $applied->status);
+    }
+
+    public function testSatisfiedWithoutAnyFlavor(): void
+    {
+        $product = new Product('3000000000103', 'Purée')
+            ->setIngredientsRaw('Carottes, pommes de terre, eau');
 
         $applied = $this->evaluator->evaluate($product, $this->rule('artificial_flavors'), null);
 
@@ -54,7 +67,6 @@ final class ArtificialFlavorsEvaluatorTest extends TestCase
     public function testReturnsNullWithoutIngredients(): void
     {
         $product = new Product('3000000000102', 'Produit');
-
         self::assertNull($this->evaluator->evaluate($product, $this->rule('artificial_flavors'), null));
     }
 

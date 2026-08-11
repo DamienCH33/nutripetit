@@ -26,7 +26,7 @@ final class ContaminatedFishEvaluatorTest extends TestCase
         self::assertFalse($this->evaluator->supports($this->rule('iron_rich')));
     }
 
-    public function testTriggersOnRiskyFish(): void
+    public function testTriggersAvoidFishAsCritical(): void
     {
         $product = new Product('3000000000120', 'Plat poisson')
             ->setIngredientsRaw('Espadon, eau, sel');
@@ -35,6 +35,20 @@ final class ContaminatedFishEvaluatorTest extends TestCase
 
         self::assertInstanceOf(AppliedRuleDto::class, $applied);
         self::assertSame('contaminated_fish', $applied->ruleCode);
+        self::assertSame(-25, $applied->pointsImpact);
+        self::assertSame(RuleStatus::Triggered, $applied->status);
+    }
+
+    public function testTriggersLimitFishAsLighterMalus(): void
+    {
+        $product = new Product('3000000000123', 'Plat poisson')
+            ->setIngredientsRaw('Thon, eau, sel');
+
+        $applied = $this->evaluator->evaluate($product, $this->rule('contaminated_fish', -25), null);
+
+        self::assertInstanceOf(AppliedRuleDto::class, $applied);
+        self::assertSame('contaminated_fish_limit', $applied->ruleCode);
+        self::assertSame(-12, $applied->pointsImpact); // intdiv(-25, 2)
         self::assertSame(RuleStatus::Triggered, $applied->status);
     }
 
@@ -53,7 +67,6 @@ final class ContaminatedFishEvaluatorTest extends TestCase
     public function testReturnsNullOnEmptyIngredients(): void
     {
         $product = new Product('3000000000122', 'Produit');
-
         self::assertNull($this->evaluator->evaluate($product, $this->rule('contaminated_fish'), null));
     }
 
