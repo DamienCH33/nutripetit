@@ -3,30 +3,37 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     static targets = ['button', 'iosHelp'];
 
+    // Le service worker et la capture de beforeinstallprompt sont faits dans le
+    // <head> du layout (base/landing.html.twig), avant le chargement de ce module.
     connect() {
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(() => {});
-        }
-
-        this.deferredPrompt = null;
-        this.isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+        this.isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent)
+            || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS
         this.isStandalone = window.navigator.standalone === true
             || window.matchMedia('(display-mode: standalone)').matches;
 
-        this._onBeforeInstall = (e) => {
-            e.preventDefault();
-            this.deferredPrompt = e;
-            this.showButton();
-        };
-        window.addEventListener('beforeinstallprompt', this._onBeforeInstall);
+        if (this.isStandalone) {
+            return;
+        }
 
-        if (this.isIos && !this.isStandalone) {
+        this._onInstallable = () => this.showButton();
+        window.addEventListener('np:installable', this._onInstallable);
+        this._onInstalled = () => this.hideButton();
+        window.addEventListener('appinstalled', this._onInstalled);
+
+        if (window.npInstallPrompt || this.isIos) {
             this.showButton();
         }
     }
 
     disconnect() {
-        window.removeEventListener('beforeinstallprompt', this._onBeforeInstall);
+        window.removeEventListener('np:installable', this._onInstallable);
+        window.removeEventListener('appinstalled', this._onInstalled);
+    }
+
+    hideButton() {
+        if (this.hasButtonTarget) {
+            this.buttonTarget.hidden = true;
+        }
     }
 
     showButton() {
@@ -36,11 +43,13 @@ export default class extends Controller {
     }
 
     async install() {
-        if (this.deferredPrompt) {
-            this.deferredPrompt.prompt();
-            await this.deferredPrompt.userChoice;
-            this.deferredPrompt = null;
-            this.buttonTarget.hidden = true;
+        const prompt = window.npInstallPrompt;
+        if (prompt) {
+            prompt.prompt();
+            await prompt.userChoice;
+            // Un événement ne sert qu'une fois ; le navigateur en renverra un si besoin.
+            window.npInstallPrompt = null;
+            this.hideButton();
         } else if (this.isIos && this.hasIosHelpTarget) {
             this.iosHelpTarget.hidden = false;
         }
