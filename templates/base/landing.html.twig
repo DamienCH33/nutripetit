@@ -21,6 +21,19 @@
 		<meta name="theme-color" content="#FDF7F1">
 
 		<link rel="manifest" href="{{ asset('manifest.json') }}">
+		{# Capturé ici, avant le chargement des modules JS : le navigateur peut
+		   émettre beforeinstallprompt avant que Stimulus ait branché le contrôleur,
+		   et l'événement était alors perdu (bouton « Installer » jamais affiché). #}
+		<script>
+			window.addEventListener('beforeinstallprompt', function (e) {
+				e.preventDefault();
+				window.npInstallPrompt = e;
+				window.dispatchEvent(new Event('np:installable'));
+			});
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(function () {});
+			}
+		</script>
 		<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
 		<link rel="icon" type="image/png" sizes="96x96" href="{{ asset('favicon-96x96.png') }}">
 		<link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
