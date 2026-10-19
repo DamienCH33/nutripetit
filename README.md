@@ -8,6 +8,10 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Redis](https://img.shields.io/badge/Redis-7-DC382D?logo=redis&logoColor=white)](https://redis.io/)
 
+
+> **Front Angular (PWA)** : [DamienCH33/nutripetit-front](https://github.com/DamienCH33/nutripetit-front)
+> **Application en ligne** : [nutripetit.up.railway.app/app](https://nutripetit.up.railway.app/app/)
+
 ---
 
 ## 📌 En quelques mots
