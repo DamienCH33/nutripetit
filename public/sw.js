@@ -5,7 +5,7 @@
 //  - tout le reste (dont /app/scan/*) : réseau normal, jamais mis en cache
 //    (un score ne doit jamais être servi périmé depuis un cache SW).
 
-const CACHE_VERSION = "np-v2";
+const CACHE_VERSION = "np-v3";
 const OFFLINE_URL = "/offline.html";
 const PRECACHE = [OFFLINE_URL, "/manifest.json", "/icons/icon-192.png"];
 
