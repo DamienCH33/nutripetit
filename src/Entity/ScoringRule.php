@@ -206,9 +206,12 @@ class ScoringRule
 
     public function appliesToAge(?int $babyAgeMonths): bool
     {
+        // Âge inconnu : par prudence, on se place dans le cas du plus jeune
+        // enfant concerné. Une règle qui vaut dès la naissance s'applique donc
+        // (ex. sel ajouté avant 1 an) ; une règle qui commence plus tard (fer
+        // dès 6 mois) ne s'applique pas, faute de savoir si l'enfant a cet âge.
         if (null === $babyAgeMonths) {
-            return (null === $this->ageMinMonths || 0 === $this->ageMinMonths)
-                && (null === $this->ageMaxMonths || 36 === $this->ageMaxMonths);
+            return null === $this->ageMinMonths || 0 === $this->ageMinMonths;
         }
         if (null !== $this->ageMinMonths && $babyAgeMonths < $this->ageMinMonths) {
             return false;

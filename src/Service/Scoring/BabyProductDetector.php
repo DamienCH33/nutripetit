@@ -165,6 +165,9 @@ final class BabyProductDetector implements BabyProductDetectorInterface
         'nutriben',
         'bledidej',
         'naturnes',
+        // Gammes bébé de distributeurs (marques distinctes de la marque enseigne).
+        'mots d enfants',   // Leclerc
+        'u tout petits',    // Système U
     ];
 
     private const NAME_KEYWORDS = [
@@ -390,8 +393,10 @@ final class BabyProductDetector implements BabyProductDetectorInterface
                     continue;
                 }
                 $normalized = $this->normalize($brand);
-                if (\in_array($normalized, self::BABY_BRANDS, true)) {
-                    return true;
+                foreach (self::BABY_BRANDS as $babyBrand) {
+                    if ($normalized === $this->normalize($babyBrand)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -417,6 +422,12 @@ final class BabyProductDetector implements BabyProductDetectorInterface
             if (str_contains($name, $keyword)) {
                 return true;
             }
+        }
+
+        // Signal 3bis : mention d'âge « dès 15 mois », « à partir de 8 mois »…
+        // La liste NAME_KEYWORDS ne couvrait que 4/6/8/10/12 mois.
+        if (1 === preg_match('/\b(?:d[eè]s|[aà] partir de)\s+(?:le\s+)?\d{1,2}\s*mois\b/u', $name)) {
+            return true;
         }
 
         // Signal 4 : recherche par tokens (mots isolés) pour AR, AC, HA, etc.
@@ -454,13 +465,17 @@ final class BabyProductDetector implements BabyProductDetectorInterface
     }
 
     /**
-     * Normalise une marque : minuscules, sans accents, sans espaces superflus.
+     * Normalise une marque ou un tag : minuscules, sans accents, et tirets,
+     * apostrophes et espaces ramenés à un espace unique.
+     * Les brands_tags d'OFF sont des slugs (« good-gout », « mots-d-enfants ») :
+     * sans ce traitement, aucune marque en plusieurs mots ne correspondait.
      */
     private function normalize(string $value): string
     {
         $value = mb_strtolower(trim($value));
         $map = ['é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e', 'à' => 'a', 'â' => 'a', 'î' => 'i', 'ï' => 'i', 'ô' => 'o', 'ö' => 'o', 'û' => 'u', 'ü' => 'u', 'ç' => 'c'];
+        $value = strtr($value, $map);
 
-        return strtr($value, $map);
+        return trim((string) preg_replace("/[\\s\\-_'’]+/u", ' ', $value));
     }
 }

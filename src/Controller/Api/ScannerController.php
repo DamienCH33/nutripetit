@@ -26,6 +26,8 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 final class ScannerController extends AbstractController
 {
+    private const REJECTED_REFRESH_AFTER = '-1 day';
+
     public function __construct(
         private readonly BabyProductDetectorInterface $babyProductDetector,
         private readonly ScanProductHandler $scanProductHandler,
@@ -52,6 +54,12 @@ final class ScannerController extends AbstractController
             return $this->json(['error' => 'Produit non trouvé.'], Response::HTTP_NOT_FOUND);
         } catch (OpenFoodFactsUnavailableException) {
             return $this->json(['error' => 'Le service de récupération des informations produit est momentanément indisponible.'], Response::HTTP_SERVICE_UNAVAILABLE);
+        }
+
+        // Fiche refusée : on relit OFF au plus une fois par jour, au cas où
+        // quelqu'un l'aurait complétée depuis (catégorie, marque, ingrédients).
+        if (!$this->completenessChecker->hasSufficientData($product) || !$this->babyProductDetector->isBabyProduct($product)) {
+            $product = $this->scanProductHandler->refreshIfOlderThan($product, self::REJECTED_REFRESH_AFTER);
         }
 
         if (!$this->completenessChecker->hasSufficientData($product)) {

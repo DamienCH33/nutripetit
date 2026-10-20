@@ -25,7 +25,7 @@ final class ScoreCalculatorTest extends TestCase
         self::assertSame(100, $result->finalScore);
         self::assertSame('ideal', $result->level);
         self::assertSame([], $result->appliedRules);
-        self::assertSame('1.2.0', $result->algoVersion);
+        self::assertSame('1.3.0', $result->algoVersion);
     }
 
     public function testImpactsAreSummedFromBase100(): void
@@ -68,6 +68,38 @@ final class ScoreCalculatorTest extends TestCase
         self::assertSame(50, $resultOld->finalScore);
     }
 
+    public function testScoreIsCappedWithoutIngredientList(): void
+    {
+        $result = $this->calculator([])->calculate($this->product(null));
+
+        self::assertSame(ScoreCalculator::SCORE_CAP_WITHOUT_INGREDIENTS, $result->finalScore);
+        self::assertSame('occasional', $result->level);
+        $cap = $result->appliedRules[array_key_last($result->appliedRules)];
+        self::assertSame('incomplete_ingredients', $cap->ruleCode);
+        self::assertSame(-16, $cap->pointsImpact);
+    }
+
+    public function testCapLeavesALowerScoreUntouchedButExplainsIt(): void
+    {
+        $result = $this->calculator([$this->rule('a', -40)])->calculate($this->product('  '));
+
+        self::assertSame(60, $result->finalScore);
+        $cap = $result->appliedRules[array_key_last($result->appliedRules)];
+        self::assertSame('incomplete_ingredients', $cap->ruleCode);
+        self::assertSame(0, $cap->pointsImpact);
+    }
+
+    public function testRuleFromBirthAppliesWhenAgeIsUnknown(): void
+    {
+        // Ex. sel ajouté : 0-12 mois. Âge inconnu -> prudence, la règle compte.
+        $rules = [$this->rule('added_salt', -15, ageMin: 0, ageMax: 12), $this->rule('iron_rich', -5, ageMin: 6)];
+
+        $result = $this->calculator($rules)->calculate($this->product(), null);
+
+        self::assertSame(85, $result->finalScore);
+        self::assertSame(['added_salt'], array_map(static fn ($r) => $r->ruleCode, $result->appliedRules));
+    }
+
     /**
      * @param list<ScoringRule> $rules
      */
@@ -100,9 +132,9 @@ final class ScoreCalculatorTest extends TestCase
         return new ScoreCalculator($repo, [$evaluator]);
     }
 
-    private function product(): Product
+    private function product(?string $ingredients = 'carottes, eau'): Product
     {
-        return new Product('3000000000000', 'Produit test');
+        return new Product('3000000000000', 'Produit test')->setIngredientsRaw($ingredients);
     }
 
     private function rule(string $code, int $points, ?int $ageMin = null, ?int $ageMax = null): ScoringRule

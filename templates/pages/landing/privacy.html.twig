@@ -3,7 +3,7 @@
 {% block title %}Politique de confidentialité - NutriPetit
 {% endblock %}
 
-{% block description %}Politique de confidentialité de NutriPetit. Aucune donnée nominative, identifiant de session anonyme, conformité RGPD.
+{% block description %}Politique de confidentialité de NutriPetit. Aucune donnée nominative, identifiant de session anonyme, données hébergées dans l'Union européenne.
 {% endblock %}
 
 {% block body %}
@@ -12,8 +12,7 @@
 
 			<header class="np-legal__header">
 				<h1 class="np-legal__title">Politique de confidentialité</h1>
-				<p class="np-legal__meta">Dernière mise à jour :
-					{{ "now"|date("d F Y") }}</p>
+				<p class="np-legal__meta">Dernière mise à jour : 13 octobre 2026</p>
 			</header>
 
 			<section class="np-legal__intro">
@@ -28,10 +27,10 @@
 					<ul class="np-legal__highlight-list">
 						<li>Aucune donnée nominative (ni nom, ni email, ni adresse postale)</li>
 						<li>Aucun compte utilisateur requis pour utiliser l'application</li>
-						<li>Adresse IP utilisée uniquement, en mémoire, pour limiter les abus — jamais conservée en base</li>
+						<li>Adresse IP utilisée uniquement, dans un cache temporaire, pour limiter les abus — jamais conservée en base</li>
 						<li>Aucune donnée vendue, partagée ou exploitée commercialement</li>
 						<li>Aucun cookie de tracking publicitaire</li>
-						<li>Aucun transfert hors Union européenne</li>
+						<li>Données hébergées dans l'Union européenne</li>
 					</ul>
 				</div>
 			</section>
@@ -42,13 +41,13 @@
 					Le responsable du traitement des données collectées via NutriPetit est :
 				</p>
 				<p>
-					<strong>Damien Chauveau</strong><br>
-					Villenave d'Ornon, France<br>
+					<strong>Damien Chauveau EI</strong> (SIRET 131 233 488 00017)<br>
+					60 chemin de Leyran, 33140 Villenave-d'Ornon, France<br>
 					Contact :
-					<a href="mailto:contact@monavispro.fr">contact@monavispro.fr</a>
+					<a href="mailto:contact@damienchauveau-dev.fr">contact@damienchauveau-dev.fr</a>
 				</p>
 				<p>
-					NutriPetit est un projet open source développé dans le cadre d'un portfolio professionnel.
+					NutriPetit est un service gratuit, sans publicité ni revente de données.
 				</p>
 			</section>
 
@@ -73,8 +72,8 @@
 				</p>
 				<ul>
 					<li>
-						<strong>Identifiant de session anonyme (UUID v7)</strong>
-						: déposé dans un cookie technique (httpOnly), sans aucun lien avec votre identité, pour retrouver vos scans entre vos visites.</li>
+						<strong>Identifiant de session anonyme</strong>
+						: un jeton aléatoire déposé dans un cookie technique (<code>np_session</code>, httpOnly, valable 12 mois), sans aucun lien avec votre identité, pour retrouver vos scans entre vos visites.</li>
 					<li>
 						<strong>Âge en mois associé au scan</strong>
 						: transmis lors du scan et conservé avec le résultat, pour la traçabilité du score affiché.</li>
@@ -86,7 +85,7 @@
 						: pour pouvoir prouver, en cas de litige, quel score a été affiché à quel moment.</li>
 					<li>
 						<strong>User-Agent du navigateur</strong>
-						: information technique (type de navigateur), tronquée et non nominative.</li>
+						: information technique transmise par votre navigateur (type de navigateur et de système), non nominative, utilisée pour des statistiques d'usage (iOS / Android / autre).</li>
 					<li>
 						<strong>Date de scan et de dernière activité</strong>
 						: pour appliquer la durée de conservation.</li>
@@ -94,8 +93,8 @@
 				<p>
 					<strong>Adresse IP</strong>
 					: traitée
-					<strong>temporairement et en mémoire</strong>
-					(environ une minute) à des fins de limitation de débit, pour empêcher les abus de scan. Elle n'est
+					<strong>temporairement, dans un cache technique</strong>
+					(une heure au plus) à des fins de limitation de débit, pour empêcher les abus de scan. Elle n'est
 					<strong>jamais enregistrée</strong>
 					dans notre base de données.
 				</p>
@@ -160,7 +159,7 @@
 							<td>Jusqu'à effacement par l'utilisateur</td>
 						</tr>
 						<tr>
-							<td>Session anonyme (UUID v7)</td>
+							<td>Session anonyme (cookie <code>np_session</code>)</td>
 							<td>13 mois d'inactivité maximum, puis suppression automatique</td>
 						</tr>
 						<tr>
@@ -169,11 +168,11 @@
 						</tr>
 						<tr>
 							<td>Adresse IP (limitation de débit)</td>
-							<td>Environ 1 minute, en mémoire, jamais en base</td>
+							<td>Une heure au plus, en cache, jamais en base</td>
 						</tr>
 						<tr>
 							<td>Cache produit Open Food Facts</td>
-							<td>7 jours (renouvellement automatique)</td>
+							<td>24 heures (renouvellement automatique)</td>
 						</tr>
 					</tbody>
 				</table>
@@ -188,7 +187,7 @@
 				<p>
 					Un seul cookie est utilisé : un
 					<strong>cookie de session strictement nécessaire</strong>
-					contenant un identifiant anonyme (UUID v7, en
+					contenant un identifiant anonyme aléatoire (en
 					<em>httpOnly</em>), indispensable au fonctionnement de l'application (historique de vos scans). Étant purement fonctionnel, il est
 					<strong>exempté de consentement</strong>
 					conformément aux recommandations de la CNIL.
@@ -234,8 +233,8 @@
 					<li>
 						<strong>Nous contacter</strong>
 						à
-						<a href="mailto:contact@monavispro.fr">contact@monavispro.fr</a>
-						pour toute autre demande. L'effacement de votre historique depuis la page « Historique » de l'application reste le moyen le plus simple et immédiat : il supprime définitivement vos scans et votre session anonyme de nos serveurs.</li>
+						<a href="mailto:contact@damienchauveau-dev.fr">contact@damienchauveau-dev.fr</a>
+						pour toute autre demande. L'effacement de votre historique depuis la page « Historique » de l'application reste le moyen le plus simple et immédiat : il supprime définitivement vos scans de nos serveurs. La session anonyme, devenue vide, est supprimée automatiquement après 13 mois d'inactivité.</li>
 				</ul>
 				<p>
 					Vous pouvez également introduire une réclamation auprès de la
@@ -251,15 +250,20 @@
 					<li>Base de données hébergée en Union européenne (Railway, infrastructure dans l'UE).</li>
 					<li>Sauvegardes chiffrées automatiques.</li>
 					<li>Aucun accès humain aux données autre que le responsable du traitement.</li>
-					<li>Adresse IP non conservée en base : utilisée uniquement, en mémoire, pour la limitation de débit.</li>
+					<li>Adresse IP non conservée en base : utilisée uniquement, dans un cache temporaire, pour la limitation de débit.</li>
 				</ul>
 			</section>
 
 			<section class="np-legal__section">
 				<h2 class="np-legal__section-title">9. Transferts hors Union européenne</h2>
 				<p>
-					Aucune donnée n'est transférée hors de l'Union européenne. La seule source externe est
-					<strong>Open Food Facts</strong>, association française à but non lucratif, dont les données sont publiées sous licence ODbL.
+					Les données sont hébergées dans l'Union européenne. L'hébergeur, Railway Corporation, est une société établie aux États-Unis : l'accès éventuel de ses équipes aux données est encadré par les clauses contractuelles types de la Commission européenne.
+				</p>
+				<p>
+					Les polices de caractères du site et de l'application sont hébergées sur nos propres serveurs : votre navigateur ne contacte pas Google Fonts.
+				</p>
+				<p>
+					Les données produits proviennent d'<strong>Open Food Facts</strong>, association française à but non lucratif (licence ODbL). Aucune donnée vous concernant ne lui est transmise.
 				</p>
 			</section>
 

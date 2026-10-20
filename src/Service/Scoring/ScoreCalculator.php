@@ -11,6 +11,7 @@ use App\Entity\ScoringRule;
 use App\Enum\ScoreLevel;
 use App\Enum\ScoringAlgorithm;
 use App\Repository\ScoringRuleRepository;
+use App\Scoring\ScoringRulesProvider;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 /**
@@ -30,9 +31,13 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
  */
 final class ScoreCalculator
 {
-    public const ALGO_VERSION = '1.2.0';
+    /** Une seule source de vérité : la version des règles semées en base. */
+    public const ALGO_VERSION = ScoringRulesProvider::ALGO_VERSION;
 
     private const SCORE_BASE = 100;
+
+    /** Plafond sans liste d'ingrédients : sous le seuil « Bon choix » (85). */
+    public const SCORE_CAP_WITHOUT_INGREDIENTS = 84;
 
     /** @var list<RuleEvaluator> */
     private readonly array $evaluators;
@@ -70,6 +75,26 @@ final class ScoreCalculator
         );
 
         $finalScore = max(0, min(100, self::SCORE_BASE + $totalImpact));
+
+        // Sans liste d'ingrédients, sucres ajoutés, miel, édulcorants ou additifs
+        // ne peuvent pas être exclus (jusqu'à -30 chacun) : le score ne peut pas
+        // dépasser « Occasionnel ». Même logique qu'Open Food Facts, qui ne calcule
+        // pas de Nutri-Score quand des données manquent.
+        if (!$this->hasIngredients($product)) {
+            $capped = min($finalScore, self::SCORE_CAP_WITHOUT_INGREDIENTS);
+            $appliedRules[] = new AppliedRuleDto(
+                ruleCode: 'incomplete_ingredients',
+                ruleLabel: 'Liste d\'ingrédients absente',
+                pointsImpact: $capped - $finalScore,
+                reason: \sprintf(
+                    'La fiche Open Food Facts n\'a pas de liste d\'ingrédients : sucres ajoutés, miel, édulcorants et additifs n\'ont pas pu être vérifiés. Score plafonné à %d.',
+                    self::SCORE_CAP_WITHOUT_INGREDIENTS,
+                ),
+                sourceName: 'Open Food Facts — fiche à compléter',
+                sourceUrl: 'https://fr.openfoodfacts.org/produit/' . rawurlencode($product->getEan()),
+            );
+            $finalScore = $capped;
+        }
         $level = $this->determineLevel($finalScore);
 
         return new ScoreCalculationResultDto(
@@ -79,6 +104,13 @@ final class ScoreCalculator
             algoVersion: self::ALGO_VERSION,
             babyAgeMonths: $babyAgeMonths,
         );
+    }
+
+    private function hasIngredients(Product $product): bool
+    {
+        $ingredients = $product->getIngredientsRaw();
+
+        return null !== $ingredients && '' !== trim($ingredients);
     }
 
     /**

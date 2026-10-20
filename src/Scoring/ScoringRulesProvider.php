@@ -6,7 +6,12 @@ namespace App\Scoring;
 
 final class ScoringRulesProvider
 {
-    public const ALGO_VERSION = '1.2.0';
+    /**
+     * 1.3.0 — branche les règles honey_botulism et total_sugars_energy, dont les
+     * evaluators existaient mais qui n'étaient jamais semées en base : elles ne
+     * s'exécutaient donc jamais (audit du 15/10/2026).
+     */
+    public const ALGO_VERSION = '1.3.0';
 
     /**
      * @return list<array<string, mixed>>
@@ -28,6 +33,16 @@ final class ScoringRulesProvider
                 'sourceUrl' => 'https://www.who.int/publications/i/item/9789241549028',
             ],
             [
+                'code' => 'total_sugars_energy',
+                'label' => 'Sucres trop élevés pour l\'énergie apportée',
+                'description' => 'Sucres totaux au-dessus du repère de l\'OMS Europe pour les 6-36 mois, selon le type de produit : 15 % de l\'énergie pour les plats salés et biscuits, 30 % pour les fruits et céréales, 40 % pour les laitages.',
+                'pointsImpact' => -15,
+                'ageMinMonths' => 6,
+                'ageMaxMonths' => 36,
+                'sourceName' => 'OMS Europe — Nutrient and Promotion Profile Model (2022)',
+                'sourceUrl' => 'https://www.who.int/europe/publications/i/item/WHO-EURO-2022-6681-46447-67287',
+            ],
+            [
                 'code' => 'sweeteners',
                 'label' => 'Édulcorants',
                 'description' => 'Présence d\'édulcorants (aspartame, sucralose, stévia, acésulfame K, saccharine). L\'ANSES recommande de proscrire ces ingrédients chez les jeunes enfants.',
@@ -39,15 +54,13 @@ final class ScoringRulesProvider
             ],
             [
                 'code' => 'added_salt',
-                'label' => 'Sel ajouté excessif',
-                'description' => 'Teneur en sel supérieure à 0.3g/100g chez le nourrisson de moins de 1 an. Le sel ajouté est déconseillé avant 12 mois.',
+                'label' => 'Trop salé',
+                'description' => 'Sodium au-dessus de 50 mg/100 kcal (100 mg/100 kcal pour les laitages et plats au fromage), plafond de l\'OMS Europe pour les aliments des 6-36 mois. L\'ANSES recommande de ne pas saler les repas des enfants de 0 à 3 ans. Sans valeur énergétique : plafond légal de 0,5 g de sel/100 g.',
                 'pointsImpact' => -15,
-                'thresholdValue' => 0.3,
-                'thresholdUnit' => 'g/100g',
                 'ageMinMonths' => 0,
-                'ageMaxMonths' => 12,
-                'sourceName' => 'ANSES Avis 0-3 ans (2019) - Repères PNNS 4',
-                'sourceUrl' => 'https://www.anses.fr/fr/system/files/NUT2017SA0145.pdf',
+                'ageMaxMonths' => 36,
+                'sourceName' => 'OMS Europe — NPPM (2022) + ANSES 0-3 ans (2019)',
+                'sourceUrl' => 'https://www.who.int/europe/publications/i/item/WHO-EURO-2022-6681-46447-67287',
             ],
             [
                 'code' => 'excessive_proteins',
@@ -124,6 +137,19 @@ final class ScoringRulesProvider
                 'ageMaxMonths' => 36,
                 'sourceName' => 'ANSES recommandations poissons (2019)',
                 'sourceUrl' => 'https://www.anses.fr/fr/content/poissons-et-produits-de-la-peche-synthese-des-recommandations-de-lagence',
+            ],
+            [
+                // L'evaluator ne déclenche qu'avant 12 mois (ou âge inconnu) ; après,
+                // le miel reste couvert par le malus « sucres ajoutés ». La tranche
+                // 0-36 est voulue : elle fait jouer la règle quand l'âge est inconnu.
+                'code' => 'honey_botulism',
+                'label' => 'Miel avant 1 an — risque de botulisme',
+                'description' => 'Le miel peut contenir des spores de Clostridium botulinum, responsables du botulisme infantile, y compris après cuisson. Aucun miel avant 12 mois, sous aucune forme.',
+                'pointsImpact' => -35,
+                'ageMinMonths' => 0,
+                'ageMaxMonths' => 36,
+                'sourceName' => 'ANSES — Pas de miel pour les enfants de moins d\'un an',
+                'sourceUrl' => 'https://www.anses.fr/fr/content/pas-de-miel-les-enfants-de-moins-dun-an',
             ],
 
             //

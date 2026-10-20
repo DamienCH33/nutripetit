@@ -11,6 +11,7 @@ use App\Service\OpenFoodFactsClientInterface;
 use App\Service\Product\ProductPreviewBuilder;
 use App\Service\Scoring\BabyProductDetectorInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -23,6 +24,7 @@ use Throwable;
  * dg/bypass-finals (mock de classes finales). IP distinctes par test pour
  * isoler le compteur du rate limiter.
  */
+#[AllowMockObjectsWithoutExpectations]
 final class ScannerControllerTest extends WebTestCase
 {
     private const VALID_EAN = '3017620422003';

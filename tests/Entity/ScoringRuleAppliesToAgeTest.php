@@ -24,6 +24,10 @@ final class ScoringRuleAppliesToAgeTest extends TestCase
         yield 'borne min, âge au dessus' => [6, null, 24, true];
         yield 'borne max, âge au dessus' => [null, 12, 24, false];
         yield 'borne max, âge pile' => [null, 12, 12, true];
+        // Âge inconnu : prudence, on applique ce qui vaut dès la naissance.
+        yield 'dès la naissance jusqu\'à 1 an, âge inconnu' => [0, 12, null, true];
+        yield 'sans min jusqu\'à 1 an, âge inconnu' => [null, 12, null, true];
+        yield 'fourchette dès 6 mois, âge inconnu' => [6, 36, null, false];
         yield 'fourchette, dans la plage' => [6, 12, 9, true];
         yield 'fourchette, trop jeune' => [6, 12, 3, false];
         yield 'fourchette, trop vieux' => [6, 12, 18, false];

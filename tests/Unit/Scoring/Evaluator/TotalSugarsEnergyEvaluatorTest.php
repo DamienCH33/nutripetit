@@ -80,6 +80,34 @@ final class TotalSugarsEnergyEvaluatorTest extends TestCase
         self::assertNull($this->evaluator->evaluate($product, $this->rule('total_sugars_energy'), null));
     }
 
+    /**
+     * 20 % de l'énergie en sucres : trop pour un plat salé (15 %), normal pour
+     * une compote (30 %) ou un yaourt (40 %). Référentiel OMS Europe NPPM, tableau 1.
+     */
+    public function testThresholdDependsOnProductType(): void
+    {
+        $nutriments = ['sugars_100g' => 5, 'energy-kcal_100g' => 100]; // 5 × 4 / 100 = 20 %
+        $plat = new Product('3000000000400', 'Petit plat carottes riz')->setNutriments($nutriments)
+            ->setOffRawData(['categories_tags' => ['en:baby-meals']]);
+        $compote = new Product('3000000000401', 'Pomme poire')->setNutriments($nutriments)
+            ->setOffRawData(['categories_tags' => ['en:compotes']]);
+        $yaourt = new Product('3000000000402', 'Yaourt aux fruits')->setNutriments($nutriments)
+            ->setOffRawData(['categories_tags' => ['en:baby-yogurts']]);
+
+        $rule = $this->rule('total_sugars_energy');
+        self::assertSame(RuleStatus::Triggered, $this->evaluator->evaluate($plat, $rule, 9)?->status);
+        self::assertSame(RuleStatus::Satisfied, $this->evaluator->evaluate($compote, $rule, 9)?->status);
+        self::assertSame(RuleStatus::Satisfied, $this->evaluator->evaluate($yaourt, $rule, 9)?->status);
+    }
+
+    public function testFruitPureeAboveThirtyPercentStillTriggers(): void
+    {
+        $compote = new Product('3000000000403', 'Compote pomme banane')
+            ->setNutriments(['sugars_100g' => 14, 'energy-kcal_100g' => 70]); // 80 %
+
+        self::assertSame(RuleStatus::Triggered, $this->evaluator->evaluate($compote, $this->rule('total_sugars_energy'), 9)?->status);
+    }
+
     private function rule(string $code, int $points = -15): ScoringRule
     {
         return new ScoringRule($code, 'Sucres élevés', '', '1.0.0', $points, 'OMS Europe - NPPM', 'https://example.test');
