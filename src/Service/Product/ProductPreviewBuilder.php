@@ -93,7 +93,9 @@ final class ProductPreviewBuilder
             'minAgeMonths' => $minAgeMonths,
             'additives' => $this->additiveExtractor->extractAdditives($product),
             'carbonFootprint' => $this->carbonFootprintExtractor->extractCarbonFootprint($product),
-            'dataIncomplete' => !$this->completenessChecker->hasSufficientData($product),
+            // Toujours faux avec hasSufficientData() : les produits sans données sont
+            // refusés en amont (422). On signale ici le score PARTIEL.
+            'dataIncomplete' => !$this->completenessChecker->isComplete($product),
             'infantFormulaReference' => $infantFormulaReference,
         ];
     }

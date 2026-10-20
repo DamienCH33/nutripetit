@@ -6,6 +6,7 @@ namespace App\Controller\Api;
 
 use App\Repository\ScoreResultRepository;
 use App\Service\Session\ScanSessionManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +20,7 @@ final class HistoryController extends AbstractController
     public function __construct(
         private readonly ScanSessionManager $scanSessionManager,
         private readonly ScoreResultRepository $scoreResultRepository,
+        private readonly EntityManagerInterface $em,
     ) {
     }
 
@@ -70,10 +72,18 @@ final class HistoryController extends AbstractController
 
         $session = $this->scanSessionManager->getSessionFromRequest($request);
 
-        $deleted = null !== $session
-            ? $this->scoreResultRepository->deleteAllForSession($session)
-            : 0;
+        $deleted = 0;
+        if (null !== $session) {
+            $deleted = $this->scoreResultRepository->deleteAllForSession($session);
+            // La politique de confidentialité promet l'effacement des scans ET de
+            // la session anonyme : on supprime aussi la session et son cookie.
+            $this->em->remove($session);
+            $this->em->flush();
+        }
 
-        return $this->json(['deleted' => $deleted]);
+        $response = $this->json(['deleted' => $deleted]);
+        $response->headers->clearCookie(ScanSessionManager::SESSION_COOKIE_NAME, '/');
+
+        return $response;
     }
 }

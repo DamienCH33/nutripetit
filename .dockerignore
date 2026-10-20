@@ -1,0 +1,12 @@
+# Rien de ceci n'a sa place dans l'image de prod.
+.git
+.github
+var/
+vendor/
+tests/
+node_modules/
+.env.local
+.env.*.local
+.phpunit.cache
+.php-cs-fixer.cache
+compose*.yaml

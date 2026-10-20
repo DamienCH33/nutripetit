@@ -4,6 +4,11 @@ RUN apt-get update && apt-get install -y git unzip libpq-dev \
     && docker-php-ext-install pdo_pgsql \
     && apt-get clean
 
+# Sans php.ini, PHP tourne avec ses valeurs par défaut (display_errors=1,
+# expose_php=1 -> en-tête X-Powered-By). On part du profil production.
+RUN cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
+    && printf 'expose_php = Off\nopcache.validate_timestamps = 0\n' > "$PHP_INI_DIR/conf.d/zz-nutripetit.ini"
+
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app

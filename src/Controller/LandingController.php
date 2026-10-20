@@ -50,6 +50,8 @@ final class LandingController extends AbstractController
         $content = implode("\n", [
             'User-agent: *',
             'Disallow: /app/',
+            'Disallow: /admin',
+            'Disallow: /api/',
             '',
             'Sitemap: ' . $sitemapUrl,
             '',

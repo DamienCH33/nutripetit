@@ -43,6 +43,42 @@ final class RuleEvaluatorCoverageTest extends KernelTestCase
         self::assertSame([], $missing, 'Règle(s) sans evaluator : ' . implode(', ', $missing));
     }
 
+    /**
+     * Garde-fou inverse : un evaluator sans règle semée ne s'exécute jamais.
+     * C'est arrivé avec honey_botulism et total_sugars_energy (évaluateurs codés
+     * et testés, mais absents du provider, donc jamais en base).
+     */
+    public function testEveryEvaluatorHasASeededRule(): void
+    {
+        self::bootKernel();
+
+        $calculator = self::getContainer()->get(ScoreCalculator::class);
+        $property = new ReflectionProperty(ScoreCalculator::class, 'evaluators');
+        /** @var list<RuleEvaluator> $evaluators */
+        $evaluators = iterator_to_array($property->getValue($calculator), false);
+
+        $rules = array_map(
+            fn (array $data): ScoringRule => $this->makeRule($data['code']),
+            ScoringRuleFixtures::getRules(),
+        );
+
+        $orphans = [];
+        foreach ($evaluators as $evaluator) {
+            $used = false;
+            foreach ($rules as $rule) {
+                if ($evaluator->supports($rule)) {
+                    $used = true;
+                    break;
+                }
+            }
+            if (!$used) {
+                $orphans[] = $evaluator::class;
+            }
+        }
+
+        self::assertSame([], $orphans, 'Evaluator(s) sans règle semée : ' . implode(', ', $orphans));
+    }
+
     private function makeRule(string $code): ScoringRule
     {
         return new ScoringRule($code, $code, '', '1.1.0', 0, 'test', 'https://example.test');

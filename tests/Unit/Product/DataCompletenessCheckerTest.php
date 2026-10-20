@@ -48,4 +48,24 @@ final class DataCompletenessCheckerTest extends TestCase
 
         self::assertFalse($this->checker->hasSufficientData($product));
     }
+
+    public function testNutrimentsWithoutIngredientsIsScoredButIncomplete(): void
+    {
+        // Cas réel : 3564706788480 (Leclerc « Mots d'enfants »), tableau
+        // nutritionnel sur OFF mais aucune liste d'ingrédients.
+        $product = new Product('3564706788480', 'Pommes de terre poulet et champignons')
+            ->setNutriments(['energy-kcal_100g' => 62, 'sugars_100g' => 1.8]);
+
+        self::assertTrue($this->checker->hasSufficientData($product));
+        self::assertFalse($this->checker->isComplete($product));
+    }
+
+    public function testIngredientsAndNutrimentsIsComplete(): void
+    {
+        $product = new Product('3000000000005', 'Complet')
+            ->setIngredientsRaw('carottes, eau')
+            ->setNutriments(['energy-kcal_100g' => 30]);
+
+        self::assertTrue($this->checker->isComplete($product));
+    }
 }

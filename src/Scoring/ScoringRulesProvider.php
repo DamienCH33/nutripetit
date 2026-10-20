@@ -6,7 +6,12 @@ namespace App\Scoring;
 
 final class ScoringRulesProvider
 {
-    public const ALGO_VERSION = '1.2.0';
+    /**
+     * 1.3.0 — branche les règles honey_botulism et total_sugars_energy, dont les
+     * evaluators existaient mais qui n'étaient jamais semées en base : elles ne
+     * s'exécutaient donc jamais (audit du 15/10/2026).
+     */
+    public const ALGO_VERSION = '1.3.0';
 
     /**
      * @return list<array<string, mixed>>
@@ -26,6 +31,18 @@ final class ScoringRulesProvider
                 'ageMaxMonths' => 36,
                 'sourceName' => 'OMS Guideline: Sugars intake (2015) + ANSES 2019',
                 'sourceUrl' => 'https://www.who.int/publications/i/item/9789241549028',
+            ],
+            [
+                'code' => 'total_sugars_energy',
+                'label' => 'Sucres trop élevés pour l\'énergie apportée',
+                'description' => 'Plus de 15 % de l\'énergie du produit vient des sucres totaux (y compris ceux des fruits). Repère du modèle de profil nutritionnel de l\'OMS Europe pour les aliments des 6-36 mois.',
+                'pointsImpact' => -15,
+                'thresholdValue' => 15.0,
+                'thresholdUnit' => '% énergie',
+                'ageMinMonths' => 6,
+                'ageMaxMonths' => 36,
+                'sourceName' => 'OMS Europe — Nutrient and Promotion Profile Model (2022)',
+                'sourceUrl' => 'https://www.who.int/europe/publications/i/item/WHO-EURO-2022-6681-46447-67287',
             ],
             [
                 'code' => 'sweeteners',
@@ -124,6 +141,19 @@ final class ScoringRulesProvider
                 'ageMaxMonths' => 36,
                 'sourceName' => 'ANSES recommandations poissons (2019)',
                 'sourceUrl' => 'https://www.anses.fr/fr/content/poissons-et-produits-de-la-peche-synthese-des-recommandations-de-lagence',
+            ],
+            [
+                // L'evaluator ne déclenche qu'avant 12 mois (ou âge inconnu) ; après,
+                // le miel reste couvert par le malus « sucres ajoutés ». La tranche
+                // 0-36 est voulue : elle fait jouer la règle quand l'âge est inconnu.
+                'code' => 'honey_botulism',
+                'label' => 'Miel avant 1 an — risque de botulisme',
+                'description' => 'Le miel peut contenir des spores de Clostridium botulinum, responsables du botulisme infantile, y compris après cuisson. Aucun miel avant 12 mois, sous aucune forme.',
+                'pointsImpact' => -35,
+                'ageMinMonths' => 0,
+                'ageMaxMonths' => 36,
+                'sourceName' => 'ANSES — Pas de miel pour les enfants de moins d\'un an',
+                'sourceUrl' => 'https://www.anses.fr/fr/content/pas-de-miel-les-enfants-de-moins-dun-an',
             ],
 
             //

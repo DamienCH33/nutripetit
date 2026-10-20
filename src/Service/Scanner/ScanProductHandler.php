@@ -74,7 +74,17 @@ final class ScanProductHandler
      */
     private function refreshIfStale(Product $product): Product
     {
-        if ($product->getFetchedAt() > new DateTimeImmutable(self::REFRESH_AFTER)) {
+        return $this->refreshIfOlderThan($product, self::REFRESH_AFTER);
+    }
+
+    /**
+     * Relit OFF si la copie locale est plus vieille que $maxAge (ex. '-1 day').
+     * Sert aux produits refusés (hors périmètre, fiche vide) : quand un parent
+     * complète la fiche sur OFF, NutriPetit doit la voir sans attendre 90 jours.
+     */
+    public function refreshIfOlderThan(Product $product, string $maxAge): Product
+    {
+        if ($product->getFetchedAt() > new DateTimeImmutable($maxAge)) {
             return $product;
         }
 
