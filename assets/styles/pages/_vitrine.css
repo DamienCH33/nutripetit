@@ -407,3 +407,43 @@
 @media (prefers-reduced-motion: no-preference) {
     .v-btn { transition: background-color 120ms ease-out; }
 }
+
+/* ---------- Pages légales dans la DA de la vitrine ---------- */
+.np-body--landing { background: #f3f6f1; }
+body.np-body--landing .np-legal {
+    background: #f3f6f1;
+    color: #1e2b24;
+    font-family: "Atkinson Hyperlegible", system-ui, sans-serif;
+}
+body.np-body--landing .np-legal__container { max-width: 760px; }
+body.np-body--landing .np-legal__title,
+body.np-body--landing .np-legal__section-title,
+body.np-body--landing .np-legal__subtitle,
+body.np-body--landing .np-legal__highlight-title {
+    font-family: "Bricolage Grotesque", system-ui, sans-serif;
+    letter-spacing: -0.02em;
+    color: #1e2b24;
+}
+body.np-body--landing .np-legal__title { font-size: clamp(34px, 5vw, 48px); font-weight: 800; line-height: 1.05; }
+body.np-body--landing .np-legal__section-title {
+    display: block;
+    border-top: 1px solid #e3e9e0;
+    padding-top: 24px;
+    font-weight: 800;
+}
+body.np-body--landing .np-legal__meta { color: #4a5a50; font-style: normal; }
+body.np-body--landing .np-legal p,
+body.np-body--landing .np-legal li,
+body.np-body--landing .np-legal td { color: #33433a; line-height: 1.6; }
+body.np-body--landing .np-legal a { color: #1e2b24; font-weight: 700; }
+body.np-body--landing .np-legal__highlight,
+body.np-body--landing .np-legal__warning {
+    border-left: 0;
+    background: #ffffff;
+    border: 0;
+    border-radius: 18px;
+}
+body.np-body--landing .np-legal__warning { background: #fbe4e2; }
+body.np-body--landing .np-legal__table th { background: #eef1ea; color: #1e2b24; }
+body.np-body--landing .np-legal__table td,
+body.np-body--landing .np-legal__table th { border-color: #e3e9e0; }
