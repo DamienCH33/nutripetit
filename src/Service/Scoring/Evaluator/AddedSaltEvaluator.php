@@ -11,14 +11,21 @@ use App\Enum\RuleStatus;
 use App\Service\Scoring\RuleEvaluator;
 
 /**
- * Sodium rapporté à l'énergie. Référentiel OMS Europe NPPM 2022 (6-36 mois) :
- * sodium ≤ 50 mg/100 kcal. Conversion sel (g) × 400 = sodium (mg).
- * Fallback si énergie absente : seuil massique 0,3 g sel/100 g (ANSES/PNNS).
+ * Sodium rapporté à l'énergie. Référentiel OMS Europe NPPM 2022 (6-36 mois),
+ * tableau 1 : sodium ≤ 50 mg/100 kcal pour la plupart des produits, ≤ 100 mg/100 kcal
+ * pour les produits laitiers et les plats au fromage. Conversion sel (g) × 400 = sodium (mg).
+ * Énergie absente : plafond légal de la directive 2006/125/CE, annexe II, 4.1
+ * (200 mg de sodium/100 g, soit 0,5 g de sel/100 g).
+ * L'ANSES (avis 2019, 0-3 ans) recommande de ne pas ajouter de sel, sans seuil chiffré.
  */
 final class AddedSaltEvaluator implements RuleEvaluator
 {
     private const SODIUM_MG_PER_100KCAL_LIMIT = 50.0;
-    private const FALLBACK_SALT_G_PER_100G_LIMIT = 0.3;
+    private const SODIUM_MG_PER_100KCAL_LIMIT_DAIRY = 100.0;
+    private const FALLBACK_SALT_G_PER_100G_LIMIT = 0.5;
+
+    /** Marqueurs (catégories OFF ou nom) des produits laitiers et plats au fromage. */
+    private const DAIRY_MARKERS = ['yogurt', 'yaourt', 'dairies', 'dairy', 'laitier', 'fromage', 'cheese', 'fromage-blanc', 'petit-suisse'];
 
     public function supports(ScoringRule $rule): bool
     {
@@ -43,38 +50,55 @@ final class AddedSaltEvaluator implements RuleEvaluator
 
         if (is_numeric($energyKcal) && (float) $energyKcal > 0.0) {
             $sodiumPer100kcal = $sodiumMgPer100g * 100.0 / (float) $energyKcal;
+            $limit = $this->isDairy($product) ? self::SODIUM_MG_PER_100KCAL_LIMIT_DAIRY : self::SODIUM_MG_PER_100KCAL_LIMIT;
 
-            if ($sodiumPer100kcal <= self::SODIUM_MG_PER_100KCAL_LIMIT) {
+            if ($sodiumPer100kcal <= $limit) {
                 return $this->satisfied($rule, \sprintf(
-                    '%.0f mg de sodium/100 kcal, sous le plafond NPPM (OMS Europe 2022) de %.0f mg/100 kcal.',
+                    '%.0f mg de sodium/100 kcal, sous le plafond OMS Europe (NPPM 2022) de %.0f mg/100 kcal.',
                     $sodiumPer100kcal,
-                    self::SODIUM_MG_PER_100KCAL_LIMIT,
+                    $limit,
                 ));
             }
 
             return $this->triggered($rule, \sprintf(
-                '%.0f mg de sodium/100 kcal (%.2f g de sel/100 g), au-dessus du plafond NPPM (OMS Europe 2022) de %.0f mg/100 kcal.',
+                '%.0f mg de sodium/100 kcal (%.2f g de sel/100 g), au-dessus du plafond OMS Europe (NPPM 2022) de %.0f mg/100 kcal.',
                 $sodiumPer100kcal,
                 $saltValue,
-                self::SODIUM_MG_PER_100KCAL_LIMIT,
+                $limit,
             ));
         }
 
-        $threshold = $rule->getThresholdValue() ?? self::FALLBACK_SALT_G_PER_100G_LIMIT;
+        $threshold = self::FALLBACK_SALT_G_PER_100G_LIMIT;
 
         if ($saltValue <= $threshold) {
             return $this->satisfied($rule, \sprintf(
-                'Teneur en sel de %.2f g/100 g, sous le seuil de %.2f g/100 g.',
+                'Teneur en sel de %.2f g/100 g, sous le plafond légal des aliments pour bébés (%.1f g/100 g).',
                 $saltValue,
                 $threshold,
             ));
         }
 
         return $this->triggered($rule, \sprintf(
-            'Teneur en sel de %.2f g/100 g, supérieure au seuil de %.2f g/100 g pour les nourrissons.',
+            'Teneur en sel de %.2f g/100 g, au-dessus du plafond légal des aliments pour bébés (%.1f g/100 g, directive 2006/125/CE).',
             $saltValue,
             $threshold,
         ));
+    }
+
+    private function isDairy(Product $product): bool
+    {
+        $haystack = mb_strtolower($product->getName() . ' ' . implode(' ', array_filter(
+            (array) ($product->getOffRawData()['categories_tags'] ?? []),
+            'is_string',
+        )));
+
+        foreach (self::DAIRY_MARKERS as $marker) {
+            if (str_contains($haystack, $marker)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function satisfied(ScoringRule $rule, string $reason): AppliedRuleDto

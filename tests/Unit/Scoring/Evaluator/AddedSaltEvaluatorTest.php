@@ -62,7 +62,7 @@ final class AddedSaltEvaluatorTest extends TestCase
 
     public function testFallbackSatisfiedUnderMassThreshold(): void
     {
-        // Pas d'énergie -> seuil massique du rule (0,3 g). 0,2 <= 0,3 -> Satisfied
+        // Pas d'énergie -> plafond légal 0,5 g (directive 2006/125/CE). 0,2 <= 0,5 -> Satisfied
         $product = new Product('3000000000303', 'Purée')
             ->setNutriments(['salt_100g' => 0.2]);
 
@@ -74,7 +74,7 @@ final class AddedSaltEvaluatorTest extends TestCase
 
     public function testFallbackTriggeredOverMassThreshold(): void
     {
-        // Pas d'énergie -> seuil massique 0,3 g. 0,6 > 0,3 -> Triggered
+        // Pas d'énergie -> plafond légal 0,5 g. 0,6 > 0,5 -> Triggered
         $product = new Product('3000000000304', 'Plat salé')
             ->setNutriments(['salt_100g' => 0.6]);
 
@@ -83,6 +83,19 @@ final class AddedSaltEvaluatorTest extends TestCase
         self::assertInstanceOf(AppliedRuleDto::class, $applied);
         self::assertSame(RuleStatus::Triggered, $applied->status);
         self::assertSame(-15, $applied->pointsImpact);
+    }
+
+    public function testDairyGetsTheNppmDairyLimit(): void
+    {
+        // 0,2 g sel -> 80 mg sodium ; 100 kcal -> 80 mg/100 kcal : > 50 mais <= 100 (laitages)
+        $yaourt = new Product('3000000000305', 'Yaourt nature bébé')
+            ->setNutriments(['salt_100g' => 0.2, 'energy-kcal_100g' => 100])
+            ->setOffRawData(['categories_tags' => ['en:dairies', 'en:baby-yogurts']]);
+        $plat = new Product('3000000000306', 'Purée de légumes')
+            ->setNutriments(['salt_100g' => 0.2, 'energy-kcal_100g' => 100]);
+
+        self::assertSame(RuleStatus::Satisfied, $this->evaluator->evaluate($yaourt, $this->rule(), null)?->status);
+        self::assertSame(RuleStatus::Triggered, $this->evaluator->evaluate($plat, $this->rule(), null)?->status);
     }
 
     private function rule(): ScoringRule
