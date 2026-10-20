@@ -600,3 +600,11 @@
         color: inherit;
     }
 }
+
+/* Rappel « pas un avis médical » sous l'accroche */
+.np-landing-hero__note {
+    margin: 12px 0 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--np-gray-600);
+}
