@@ -18,7 +18,7 @@ class ScoringRule
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null; // @phpstan-ignore property.unusedType (assigné par Doctrine via GeneratedValue)
+    private ?int $id = null;
 
     #[ORM\Column(length: 50)]
     private string $code;

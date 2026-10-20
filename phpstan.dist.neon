@@ -10,3 +10,9 @@ parameters:
         -
             identifier: method.unresolvableReturnType
             path: tests/Functional/ScannerControllerTest.php
+        # Id assigné par Doctrine (GeneratedValue). Selon l'état du cache, PHPStan
+        # le signale ou non : on l'ignore sans échouer quand il n'apparaît pas.
+        -
+            identifier: property.unusedType
+            path: src/Entity/ScoringRule.php
+            reportUnmatched: false
