@@ -5,11 +5,18 @@ declare(strict_types=1);
 namespace App\Service\Product;
 
 use App\Entity\Product;
+use App\Service\Scoring\Evaluator\ControversialAdditivesEvaluator;
 
 final class AdditiveExtractor
 {
+    public const STATUS_CONTROVERSIAL = 'controversial';
+    public const STATUS_SWEETENER = 'sweetener';
+    public const STATUS_AUTHORIZED = 'authorized';
+
     /**
-     * @return list<array{code: string, name: string}>
+     * Détail affiché quand le parent ouvre la section « Additifs » de la fiche.
+     *
+     * @return list<array{code: string, name: string, status: string, note: string}>
      */
     public function extractAdditives(Product $product): array
     {
@@ -60,12 +67,31 @@ final class AdditiveExtractor
             }
             $seen[] = $code;
 
+            $status = $this->statusOf($code);
             $result[] = [
                 'code' => $code,
                 'name' => $known[$code] ?? 'Additif non documenté',
+                'status' => $status,
+                'note' => match ($status) {
+                    self::STATUS_CONTROVERSIAL => 'Évaluation préoccupante (EFSA/ANSES) : mieux vaut l\'éviter chez l\'enfant.',
+                    self::STATUS_SWEETENER => 'Édulcorant : non autorisé dans les aliments pour bébés (règlement UE 1333/2008).',
+                    default => 'Autorisé dans l\'UE (règlement 1333/2008), pas de signalement particulier.',
+                },
             ];
         }
 
         return $result;
+    }
+
+    private function statusOf(string $code): string
+    {
+        if (\in_array(mb_strtolower($code), ControversialAdditivesEvaluator::CONTROVERSIAL_E_CODES, true)) {
+            return self::STATUS_CONTROVERSIAL;
+        }
+        if (1 === preg_match('/^E9[5-6]\d/', $code)) {
+            return self::STATUS_SWEETENER;
+        }
+
+        return self::STATUS_AUTHORIZED;
     }
 }
