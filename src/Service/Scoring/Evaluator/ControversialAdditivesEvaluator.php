@@ -17,7 +17,7 @@ use App\Service\Scoring\RuleEvaluator;
  */
 final class ControversialAdditivesEvaluator implements RuleEvaluator
 {
-    private const CONTROVERSIAL_E_CODES = [
+    public const CONTROVERSIAL_E_CODES = [
         'e102',
         'e104',
         'e110',
