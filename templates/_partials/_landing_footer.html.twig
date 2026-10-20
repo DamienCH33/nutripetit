@@ -1,54 +1,20 @@
-<footer class="np-landing-footer">
-	<div class="np-landing-footer__inner">
-		<div class="np-landing-footer__grid">
-			<div>
-				<div class="np-landing-footer__brand-logo">
-					<img src="{{ asset('images/logo/nutripetit.svg') }}" alt="" width="32" height="32">
-					<span>NutriPetit</span>
-				</div>
-				<p class="np-landing-footer__brand-text">
-					L'application qui aide les parents à faire les bons choix nutritionnels pour leurs petits, basée sur les recommandations officielles.
-				</p>
-			</div>
-
-			<div>
-				<h3 class="np-landing-footer__col-title">Produit</h3>
-				<div class="np-landing-footer__links">
-					<a href="/app" class="np-landing-footer__link">Accéder à l'app</a>
-					<a href="#comment-ca-marche" class="np-landing-footer__link">Comment ça marche</a>
-					<a href="#sources" class="np-landing-footer__link">Nos sources</a>
-				</div>
-			</div>
-
-			<div>
-				<h3 class="np-landing-footer__col-title">À propos</h3>
-				<div class="np-landing-footer__links">
-					<a href="{{ path('app_landing_about') }}" class="np-landing-footer__link">À propos du projet</a>
-					<a href="https://github.com/DamienCH33/nutripetit" class="np-landing-footer__link" target="_blank" rel="noopener noreferrer">GitHub</a>
-				</div>
-			</div>
-
-			<div>
-				<h3 class="np-landing-footer__col-title">Légal</h3>
-				<div class="np-landing-footer__links">
-					<a href="{{ path('app_landing_privacy') }}" class="np-landing-footer__link">Confidentialité</a>
-					<a href="{{ path('app_landing_legal') }}" class="np-landing-footer__link">Mentions légales</a>
-				</div>
-			</div>
-		</div>
-
-		<div class="np-landing-footer__bottom">
-			<p>©
-				{{ "now"|date("Y") }}
-				NutriPetit. Tous droits réservés.</p>
-			<p>Conçu avec ❤️ pour les parents</p>
-		</div>
-
-		<div class="np-landing-footer__disclaimer">
-			<strong>Avertissement santé : NutriPetit n'est pas un professionnel de santé.</strong>
-			Il ne pose pas de diagnostic et ne donne aucun avis médical. Il compare des produits du commerce à partir de recommandations officielles générales (ANSES, OMS, EFSA) et des données Open Food Facts, sans rien savoir de votre enfant.
-			<strong>Pour toute question sur son alimentation, demandez à votre médecin ou à votre pédiatre</strong>,
-			notamment en cas d'allergie, d'intolérance, de prématurité ou de traitement, et avant de changer de lait infantile. En cas d'urgence, appelez le 15.
-		</div>
-	</div>
+<footer class="v">
+    <div class="v-wrap v-footer">
+        <p class="v-footer__care">
+            <strong>NutriPetit n'est pas un professionnel de santé.</strong>
+            Il ne pose pas de diagnostic et ne donne aucun avis médical : il compare des produits du commerce
+            à partir de recommandations officielles générales (ANSES, OMS, EFSA) et des données Open Food Facts
+            (licence ODbL), sans rien savoir de votre enfant.
+            <strong>Pour toute question sur son alimentation, demandez à votre médecin ou à votre pédiatre</strong>,
+            notamment en cas d'allergie, d'intolérance, de prématurité ou de traitement, et avant de changer de lait infantile.
+            En cas d'urgence, appelez le 15.
+        </p>
+        <span>© {{ "now"|date("Y") }} NutriPetit</span>
+        <nav aria-label="Informations légales">
+            <a href="{{ path('app_landing_legal') }}">Mentions légales</a>
+            <a href="{{ path('app_landing_privacy') }}">Confidentialité</a>
+            <a href="{{ path('app_landing_about') }}">À propos</a>
+            <a href="https://github.com/DamienCH33/nutripetit" rel="noopener noreferrer">Code source</a>
+        </nav>
+    </div>
 </footer>

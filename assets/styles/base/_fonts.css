@@ -26,3 +26,40 @@
     font-weight: 700;
     src: url("../../fonts/poppins-v24-latin-700.woff2") format("woff2");
 }
+
+/* Vitrine (refonte 2026) : mêmes polices que l'application Angular, auto-hébergées. */
+@font-face {
+    font-display: swap;
+    font-family: "Bricolage Grotesque";
+    font-style: normal;
+    font-weight: 500;
+    src: url("../../fonts/bricolage-grotesque-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+    font-display: swap;
+    font-family: "Bricolage Grotesque";
+    font-style: normal;
+    font-weight: 700;
+    src: url("../../fonts/bricolage-grotesque-latin-700-normal.woff2") format("woff2");
+}
+@font-face {
+    font-display: swap;
+    font-family: "Bricolage Grotesque";
+    font-style: normal;
+    font-weight: 800;
+    src: url("../../fonts/bricolage-grotesque-latin-800-normal.woff2") format("woff2");
+}
+@font-face {
+    font-display: swap;
+    font-family: "Atkinson Hyperlegible";
+    font-style: normal;
+    font-weight: 400;
+    src: url("../../fonts/atkinson-hyperlegible-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+    font-display: swap;
+    font-family: "Atkinson Hyperlegible";
+    font-style: normal;
+    font-weight: 700;
+    src: url("../../fonts/atkinson-hyperlegible-latin-700-normal.woff2") format("woff2");
+}

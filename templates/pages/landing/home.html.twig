@@ -1,285 +1,193 @@
 {% extends 'base/landing.html.twig' %}
 
-{% block title %}NutriPetit - L'analyse nutritionnelle adaptée aux bébés
-{% endblock %}
+{% block title %}NutriPetit : le score des aliments bébé, adapté à l'âge de votre enfant{% endblock %}
+{% block description %}Scannez un aliment bébé : NutriPetit répond pour l'âge de votre enfant, avec les raisons et les sources officielles (ANSES, OMS Europe, EFSA). Gratuit, sans compte.{% endblock %}
 
 {% block body %}
+<div class="v">
 
 	{# HERO #}
-	<section class="np-landing-hero">
-		<div class="np-landing-hero__inner">
-			<div class="np-landing-hero__content" {{ stimulus_controller('pwa-install') }}>
-				<span class="np-landing-hero__eyebrow">
-					Spécialement pensé pour les nourrissons
+	<section id="top" class="v-wrap v-hero" aria-labelledby="hero-title">
+		<div class="v-hero__text" {{ stimulus_controller('pwa-install') }}>
+			<h1 id="hero-title" class="v-d">Ce petit pot, vous pouvez le lui donner&#160;?</h1>
+			<p class="v-lead">Scannez un aliment bébé : NutriPetit vous répond pour l'âge de votre enfant, avec les raisons et les sources officielles. Gratuit, sans compte.</p>
+
+			<form class="v-try" method="get" action="{{ path('app_landing_try') }}">
+				<label for="try-ean">Essayez avec un code-barres</label>
+				<div class="v-try__row">
+					<input id="try-ean" name="ean" inputmode="numeric" autocomplete="off" pattern="[0-9]{8,14}" required value="3701293900233" aria-describedby="try-hint">
+					<button type="submit" class="v-btn v-btn--orange">Voir le score</button>
+				</div>
+				<span id="try-hint" class="v-hint">Les 8 à 13 chiffres sous le code-barres. Pour scanner, ouvrez l'appli sur votre téléphone.</span>
+			</form>
+
+			<div class="v-install">
+				<a href="/app/" class="v-btn v-btn--dark">Ouvrir l'appli</a>
+				<button type="button" hidden class="v-btn v-btn--orange" data-pwa-install-target="button" {{ stimulus_action('pwa-install', 'install') }}>Installer sur ce téléphone</button>
+				<span class="v-hint">Sur iPhone : depuis Safari, Partager puis « Sur l'écran d'accueil ».</span>
+			</div>
+
+			<div hidden class="np-install-help" data-pwa-install-target="iosHelp">
+				Pour installer : touchez <strong>Partager</strong> en bas de Safari, puis <strong>« Sur l'écran d'accueil »</strong>.
+				<button type="button" class="np-install-help__ok" {{ stimulus_action('pwa-install', 'closeHelp') }}>Compris</button>
+			</div>
+		</div>
+
+		<figure class="v-example" aria-label="Exemple de résultat pour des biscuits bébé">
+			<div class="v-example__product">
+				<span class="v-example__thumb" aria-hidden="true"></span>
+				<span>
+					<span class="v-example__brand">Exemple</span>
+					<span class="v-example__name">Biscuits bébé, dès 8 mois</span>
 				</span>
+			</div>
+			<div class="v-example__verdict">
+				<span class="v-example__score v-d" aria-hidden="true">70</span>
+				<span>
+					<strong class="v-d">Occasionnel pour Léo</strong>
+					<small>Score 70 sur 100</small>
+				</span>
+			</div>
+			<div class="v-scale" role="img" aria-label="Échelle de 0 à 100 : tranche Occasionnel">
+				<span style="flex: 40; background: #B3261E"></span>
+				<span style="flex: 25; background: #D9661A"></span>
+				<span class="v-scale__on" style="flex: 20; background: #E9B51F"></span>
+				<span style="flex: 12; background: #3F8F2E"></span>
+				<span style="flex: 4; background: #1F6B3B"></span>
+				<span class="v-scale__mark" style="left: 70%"></span>
+			</div>
+			<ul class="v-reasons">
+				<li><span class="v-pts v-pts--minus">−30</span>Sucre ajouté dans la liste d'ingrédients</li>
+				<li><span class="v-pts v-pts--ok" aria-label="Critère respecté">OK</span>Sans additif controversé</li>
+				<li><span class="v-pts v-pts--ok" aria-label="Critère respecté">OK</span>Sans miel</li>
+			</ul>
+			<figcaption>Produit fictif, pour illustrer. Chaque raison renvoie à sa source dans l'appli.</figcaption>
+		</figure>
+	</section>
 
-				<h1 class="np-landing-hero__title">
-					Le bon choix nutritionnel pour
-					<span>vos petits</span>
-				</h1>
-
-				<p class="np-landing-hero__subtitle">
-					Scannez les produits alimentaires de votre bébé et obtenez une analyse nutritionnelle adaptée aux 0-3 ans, basée sur les recommandations officielles ANSES, OMS, EFSA et la réglementation européenne.
-				</p>
-				<p class="np-landing-hero__note">
-					Outil d'information, pas un avis médical : pour toute question sur l'alimentation de votre enfant, demandez à votre médecin ou à votre pédiatre.
-				</p>
-
-				<div class="np-landing-hero__actions">
-					<a href="/app" class="np-landing-hero__cta-primary">
-						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M3 7V5a2 2 0 0 1 2-2h2"/>
-							<path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-							<path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
-							<path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-							<line x1="7" y1="12" x2="17" y2="12"/>
-						</svg>
-						Commencer à scanner
-					</a>
-					<a href="#comment-ca-marche" class="np-landing-hero__cta-secondary">
-						Comment ça marche
-					</a>
-					<button type="button" hidden class="np-landing-hero__cta-install" data-pwa-install-target="button" {{ stimulus_action('pwa-install', 'install') }}>
-						Installer l'application
-					</button>
-				</div>
-
-				<div hidden class="np-install-help" data-pwa-install-target="iosHelp">
-					Pour installer : touchez
-					<strong>Partager</strong>
-					en bas de Safari, puis
-					<strong>« Sur l'écran d'accueil »</strong>.
-					<button type="button" class="np-install-help__ok" {{ stimulus_action('pwa-install', 'closeHelp') }}>Compris</button>
-				</div>
+	{# CAS #}
+	<section id="cas" class="v-band v-band--white" aria-labelledby="cas-title">
+		<div class="v-wrap">
+			<div class="v-intro">
+				<h2 id="cas-title" class="v-h2 v-d">Un bébé n'est pas un petit adulte</h2>
+				<p>Les applis nutrition grand public notent pour des adultes. NutriPetit applique les repères de la petite enfance, et certains changent avec l'âge. Trois cas qui le montrent.</p>
+			</div>
+			<div class="v-cases">
+				<article class="v-case v-case--red">
+					<h3 class="v-d">Un biscuit au miel, à 9 mois</h3>
+					<p>Alerte en plein écran, score masqué : le miel peut transmettre le botulisme infantile, même cuit. Passé 1 an, l'alerte disparaît. Une appli pour adultes y verrait seulement du sucre.</p>
+					<small>Source : ANSES</small>
+				</article>
+				<article class="v-case v-case--green">
+					<h3 class="v-d">Un plat salé comme pour un adulte</h3>
+					<p>Au-delà de 50 mg de sodium pour 100 kcal (100 mg pour les laitages), il perd 15 points. C'est le plafond fixé pour les aliments des 6-36 mois, et l'ANSES conseille de ne pas saler les repas avant 3 ans.</p>
+					<small>Sources : OMS Europe, ANSES</small>
+				</article>
+				<article class="v-case v-case--yellow">
+					<h3 class="v-d">Une compote avec du sucre ajouté</h3>
+					<p>Du sucre, du sirop de glucose ou du miel dans la liste d'ingrédients : −30. L'OMS recommande zéro sucre ajouté chez le jeune enfant. Le label « sans sucres ajoutés » certifié, lui, n'est pas pénalisé.</p>
+					<small>Sources : OMS, ANSES</small>
+				</article>
 			</div>
 		</div>
 	</section>
 
-	{# CONCEPT #}
-	<section class="np-landing-section np-landing-section--alt">
-		<div class="np-landing-section__inner">
-			<span class="np-landing-section__eyebrow">Notre approche</span>
-			<h2 class="np-landing-section__title">Une app pensée pour les parents</h2>
-			<p class="np-landing-section__subtitle">
-				Quatre valeurs guident chaque ligne de NutriPetit pour vous accompagner sereinement dans le choix de l'alimentation de votre enfant.
-			</p>
-
-			<div class="np-landing-pillars">
-				<div class="np-landing-pillar">
-					<div class="np-landing-pillar__icon">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
-							<path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
-						</svg>
-					</div>
-					<h3 class="np-landing-pillar__title">Bienveillance</h3>
-					<p class="np-landing-pillar__text">Des informations claires, dans un esprit bienveillant et sans jugement.</p>
-				</div>
-
-				<div class="np-landing-pillar">
-					<div class="np-landing-pillar__icon">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<circle cx="12" cy="12" r="10"/>
-							<path d="M16 8l-8 8M8 8l8 8"/>
-						</svg>
-					</div>
-					<h3 class="np-landing-pillar__title">Nutrition</h3>
-					<p class="np-landing-pillar__text">Un scoring spécifique nourrisson, pas un Nutri-Score adulte mal adapté.</p>
-				</div>
-
-				<div class="np-landing-pillar">
-					<div class="np-landing-pillar__icon">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-						</svg>
-					</div>
-					<h3 class="np-landing-pillar__title">Confiance</h3>
-					<p class="np-landing-pillar__text">Chaque règle de scoring est sourcée et accessible. Aucune boîte noire.</p>
-				</div>
-
-				<div class="np-landing-pillar">
-					<div class="np-landing-pillar__icon">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M12 2L2 7l10 5 10-5-10-5z"/>
-							<path d="M2 17l10 5 10-5"/>
-							<path d="M2 12l10 5 10-5"/>
-						</svg>
-					</div>
-					<h3 class="np-landing-pillar__title">Simplicité</h3>
-					<p class="np-landing-pillar__text">Un scan, un score, une recommandation. En moins de 3 secondes.</p>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	{# COMMENT ÇA MARCHE #}
-	<section id="comment-ca-marche" class="np-landing-section">
-		<div class="np-landing-section__inner">
-			<span class="np-landing-section__eyebrow">En 3 étapes</span>
-			<h2 class="np-landing-section__title">Comment ça marche</h2>
-			<p class="np-landing-section__subtitle">
-				Faire les bons choix n'a jamais été aussi simple. Une app conçue pour être utilisée d'une main, en magasin.
-			</p>
-
-			<div class="np-landing-steps">
-				<div class="np-landing-step">
-					<div class="np-landing-step__number">1</div>
-					<h3 class="np-landing-step__title">Installez NutriPetit</h3>
-					<p class="np-landing-step__text">
-						Ouvrez le site sur votre téléphone, puis ajoutez NutriPetit à votre écran d'accueil :
-												sur
-						<strong>Android</strong>, via le menu du navigateur ;
-													sur
-						<strong>iPhone</strong>, via le bouton
-						<strong>Partager</strong>
-						de Safari puis « Sur l'écran d'accueil ».
-												Aucun téléchargement, aucun compte.
-					</p>
-				</div>
-
-				<div class="np-landing-step">
-					<div class="np-landing-step__number">2</div>
-					<h3 class="np-landing-step__title">Ouvrez NutriPetit</h3>
-					<p class="np-landing-step__text">
-						Touchez l'icône créée sur votre écran d'accueil. L'application s'ouvre en plein écran comme une application classique.
-					</p>
-				</div>
-
-				<div class="np-landing-step">
-					<div class="np-landing-step__number">3</div>
-					<h3 class="np-landing-step__title">Scannez</h3>
-					<p class="np-landing-step__text">
-						Pointez votre caméra vers le code-barres du produit. La détection est instantanée.
-					</p>
-				</div>
-
-				<div class="np-landing-step">
-					<div class="np-landing-step__number">4</div>
-					<h3 class="np-landing-step__title">Choisissez</h3>
-					<p class="np-landing-step__text">
-						Consultez le score, les points forts et les points d'attention pour choisir le produit le plus adapté à votre enfant.
-					</p>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	{# POURQUOI NUTRIPETIT #}
-	<section class="np-landing-section np-landing-section--soft">
-		<div class="np-landing-section__inner">
-			<span class="np-landing-section__eyebrow">Notre différence</span>
-			<h2 class="np-landing-section__title">Pourquoi une analyse spécifique pour les 0-3 ans ?</h2>
-
-			<div class="np-landing-why-text">
+	{# POURQUOI 0-3 ANS #}
+	<section class="v-band" aria-labelledby="pourquoi-title">
+		<div class="v-wrap v-why">
+			<h2 id="pourquoi-title" class="v-h2 v-d">Pourquoi une analyse spécifique pour les 0-3 ans&#160;?</h2>
+			<div class="v-why__text">
 				<p>Les applications nutritionnelles généralistes sont conçues avant tout pour le grand public. Or, les besoins nutritionnels d'un nourrisson ou d'un jeune enfant diffèrent fortement de ceux d'un adulte : croissance rapide, besoins spécifiques en fer, lipides, protéines et micronutriments, ainsi que recommandations alimentaires dédiées à la petite enfance.</p>
 				<p>NutriPetit propose une analyse complémentaire spécialement pensée pour les enfants de 0 à 3 ans, en tenant compte de leur âge et de critères nutritionnels adaptés à cette période essentielle du développement.</p>
 			</div>
+		</div>
+	</section>
 
-			<div class="np-landing-pillars">
-				<div class="np-landing-pillar">
-					<div class="np-landing-pillar__icon">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<circle cx="12" cy="12" r="10"/>
-							<path d="M12 6v6l4 2"/>
-						</svg>
-					</div>
-					<h3 class="np-landing-pillar__title">Adapté à l'âge</h3>
-					<p class="np-landing-pillar__text">Des règles différentes selon que votre enfant a 6 mois, 12 mois ou 3 ans.</p>
+	{# ÉTAPES #}
+	<section class="v-band" aria-labelledby="etapes-title">
+		<div class="v-wrap v-steps-band">
+			<div>
+				<h2 id="etapes-title" class="v-h2 v-d">Au rayon, en trois gestes</h2>
+				<p>Pensé pour une main sur le caddie et l'autre sur le téléphone.</p>
+			</div>
+			<ol class="v-steps">
+				<li><b class="v-d">1</b><strong>Indiquez son âge</strong><span>Une seule question au premier lancement. Il reste sur votre téléphone.</span></li>
+				<li><b class="v-d">2</b><strong>Scannez le code-barres</strong><span>Ou tapez les chiffres si le code est abîmé.</span></li>
+				<li><b class="v-d">3</b><strong>Lisez le verdict</strong><span>Une phrase, une échelle, les raisons principales. Le détail est en dessous.</span></li>
+			</ol>
+		</div>
+	</section>
+
+	{# SOURCES #}
+	<section id="sources" class="v-band v-band--dark" aria-labelledby="sources-title">
+		<div class="v-wrap v-sources">
+			<div>
+				<h2 id="sources-title" class="v-h2 v-d">Basé sur des sources reconnues</h2>
+				<p>Chacune de nos règles de scoring s'appuie sur des recommandations officielles d'organismes de référence en nutrition et santé. Sur chaque fiche, la règle renvoie au texte qui la justifie, et aucune marque ne paie pour être mieux notée.</p>
+				<a href="/app/infos">Voir toutes les règles de notation</a>
+			</div>
+			<ul>
+				<li><strong>ANSES</strong><span>Agence française de sécurité sanitaire</span></li>
+				<li><strong>OMS</strong><span>Organisation mondiale de la santé, et son bureau Europe</span></li>
+				<li><strong>EFSA</strong><span>Autorité européenne de sécurité des aliments</span></li>
+				<li><strong>PNNS 4</strong><span>Programme national nutrition santé</span></li>
+				<li><strong>Réglementation UE</strong><span>Additifs, étiquetage, aliments bébé, laits infantiles, bio</span></li>
+				<li><strong>Santé publique France</strong><span>Agence nationale de santé publique</span></li>
+			</ul>
+		</div>
+	</section>
+
+	{# OFFRE #}
+	<section id="offre" class="v-band" aria-labelledby="offre-title">
+		<div class="v-wrap">
+			<h2 id="offre-title" class="v-h2 v-d">L'essentiel reste gratuit. Pour toujours.</h2>
+			<div class="v-offers">
+				<div class="v-offer">
+					<h3 class="v-d">Gratuit</h3>
+					<p>Sans compte, sans publicité</p>
+					<ul>
+						<li>Score adapté à l'âge de votre enfant</li>
+						<li>Les raisons et les sources de chaque score</li>
+						<li>Toutes les alertes de sécurité (miel, risque d'étouffement, poissons à risque)</li>
+						<li>Historique de vos scans</li>
+					</ul>
 				</div>
-
-				<div class="np-landing-pillar">
-					<div class="np-landing-pillar__icon">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-							<polyline points="14 2 14 8 20 8"/>
-							<line x1="9" y1="15" x2="15" y2="15"/>
-						</svg>
-					</div>
-					<h3 class="np-landing-pillar__title">100% transparent</h3>
-					<p class="np-landing-pillar__text">Chaque malus ou bonus est justifié, avec sa source officielle accessible.</p>
-				</div>
-
-				<div class="np-landing-pillar">
-					<div class="np-landing-pillar__icon">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
-							<path d="M21 3v5h-5"/>
-						</svg>
-					</div>
-					<h3 class="np-landing-pillar__title">Toujours à jour</h3>
-					<p class="np-landing-pillar__text">Les règles évoluent avec les recommandations officielles. Versionnées et tracées.</p>
-				</div>
-
-				<div class="np-landing-pillar">
-					<div class="np-landing-pillar__icon">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-							<line x1="8" y1="21" x2="16" y2="21"/>
-							<line x1="12" y1="17" x2="12" y2="21"/>
-						</svg>
-					</div>
-					<h3 class="np-landing-pillar__title">PWA installable</h3>
-					<p class="np-landing-pillar__text">Ajoutez NutriPetit à votre écran d'accueil. Aucun store, aucun compte.</p>
+				<div class="v-offer v-offer--soon">
+					<h3 class="v-d">Famille <small>bientôt</small></h3>
+					<p>Tout le gratuit, plus le confort pour toute la famille. En préparation, rien à payer aujourd'hui.</p>
+					<ul>
+						<li>Alternatives mieux notées, rayon par rayon</li>
+						<li>Plusieurs enfants, chacun avec son âge</li>
+						<li>Historique partagé avec l'autre parent</li>
+						<li>Listes de courses et favoris</li>
+					</ul>
 				</div>
 			</div>
 		</div>
 	</section>
 
-	{# SOURCES OFFICIELLES #}
-	<section id="sources" class="np-landing-section">
-		<div class="np-landing-section__inner">
-			<span class="np-landing-section__eyebrow">Références officielles</span>
-			<h2 class="np-landing-section__title">Basé sur des sources reconnues</h2>
-			<p class="np-landing-section__subtitle">
-				Chacune de nos règles de scoring s'appuie sur des recommandations officielles d'organismes de référence en nutrition et santé.
-			</p>
-
-			<div class="np-landing-sources">
-				<div class="np-landing-source">
-					<div class="np-landing-source__name">ANSES</div>
-					<div class="np-landing-source__desc">Agence française de sécurité sanitaire</div>
-				</div>
-				<div class="np-landing-source">
-					<div class="np-landing-source__name">OMS</div>
-					<div class="np-landing-source__desc">Organisation Mondiale de la Santé</div>
-				</div>
-				<div class="np-landing-source">
-					<div class="np-landing-source__name">EFSA</div>
-					<div class="np-landing-source__desc">Autorité européenne de sécurité des aliments</div>
-				</div>
-				<div class="np-landing-source">
-					<div class="np-landing-source__name">PNNS 4</div>
-					<div class="np-landing-source__desc">Programme national nutrition santé</div>
-				</div>
-				<div class="np-landing-source">
-					<div class="np-landing-source__name">Réglementation UE</div>
-					<div class="np-landing-source__desc">Règlements européens (additifs, étiquetage, aliments bébé, bio)</div>
-				</div>
-				<div class="np-landing-source">
-					<div class="np-landing-source__name">Santé publique France</div>
-					<div class="np-landing-source__desc">Agence nationale de santé publique</div>
-				</div>
-			</div>
+	{# FAQ #}
+	<section class="v-band v-band--white" aria-labelledby="faq-title">
+		<div class="v-wrap v-faq">
+			<h2 id="faq-title" class="v-h2 v-d">Questions de parents</h2>
+			<details>
+				<summary>NutriPetit remplace-t-il l'avis du pédiatre&#160;?</summary>
+				<p>Non. NutriPetit n'est pas un professionnel de santé et ne donne aucun avis médical. Il compare des produits du commerce à partir de recommandations officielles générales, sans rien savoir de votre enfant : allergies, prématurité, poids, traitement. Pour toute question sur son alimentation, et avant de changer de lait infantile, demandez à votre médecin ou à votre pédiatre.</p>
+			</details>
+			<details>
+				<summary>D'où viennent les informations sur les produits&#160;?</summary>
+				<p>D'Open Food Facts, une base collaborative ouverte. Si la fiche est incomplète, NutriPetit vous le signale, plafonne le score et vous propose de la compléter.</p>
+			</details>
+			<details>
+				<summary>Que faites-vous de mes données&#160;?</summary>
+				<p>Sans compte, rien qui vous identifie : l'âge de l'enfant reste sur votre téléphone et n'est envoyé qu'avec le scan. L'historique est supprimé après 13 mois d'inactivité. Le détail est dans la <a href="{{ path('app_landing_privacy') }}">politique de confidentialité</a>.</p>
+			</details>
+			<details>
+				<summary>Pourquoi un score différent du Nutri-Score&#160;?</summary>
+				<p>Le Nutri-Score est calculé pour des adultes. NutriPetit part de 100 et retire des points pour ce qui est déconseillé aux 0-3 ans (sucre ajouté, sel, miel avant 1 an, additifs controversés…). Les laits infantiles ont leur propre grille, car tous ceux vendus en Europe sont conformes.</p>
+			</details>
 		</div>
 	</section>
 
-	{# CTA FINAL #}
-	<section>
-		<div class="np-landing-cta">
-			<h2 class="np-landing-cta__title">Prêt à faire les bons choix ?</h2>
-			<p class="np-landing-cta__text">
-				Rejoignez les parents qui choisissent en confiance ce qu'ils donnent à leurs petits. C'est gratuit, sans compte, et accessible immédiatement.
-			</p>
-			<a href="/app" class="np-landing-cta__button">
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="M3 7V5a2 2 0 0 1 2-2h2"/>
-					<path d="M17 3h2a2 2 0 0 1 2 2v2"/>
-					<path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
-					<path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
-					<line x1="7" y1="12" x2="17" y2="12"/>
-				</svg>
-				Lancer NutriPetit
-			</a>
-		</div>
-	</section>
+</div>
 {% endblock %}
