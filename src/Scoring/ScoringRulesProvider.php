@@ -121,7 +121,7 @@ final class ScoringRulesProvider
             [
                 'code' => 'choking_hazard',
                 'label' => 'Risque d\'étouffement',
-                'description' => 'Aliments présentant un risque d\'étouffement : cacahuètes entières, fruits à coque entiers, raisins entiers, fruits à coque, raisins entiers. À ne pas proposer entiers avant 3 ans.',
+                'description' => 'Aliments présentant un risque d\'étouffement : cacahuètes, fruits à coque et raisins entiers. À ne pas proposer entiers avant 3 ans.',
                 'pointsImpact' => -35,
                 'ageMinMonths' => 0,
                 'ageMaxMonths' => 36,
@@ -189,7 +189,7 @@ final class ScoringRulesProvider
             [
                 'code' => 'organic_certified',
                 'label' => 'Certification Bio AB',
-                'description' => 'Produit certifié issu de l\'agriculture biologique (Label AB, Règlement EU 2018/848). Garantit l\'absence de pesticides de synthèse et d\'OGM.',
+                'description' => 'Produit issu de l\'agriculture biologique (label AB, règlement UE 2018/848) : pesticides de synthèse et OGM interdits en production. Information, sans effet sur le score.',
                 'pointsImpact' => 0,
                 'ageMinMonths' => 0,
                 'ageMaxMonths' => 36,
@@ -223,7 +223,7 @@ final class ScoringRulesProvider
             [
                 'code' => 'major_allergens',
                 'label' => 'Allergènes majeurs',
-                'description' => 'Présence d\'allergènes majeurs...',
+                'description' => 'Signale les allergènes à déclaration obligatoire présents (lait, œuf, gluten, arachide, fruits à coque, soja, poisson…). Information, sans effet sur le score.',
                 'pointsImpact' => 0,
                 'ageMinMonths' => 0,
                 'ageMaxMonths' => 36,

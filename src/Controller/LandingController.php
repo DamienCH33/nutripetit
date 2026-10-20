@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -18,6 +20,23 @@ final class LandingController extends AbstractController
     public function home(): Response
     {
         return $this->render('pages/landing/home.html.twig');
+    }
+
+    /**
+     * Formulaire « Essayez avec un code-barres » de la vitrine : renvoie vers la
+     * fiche produit de l'appli. Sans JavaScript, et sans jamais rediriger
+     * ailleurs que vers /app/ (le code est réduit à ses chiffres).
+     */
+    #[Route('/essayer', name: 'app_landing_try', methods: ['GET'])]
+    public function try(Request $request): RedirectResponse
+    {
+        $ean = preg_replace('/\D/', '', (string) $request->query->get('ean', '')) ?? '';
+
+        if (1 !== preg_match('/^\d{8,14}$/', $ean)) {
+            return new RedirectResponse('/app/saisie-manuelle', Response::HTTP_SEE_OTHER);
+        }
+
+        return new RedirectResponse('/app/scan/' . $ean, Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/a-propos', name: 'app_landing_about', methods: ['GET'])]

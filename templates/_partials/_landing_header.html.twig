@@ -1,19 +1,13 @@
-<header class="np-landing-header">
-    <div class="np-landing-header__inner">
-        <a href="{{ path('app_landing') }}" class="np-landing-header__logo" aria-label="NutriPetit - Accueil">
-            <img src="{{ asset('images/logo/nutripetit.svg') }}" alt="" class="np-landing-header__logo-icon" width="40" height="40">
-            <span>
-                <span class="np-header__logo-nutri">Nutri</span><span class="np-header__logo-petit">Petit</span>
-            </span>
-        </a>
-
-        <nav class="np-landing-header__nav" aria-label="Navigation principale">
-            <a href="#comment-ca-marche" class="np-landing-header__link">Comment ça marche</a>
-            <a href="#sources" class="np-landing-header__link">Nos sources</a>
-            <a href="{{ path('app_landing_about') }}" class="np-landing-header__link">À propos</a>
-            <a href="/app" class="np-landing-header__cta">
-                Lancer l'app
-            </a>
+{% set home = path('app_landing') %}
+<header class="v">
+    <div class="v-wrap v-header">
+        <a href="{{ home }}" class="v-logo v-d" aria-label="NutriPetit, accueil">Nutri<span>Petit</span></a>
+        <nav class="v-nav" aria-label="Navigation principale">
+            <a href="{{ home }}#cas">Comment on note&#160;?</a>
+            <a href="{{ home }}#sources">Nos sources</a>
+            <a href="{{ home }}#offre">Gratuit ou Famille</a>
+            <a href="{{ path('app_landing_about') }}">À propos</a>
         </nav>
+        <a href="/app/" class="v-btn v-btn--dark v-header__cta">Ouvrir l'appli</a>
     </div>
 </header>

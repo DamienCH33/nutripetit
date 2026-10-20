@@ -411,7 +411,9 @@ OpenFoodFactsClient, golden tests sur de vrais JSON OFF.
 
 ## 📜 Licence
 
-Code source disponible sous licence MIT.
+© 2026 Damien Chauveau. Tous droits réservés.
+
+Le code est public pour être consulté et audité, mais il n'est pas sous licence libre : aucune copie, modification, redistribution ni utilisation commerciale sans accord écrit de l'auteur.
 
 Données produits issues d'**Open Food Facts** (licence ODbL).
 
