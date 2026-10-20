@@ -11,6 +11,7 @@ use App\Entity\ScoringRule;
 use App\Enum\ScoreLevel;
 use App\Enum\ScoringAlgorithm;
 use App\Repository\ScoringRuleRepository;
+use App\Scoring\ScoringRulesProvider;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 /**
@@ -30,7 +31,8 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
  */
 final class ScoreCalculator
 {
-    public const ALGO_VERSION = '1.2.0';
+    /** Une seule source de vérité : la version des règles semées en base. */
+    public const ALGO_VERSION = ScoringRulesProvider::ALGO_VERSION;
 
     private const SCORE_BASE = 100;
 

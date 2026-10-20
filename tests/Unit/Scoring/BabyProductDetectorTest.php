@@ -135,4 +135,52 @@ final class BabyProductDetectorTest extends TestCase
 
         self::assertTrue($this->detector->isBabyProduct($product));
     }
+
+    /**
+     * Les brands_tags d'OFF sont des slugs : « good-gout », pas « good gout ».
+     */
+    public function testDetectsMultiWordBabyBrandFromOffSlug(): void
+    {
+        $product = new Product('3760269310045', 'Purée carottes')
+            ->setOffRawData(['categories_tags' => ['en:meals'], 'brands_tags' => ['good-gout']]);
+
+        self::assertTrue($this->detector->isBabyProduct($product));
+    }
+
+    public function testDetectsRetailerBabyRangeMotsDEnfants(): void
+    {
+        $product = new Product('3564706788480', 'Pommes de terre poulet et champignons')
+            ->setOffRawData(['categories_tags' => [], 'brands_tags' => ['marque-repere', 'mots-d-enfants']]);
+
+        self::assertTrue($this->detector->isBabyProduct($product));
+    }
+
+    public function testDetectsAgeMentionNotInFixedList(): void
+    {
+        $product = new Product('3000000000010', 'Assiette légumes poulet dès 15 mois')
+            ->setOffRawData(['categories_tags' => [], 'brands_tags' => []]);
+
+        self::assertTrue($this->detector->isBabyProduct($product));
+    }
+
+    /**
+     * Fiche OFF actuelle du produit Leclerc : marque enseigne seule, aucune
+     * catégorie, nom sans mention d'âge. Rien ne permet de la reconnaître ;
+     * c'est la fiche OFF qu'il faut compléter.
+     */
+    public function testRejectsLeclercProductAsCurrentlyDescribedOnOff(): void
+    {
+        $product = new Product('3564706788480', 'Pommes de terre poulet et champignons')
+            ->setOffRawData(['categories_tags' => [], 'brands_tags' => ['marque-repere']]);
+
+        self::assertFalse($this->detector->isBabyProduct($product));
+    }
+
+    public function testDoesNotTreatAdultMonthMentionAsBaby(): void
+    {
+        $product = new Product('3000000000011', 'Comté affiné 18 mois')
+            ->setOffRawData(['categories_tags' => ['en:cheeses'], 'brands_tags' => []]);
+
+        self::assertFalse($this->detector->isBabyProduct($product));
+    }
 }

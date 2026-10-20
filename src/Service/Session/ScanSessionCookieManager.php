@@ -5,12 +5,19 @@ declare(strict_types=1);
 namespace App\Service\Session;
 
 use App\Entity\ScanSession;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 final class ScanSessionCookieManager
 {
+    public function __construct(
+        #[Autowire('%kernel.environment%')]
+        private readonly string $environment = 'prod',
+    ) {
+    }
+
     /**
      * Pose le cookie de session sur la réponse si le cookie reçu
      * ne correspond pas déjà au jeton de la session résolue (absent ou périmé).
@@ -26,7 +33,11 @@ final class ScanSessionCookieManager
             return $response;
         }
 
-        $isSecure = $request->isSecure();
+        // En prod, l'API est jointe en http interne derrière Caddy : isSecure()
+        // peut être faux alors que le navigateur est en HTTPS. Le cookie doit
+        // quand même être Secure. Front et API partagent le même domaine :
+        // Lax suffit (None n'était utile qu'avec deux domaines).
+        $secure = $request->isSecure() || 'prod' === $this->environment;
 
         $response->headers->setCookie(
             Cookie::create(
@@ -34,9 +45,9 @@ final class ScanSessionCookieManager
                 value: $token,
                 expire: time() + (ScanSessionManager::SESSION_COOKIE_TTL_DAYS * 86400),
                 path: '/',
-                secure: $isSecure,
+                secure: $secure,
                 httpOnly: true,
-                sameSite: $isSecure ? 'none' : 'lax',
+                sameSite: Cookie::SAMESITE_LAX,
             ),
         );
 
