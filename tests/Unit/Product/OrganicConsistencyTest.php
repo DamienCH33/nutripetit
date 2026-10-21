@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Product;
 use App\Entity\Product;
 use App\Service\Product\EnvironmentAnalyzer;
 use App\Service\Product\OrganicLabelDetector;
+use App\Service\Product\PalmOilDetector;
 use App\Service\Scoring\Evaluator\InfantFormulaScoreCalculator;
 use PHPUnit\Framework\TestCase;
 
@@ -41,11 +42,11 @@ final class OrganicConsistencyTest extends TestCase
         self::assertTrue($detector->isOrganic($product), "détecteur: {$tag}");
 
         // EnvironmentAnalyzer (badge fiche)
-        $env = new EnvironmentAnalyzer($detector)->buildEnvironment($product);
+        $env = new EnvironmentAnalyzer($detector, new PalmOilDetector())->buildEnvironment($product);
         self::assertTrue($env['bio_certified'], "analyzer: {$tag}");
 
         // InfantFormulaScoreCalculator (bonus lait)
-        $result = new InfantFormulaScoreCalculator($detector)->calculate($product);
+        $result = new InfantFormulaScoreCalculator($detector, new PalmOilDetector())->calculate($product);
         $codes = array_map(static fn ($r) => $r->ruleCode, $result->appliedRules);
         self::assertContains('formula_organic', $codes, "calculator: {$tag}");
     }
