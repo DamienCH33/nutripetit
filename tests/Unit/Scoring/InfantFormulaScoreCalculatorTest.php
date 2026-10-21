@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Scoring;
 
 use App\Entity\Product;
 use App\Service\Product\OrganicLabelDetector;
+use App\Service\Product\PalmOilDetector;
 use App\Service\Scoring\Evaluator\InfantFormulaScoreCalculator;
 use PHPUnit\Framework\TestCase;
 
@@ -21,7 +22,7 @@ final class InfantFormulaScoreCalculatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->calculator = new InfantFormulaScoreCalculator(new OrganicLabelDetector());
+        $this->calculator = new InfantFormulaScoreCalculator(new OrganicLabelDetector(), new PalmOilDetector());
     }
 
     public function testEmptyFormulaStaysAtBase(): void
@@ -76,6 +77,18 @@ final class InfantFormulaScoreCalculatorTest extends TestCase
     }
 
     // --- Régressions de sous-chaîne (déjà connues, à conserver) ---
+
+    public function testPalmitateVitaminIsNotPalmOil(): void
+    {
+        // Palmitate d'ascorbyle / de rétinyle : vitamines présentes dans la plupart des laits.
+        $product = new Product('3000000000312', 'Lait 1er âge')
+            ->setIngredientsRaw('lactose, huile de colza, palmitate d\'ascorbyle, palmitate de rétinyle');
+
+        $codes = array_map(static fn ($r) => $r->ruleCode, $this->calculator->calculate($product)->appliedRules);
+        self::assertContains('formula_no_palm_oil', $codes);
+        self::assertNotContains('formula_palm_oil_present', $codes);
+        self::assertNotContains('formula_palm_oil_main', $codes);
+    }
 
     public function testCaramelDoesNotTriggerAraBonus(): void
     {

@@ -10,6 +10,7 @@ use App\Entity\Product;
 use App\Enum\ScoreLevel;
 use App\Enum\ScoringAlgorithm;
 use App\Service\Product\OrganicLabelDetector;
+use App\Service\Product\PalmOilDetector;
 
 /**
  * Calcule le score d'un lait infantile.
@@ -44,6 +45,7 @@ final class InfantFormulaScoreCalculator
 
     public function __construct(
         private readonly OrganicLabelDetector $organicLabelDetector,
+        private readonly PalmOilDetector $palmOilDetector,
     ) {
     }
 
@@ -61,8 +63,8 @@ final class InfantFormulaScoreCalculator
         // BONUS
         // Sans huile de palme (+8) — EFSA 2016 : évite contaminants 3-MCPD / glycidol.
         // L'huile de palme est autorisée : son absence est un vrai choix différenciant.
-        $hasPalm = str_contains($ingredients, 'palme') || str_contains($ingredients, 'palm');
-        if ('' !== $ingredients && !$hasPalm) {
+        $containsPalmOil = $this->palmOilDetector->containsPalmOil($product);
+        if (false === $containsPalmOil) {
             $appliedRules[] = new AppliedRuleDto(
                 ruleCode: 'formula_no_palm_oil',
                 ruleLabel: 'Sans huile de palme',
@@ -122,7 +124,7 @@ final class InfantFormulaScoreCalculator
         // Huile de palme en 1er ingrédient (-8) OU présente ailleurs (-3) — EFSA 2016.
         // elseif : jamais de cumul (un produit "palme en tête" n'est pas aussi
         // pénalisé une seconde fois pour "palme présente").
-        if (preg_match('/^[^,]*palme/i', $ingredients) || preg_match('/^[^,]*palm/i', $ingredients)) {
+        if ($this->palmOilDetector->isFirstIngredient($product)) {
             $appliedRules[] = new AppliedRuleDto(
                 ruleCode: 'formula_palm_oil_main',
                 ruleLabel: 'Huile de palme en premier ingrédient',
@@ -132,7 +134,7 @@ final class InfantFormulaScoreCalculator
                 sourceUrl: 'https://www.efsa.europa.eu/fr/press/news/process-contaminants-vegetable-oils-and-foods',
             );
             $score -= 8;
-        } elseif ($hasPalm) {
+        } elseif (true === $containsPalmOil) {
             $appliedRules[] = new AppliedRuleDto(
                 ruleCode: 'formula_palm_oil_present',
                 ruleLabel: 'Contient de l\'huile de palme',
