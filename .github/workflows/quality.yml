@@ -41,7 +41,7 @@ jobs:
               run: composer install --prefer-dist --no-progress --no-interaction
 
             - name: Security audit (CVE check)
-              run: composer audit
+              run: composer audit --locked
 
             - name: PHP CS Fixer (style)
               run: composer cs:check
