@@ -16,7 +16,7 @@
         "predis/predis": "^3.5",
         "symfony/ai-open-ai-platform": "^0.10.0",
         "symfony/asset": "7.4.*",
-        "symfony/asset-mapper": "7.4.*",
+        "symfony/asset-mapper": "8.1.*",
         "symfony/cache": "7.4.*",
         "symfony/console": "7.4.*",
         "symfony/doctrine-messenger": "7.4.*",
