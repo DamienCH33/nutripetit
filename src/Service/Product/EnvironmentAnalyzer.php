@@ -10,6 +10,7 @@ final class EnvironmentAnalyzer
 {
     public function __construct(
         private readonly OrganicLabelDetector $organicLabelDetector,
+        private readonly PalmOilDetector $palmOilDetector,
     ) {
     }
 
@@ -20,7 +21,6 @@ final class EnvironmentAnalyzer
     {
         $raw = $product->getOffRawData();
         $labels = $raw['labels_tags'] ?? [];
-        $ingredients = mb_strtolower((string) ($raw['ingredients_text_fr'] ?? $raw['ingredients_text'] ?? ''));
         $countries = $raw['countries_tags'] ?? [];
         $packagingTags = $raw['packaging_tags'] ?? [];
         $packagingMaterialsTags = $raw['packaging_materials_tags'] ?? [];
@@ -108,9 +108,17 @@ final class EnvironmentAnalyzer
         return [
             'origin' => $origin,
             'bio_certified' => $this->organicLabelDetector->hasOrganicLabel($labels),
-            'palm_oil_free' => !str_contains($ingredients, 'palme') && !str_contains($ingredients, 'palm oil'),
+            // null : liste d'ingrédients absente, on ne peut pas affirmer « sans palme ».
+            'palm_oil_free' => $this->isPalmOilFree($product),
             'packaging' => $packaging,
         ];
+    }
+
+    private function isPalmOilFree(Product $product): ?bool
+    {
+        $containsPalmOil = $this->palmOilDetector->containsPalmOil($product);
+
+        return null === $containsPalmOil ? null : !$containsPalmOil;
     }
 
     private function isPackagingRecyclable(string $cleanTag): bool

@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Service\Product\AllergenExtractor;
 use App\Service\Scoring\Evaluator\MajorAllergensEvaluator;
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +17,7 @@ final class MajorAllergensEvaluatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->evaluator = new MajorAllergensEvaluator();
+        $this->evaluator = new MajorAllergensEvaluator(new AllergenExtractor());
     }
 
     public function testSupportsOnlyItsRule(): void

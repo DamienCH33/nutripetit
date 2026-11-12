@@ -21,6 +21,7 @@ final class ProductPreviewBuilder
         private readonly MinimumAgeExtractor $minimumAgeExtractor,
         private readonly CarbonFootprintExtractor $carbonFootprintExtractor,
         private readonly DataCompletenessChecker $completenessChecker,
+        private readonly AllergenExtractor $allergenExtractor,
     ) {
     }
 
@@ -92,6 +93,7 @@ final class ProductPreviewBuilder
             'uniqueSources' => $uniqueSources,
             'minAgeMonths' => $minAgeMonths,
             'additives' => $this->additiveExtractor->extractAdditives($product),
+            'allergens' => $this->allergenExtractor->extract($product),
             'carbonFootprint' => $this->carbonFootprintExtractor->extractCarbonFootprint($product),
             // Toujours faux avec hasSufficientData() : les produits sans données sont
             // refusés en amont (422). On signale ici le score PARTIEL.

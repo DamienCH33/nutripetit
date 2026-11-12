@@ -8,6 +8,7 @@ use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
 use App\Enum\RuleStatus;
+use App\Service\Product\PalmOilDetector;
 use App\Service\Scoring\Evaluator\PalmOilEvaluator;
 use PHPUnit\Framework\TestCase;
 
@@ -17,7 +18,7 @@ final class PalmOilEvaluatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->evaluator = new PalmOilEvaluator();
+        $this->evaluator = new PalmOilEvaluator(new PalmOilDetector());
     }
 
     public function testSupportsOnlyItsRule(): void

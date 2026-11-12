@@ -7,6 +7,7 @@ namespace App\Service\Scoring\Evaluator;
 use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
+use App\Service\Product\AllergenExtractor;
 use App\Service\Scoring\RuleEvaluator;
 
 /**
@@ -20,42 +21,14 @@ use App\Service\Scoring\RuleEvaluator;
  */
 final class MajorAllergensEvaluator implements RuleEvaluator
 {
+    public function __construct(
+        private readonly AllergenExtractor $allergenExtractor,
+    ) {
+    }
+
     public function supports(ScoringRule $rule): bool
     {
         return 'major_allergens' === $rule->getCode();
-    }
-
-    private const ALLERGEN_FR = [
-        'gluten' => 'Gluten',
-        'crustaceans' => 'Crustacés',
-        'eggs' => 'Œufs',
-        'fish' => 'Poisson',
-        'peanuts' => 'Arachides',
-        'soybeans' => 'Soja',
-        'milk' => 'Lait',
-        'nuts' => 'Fruits à coque',
-        'celery' => 'Céleri',
-        'mustard' => 'Moutarde',
-        'sesame-seeds' => 'Graines de sésame',
-        'sulphur-dioxide-and-sulphites' => 'Sulfites',
-        'lupin' => 'Lupin',
-        'molluscs' => 'Mollusques',
-    ];
-
-    /**
-     * @param list<string> $allergens
-     *
-     * @return list<string>
-     */
-    private function translateAllergens(array $allergens): array
-    {
-        $result = [];
-        foreach ($allergens as $tag) {
-            $clean = str_replace(['en:', 'fr:'], '', (string) $tag);
-            $result[] = self::ALLERGEN_FR[$clean] ?? ucfirst($clean);
-        }
-
-        return $result;
     }
 
     public function evaluate(
@@ -63,26 +36,15 @@ final class MajorAllergensEvaluator implements RuleEvaluator
         ScoringRule $rule,
         ?int $babyAgeMonths,
     ): ?AppliedRuleDto {
-        $allergens = $product->getAllergens();
+        $labels = $this->allergenExtractor->declaredLabels($product);
 
-        if ([] === $allergens) {
+        if ([] === $labels) {
             return null;
         }
 
-        // Nettoyage des préfixes OFF
-        $cleanAllergens = array_map(
-            static function (string $a): string {
-                $parts = explode(':', $a);
-
-                return ucfirst(end($parts));
-            },
-            $allergens,
-        );
-
-        $translated = $this->translateAllergens($product->getAllergens());
         $reason = \sprintf(
             'Allergène(s) majeur(s) déclaré(s) : %s. Vigilance recommandée selon le règlement INCO.',
-            implode(', ', $translated),
+            implode(', ', $labels),
         );
 
         return new AppliedRuleDto(

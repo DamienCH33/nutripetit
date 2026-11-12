@@ -8,6 +8,7 @@ use App\Dto\AppliedRuleDto;
 use App\Entity\Product;
 use App\Entity\ScoringRule;
 use App\Enum\RuleStatus;
+use App\Service\Product\PalmOilDetector;
 use App\Service\Scoring\RuleEvaluator;
 
 /**
@@ -15,14 +16,10 @@ use App\Service\Scoring\RuleEvaluator;
  */
 final class PalmOilEvaluator implements RuleEvaluator
 {
-    private const PALM_OIL_KEYWORDS = [
-        'huile de palme',
-        'huile de palmiste',
-        'graisse de palme',
-        'palm oil',
-        'palmiste',
-        'matière grasse végétale (palme',
-    ];
+    public function __construct(
+        private readonly PalmOilDetector $palmOilDetector,
+    ) {
+    }
 
     public function supports(ScoringRule $rule): bool
     {
@@ -34,26 +31,22 @@ final class PalmOilEvaluator implements RuleEvaluator
         ScoringRule $rule,
         ?int $babyAgeMonths,
     ): ?AppliedRuleDto {
-        $ingredients = $product->getIngredientsRaw();
+        $containsPalmOil = $this->palmOilDetector->containsPalmOil($product);
 
-        if (null === $ingredients || '' === trim($ingredients)) {
+        if (null === $containsPalmOil) {
             return null;
         }
 
-        $ingredientsLower = mb_strtolower($ingredients);
-
-        foreach (self::PALM_OIL_KEYWORDS as $keyword) {
-            if (str_contains($ingredientsLower, $keyword)) {
-                return new AppliedRuleDto(
-                    ruleCode: $rule->getCode(),
-                    ruleLabel: $rule->getLabel(),
-                    pointsImpact: $rule->getPointsImpact(),
-                    reason: 'Présence d\'huile de palme détectée dans la liste d\'ingrédients.',
-                    sourceName: $rule->getSourceName(),
-                    sourceUrl: $rule->getSourceUrl(),
-                    status: RuleStatus::Triggered,
-                );
-            }
+        if ($containsPalmOil) {
+            return new AppliedRuleDto(
+                ruleCode: $rule->getCode(),
+                ruleLabel: $rule->getLabel(),
+                pointsImpact: $rule->getPointsImpact(),
+                reason: 'Présence d\'huile de palme détectée dans la liste d\'ingrédients.',
+                sourceName: $rule->getSourceName(),
+                sourceUrl: $rule->getSourceUrl(),
+                status: RuleStatus::Triggered,
+            );
         }
 
         return new AppliedRuleDto(
